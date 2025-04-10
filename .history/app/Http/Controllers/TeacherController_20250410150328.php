@@ -12,6 +12,6 @@ class TeacherController extends Controller
     {
         $validated_teacher = $createTeacher->validated();
         Teacher::create($validated_teacher);
-    
+        return 
     }
 }

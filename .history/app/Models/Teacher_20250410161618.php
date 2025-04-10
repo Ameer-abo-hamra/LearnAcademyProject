@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Models;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 use Illuminate\Database\Eloquent\Model;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-class Student extends Authenticatable implements JWTSubject
+class Teacher extends Authenticatable implements JWTSubject
 {
+
+    protected $fillable = ["full_name", "username", "password", "email" , "id"];
 
     public function getJWTIdentifier()
     {
