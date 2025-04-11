@@ -14,7 +14,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.19",
         "laravel/tinker": "^2.10.1",
-        "lcobucci/clock": "^2.3.0",
+        "lcobucci/clock": "^2.9",
         "mailersend/laravel-driver": "^2.9",
         "pbmedia/laravel-ffmpeg": "^8.7",
         "phpmailer/phpmailer": "^6.9",
