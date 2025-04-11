@@ -15,6 +15,7 @@
         "laravel/socialite": "^5.19",
         "laravel/tinker": "^2.10.1",
         "mailersend/laravel-driver": "^2.9",
+        "pbmedia/laravel-ffmpeg": "^8.7",
         "phpmailer/phpmailer": "^6.9",
         "tymon/jwt-auth": "^2.2"
     },
