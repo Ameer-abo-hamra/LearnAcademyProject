@@ -19,7 +19,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::post('student/resend', [StudentController::class, "resend"]);
 
-    Route::get('student/logout', [StudentController::class, "logout"]);
+    Route::post('student/logout', [StudentController::class, "logout"]);
 
     Route::post('student/activate', [StudentController::class, "activate"]);
 
