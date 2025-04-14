@@ -30,7 +30,7 @@ function fileupload($request, $teacherId, $courseId, $videoId): string|bool
     $folderPath = "uploads/{$teacherId}/{$courseId}";
 
     // خزن الملف
-    $path = $request->file("video")->storeAs($folderPath, $fileName, 'teachers');
+    $path = $request->file("file")->storeAs($folderPath, $fileName, 'teachers');
 
     return $path; // يرجع المسار الكامل داخل public/
 }

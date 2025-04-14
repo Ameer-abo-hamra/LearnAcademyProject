@@ -18,30 +18,26 @@ Route::post('teacher/login', [TeacherController::class, "login"]);
 
 Route::group(["middleware" => 'checkuser:student'], function () {
 
+    Route::post('student/resend', [StudentController::class, "resend"]);
 
     Route::get('student/logout', [StudentController::class, "logout"]);
 
+    Route::post('student/activate', [StudentController::class, "activate"]);
 
 });
 
 Route::group(["middleware" => 'checkuser:teacher'], function () {
 
+    Route::post('teacher/resend', [TeacherController::class, "resend"]);
 
     Route::get('teacher/logout', [TeacherController::class, "logout"]);
 
-
+    Route::post('teacher/activate', [TeacherController::class, "activate"]);
 
     Route::post("teacher/upload-video", [VideoController::class, "store"]);
 
 
 });
-
-
-Route::post('student/resend', [StudentController::class, "resend"]);
-
-Route::post('student/activate', [StudentController::class, "activate"]);
-
-Route::post('teacher/activate', [TeacherController::class, "activate"]);
 
 Route::post('student/sign-up', [StudentController::class, "signUp"]);
 

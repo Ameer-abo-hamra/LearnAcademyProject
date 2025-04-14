@@ -13,14 +13,14 @@ return new class extends Migration {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string("full_name");
-            $table->double("points")->default(100);
+            $table->double("poi")
             $table->string("email");
             $table->string("password");
             $table->string("username");
             $table->string("activation_code");
             $table->boolean("is_active")->default(false);
-            $table->boolean("admin_activation")->default(false);
-            
+            $table->boolean("admin_activation")->default(false) ;
+
             $table->timestamps();
         });
     }

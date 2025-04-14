@@ -18,9 +18,11 @@ Route::post('teacher/login', [TeacherController::class, "login"]);
 
 Route::group(["middleware" => 'checkuser:student'], function () {
 
+    Route::post('student/resend', [StudentController::class, "resend"]);
 
     Route::get('student/logout', [StudentController::class, "logout"]);
 
+    Route::post('student/activate', [StudentController::class, "activate"]);
 
 });
 
@@ -35,11 +37,6 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
 
 });
-
-
-Route::post('student/resend', [StudentController::class, "resend"]);
-
-Route::post('student/activate', [StudentController::class, "activate"]);
 
 Route::post('teacher/activate', [TeacherController::class, "activate"]);
 

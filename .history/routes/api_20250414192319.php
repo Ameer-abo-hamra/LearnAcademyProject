@@ -36,9 +36,6 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
 });
 
-
-Route::post('student/resend', [StudentController::class, "resend"]);
-
 Route::post('student/activate', [StudentController::class, "activate"]);
 
 Route::post('teacher/activate', [TeacherController::class, "activate"]);

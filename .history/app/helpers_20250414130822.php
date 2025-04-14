@@ -23,14 +23,14 @@ function sendEmail($to)
 function fileupload($request, $teacherId, $courseId, $videoId): string|bool
 {
     // اسم الملف: [video_id].[الامتداد]
-    $extension = $request->file("video")->getClientOriginalExtension();
+    $extension = $request->file("file")->getClientOriginalExtension();
     $fileName = $videoId . '.' . $extension;
 
     // المسار: public/uploads/{teacher_id}/{course_id}/
     $folderPath = "uploads/{$teacherId}/{$courseId}";
 
     // خزن الملف
-    $path = $request->file("video")->storeAs($folderPath, $fileName, 'teachers');
+    $path = $request->file("file")->storeAs($folderPath, $fileName, 'public');
 
     return $path; // يرجع المسار الكامل داخل public/
 }

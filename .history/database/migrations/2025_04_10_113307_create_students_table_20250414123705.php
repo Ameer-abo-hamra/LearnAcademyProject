@@ -19,8 +19,8 @@ return new class extends Migration {
             $table->string("username");
             $table->string("activation_code");
             $table->boolean("is_active")->default(false);
-            $table->boolean("admin_activation")->default(false);
-            
+            $table->boolean("admin_activation")->default(false) ;
+
             $table->timestamps();
         });
     }
