@@ -8,8 +8,7 @@ class Video extends Model
 {
     protected $fillable = ["description", "path", "disk", "original_name", "course_id"];
 
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
+    public function course() {
+        return $this->belongsTo()
     }
 }

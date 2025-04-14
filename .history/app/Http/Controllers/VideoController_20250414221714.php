@@ -16,6 +16,7 @@ class VideoController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:1000', // حسب الحد اللي بتحدده
             'file' => 'required|file|mimes:mp4,mov,avi,wmv|max:512000', // مثال: 500MB
+            'teacher_id' => 'required|exists:teachers,id',
             'course_id' => 'required|exists:courses,id',
         ]);
 

@@ -14,8 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string("path");
             $table->text("description");
-            $table->text("original_name");
-            $table->string("disk");
+
             $table->foreignId("course_id")->references("id")->on("courses");
             $table->timestamps();
         });
