@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\createStudent;
-use App\Models\Student;
+use App\Http\Requests\createTeacher;
+use App\Models\Teacher;
 use App\Traits\ResponseTrait;
 use Hash;
+use Illuminate\Http\Request;
 use Validator;
 use Auth;
-class StudentController extends Controller
+class TeacherController extends Controller
 {
     use ResponseTrait;
     public function signUp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:50|unique:Students',
+            'email' => 'required|string|email|max:50|unique:teachers',
             'password' => 'required|string|min:6|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/',
             'full_name' => 'required|string',
             'username' => 'required|min:4|max:20',
@@ -30,7 +30,7 @@ class StudentController extends Controller
             $code = sendEmail($request);
             if ($code) {
 
-                $Student = Student::create([
+                $teacher = Teacher::create([
                     'full_name' => $request->full_name,
                     'password' => Hash::make($request->password),
                     'email' => $request->email,
@@ -40,7 +40,7 @@ class StudentController extends Controller
 
 
 
-                return $this->returnData('Your account has been created successfully please activate your account now .', $Student, 200);
+                return $this->returnData('Your account has been created successfully please activate your account now .', $teacher, 200);
             }
         } catch (\Exception $e) {
             return $this->returnError($e->getMessage());
@@ -64,15 +64,15 @@ class StudentController extends Controller
         try {
             $cre = $request->only('password', 'username');
 
-            $token = Auth::guard('student')->attempt($cre);
+            $token = Auth::guard('teacher')->attempt($cre);
 
             if ($token) {
 
-                $Student = Auth::guard('student')->user();
+                $teacher = Auth::guard('teacher')->user();
 
-                $Student->token = $token;
+                $teacher->token = $token;
 
-                return $this->returnData('', $Student, 200, );
+                return $this->returnData('', $teacher, 200, );
 
             }
         } catch (\Exception $e) {
@@ -84,7 +84,7 @@ class StudentController extends Controller
     public function logout()
     {
 
-        Auth::guard('student')->logout();
+        Auth::guard('teacher')->logout();
         return $this->returnSuccess('your are logged-out successfully');
     }
     public function activate(Request $request)
@@ -92,19 +92,18 @@ class StudentController extends Controller
 
         $validator = Validator::make($request->all(), [
             'activation_code' => 'required|string|min:6|max:6',
-            'id' => 'required|exists:students,id',
+            'id' => 'required|exists:teachers,id',
         ]);
-
 
         if ($validator->fails()) {
             return $this->returnError($validator->errors()->first());
         }
 
         try {
-            $Student = Student::find($request->id);
-            if ($Student->activation_code === $request->activation_code) {
-                $Student->is_active = true;
-                $Student->save();
+            $teacher = Teacher::find($request->id);
+            if ($teacher->activation_code === $request->activation_code) {
+                $teacher->is_active = true;
+                $teacher->save();
                 return $this->returnSuccess('your account activated successfully :)');
             }
         } catch (\Exception $e) {
@@ -125,10 +124,10 @@ class StudentController extends Controller
         }
 
         try {
-            $Student = Student::find($request->id);
-            if ($code = sendEmail($Student)) {
-                $Student->activation_code = $code;
-                $Student->save();
+            $teacher =Teacher::;
+            if ($code = sendEmail($teacher)) {
+                $teacher->activation_code = $code;
+                $teacher->save();
                 return $this->returnSuccess("we sent your activation code  succesfully ");
             }
         } catch (\Exception $e) {

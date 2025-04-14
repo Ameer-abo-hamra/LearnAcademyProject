@@ -21,9 +21,9 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::get('teacher/logout', [TeacherController::class, "logout"]);
 
-    Route::post("teacher/make-course", [CourseController::class, "makeCourse"]);
+    Route::post("teacher/make-course" , [CourseController::class , "makeCourse"]);
 
-    Route::post('teacher/add-quiz', [QuizeController::class, "addQuize"]);
+    Route::post('teacher/add-quiz',[QuizeController::class , "addQuize"]);
 
     Route::post("teacher/upload-video", [VideoController::class, "store"]);
 
@@ -32,7 +32,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
 Route::post('student/resend', [StudentController::class, "resend"]);
 
-Route::post('teacher/resend', [TeacherController::class, "resend"]);
+Route::post('teacher/resend', [StudentController::class, "resend"]);
 
 Route::post('student/activate', [StudentController::class, "activate"]);
 

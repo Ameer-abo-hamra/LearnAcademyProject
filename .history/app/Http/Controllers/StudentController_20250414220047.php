@@ -125,7 +125,7 @@ class StudentController extends Controller
         }
 
         try {
-            $Student = Student::find($request->id);
+            $Student = Student::find();
             if ($code = sendEmail($Student)) {
                 $Student->activation_code = $code;
                 $Student->save();
