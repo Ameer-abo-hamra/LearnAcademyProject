@@ -118,7 +118,7 @@ class StudentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:50',
-            'id' => 'required|exists:students,id',
+            'id' => 'required|exists:stiden,id',
         ]);
         if ($validator->fails()) {
             return $this->returnError($validator->errors()->first());

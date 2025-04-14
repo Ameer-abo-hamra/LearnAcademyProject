@@ -9,35 +9,28 @@ use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
-    use ResponseTrait;
+use ResponseTrait ;
     public function store(Request $request)
     {
+        // ✅ التحقق من البيانات
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'file' => 'required|file|mimes:mp4,mov,avi,wmv|max:512000',
+            'description' => 'required|string|max:1000', // حسب الحد اللي بتحدده
+            'file' => 'required|file|mimes:mp4,mov,avi,wmv|max:512000', // مثال: 500MB
             'course_id' => 'required|exists:courses,id',
-            'teacher_id' => 'required|exists:teachers,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()->first()], 422);
         }
-
-        // ✅ تحقق من وجود الملف وصحته
-        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
-            return response()->json(['error' => 'الملف غير موجود أو غير صالح'], 400);
-        }
-
+        return $this->returnData( , $request->file());
         try {
-            $file = $request->file('file');
-
             $video = \App\Models\Video::create([
                 'disk' => 'teachers',
-                'original_name' => $file->getClientOriginalName(),
+                'original_name' => $request->file('file')->getClientOriginalName(),
                 'title' => $request->title,
                 'description' => $request->description,
-                'path' => '', // مؤقت
+                'path' => '', // مؤقتًا
                 'course_id' => $request->course_id
             ]);
 
@@ -48,12 +41,10 @@ class VideoController extends Controller
 
             dispatch(new ProcessVideoUpload($video->id));
 
-            return response()->json(["message" => "جاري معالجة الفيديو"], 200);
+            return response()->json(["message" => "Your video upload is processing :)"], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
 
 }
