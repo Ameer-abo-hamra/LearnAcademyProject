@@ -10,24 +10,19 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('videos', function (Blueprint $table) {
+        Schema::create('scripts', function (Blueprint $table) {
             $table->id();
-            $table->string("path");
-            $table->string("title");
-            $table->text("description");
-            $table->text("original_name");
-            $table->string("disk");
-            $table->integer("teacher_id");
-            $table->foreignId("course_id")->references("id")->on("courses");
+            $table->foreignId("video_id")->references("id")->on("videos");
+            $table->string("script_path");
             $table->timestamps();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('videos');
+        Schema::dropIfExists('scripts');
     }
 };
