@@ -69,7 +69,7 @@ class ExtractAudioFromVideo implements ShouldQueue
                 ->toDisk('teachers')
                 ->addFilter('-an') // هذا الفلتر يعني "remove audio"
                 ->save($videoNoAudioFileName)
-            ;
+;
             echo "✅ Audio extracted to: uploads/{$audioFileName}" . PHP_EOL;
             echo "✅ Video without audio saved to: uploads/{$videoNoAudioFileName}" . PHP_EOL;
 

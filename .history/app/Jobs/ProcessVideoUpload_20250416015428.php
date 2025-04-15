@@ -30,7 +30,7 @@ class ProcessVideoUpload implements ShouldQueue
     {
         try {
             // استرجاع الفيديو من قاعدة البيانات
-            $video = Video::findOrFail($this->videoId);
+            $video = Video::find($this->videoId);
 
             if (!$video) {
                 \Log::error('Video not found: ' . $this->videoId);
@@ -38,8 +38,8 @@ class ProcessVideoUpload implements ShouldQueue
             }
 
             // إرسال مهام تحويل الفيديو
-            dispatch(new ExtractAudioFromVideo( $this->videoId));
-            // dispatch(new ConvertVideoForStreaming( $video));
+            dispatch(new ExtractAudioFromVideo( $video));
+            dispatch(new ConvertVideoForStreaming( $video));
         } catch (\Exception $e) {
             \Log::error('Error processing video upload: ' . $e->getMessage());
         }

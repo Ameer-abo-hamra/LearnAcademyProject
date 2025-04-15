@@ -30,7 +30,7 @@ class ExtractAudioFromVideo implements ShouldQueue
      */
     public function handle(): void
     {
-        $video = Video::where("id", "=", $this->videoId)->first();
+        $video = Video::find($this->videoId);
 
         if (!$video) {
             echo "❌ Video not found with ID: {$this->videoId}";
@@ -43,7 +43,7 @@ class ExtractAudioFromVideo implements ShouldQueue
         $directory = dirname(public_path($relativePath));
         $filename = pathinfo($relativePath, PATHINFO_FILENAME);
         $extension = pathinfo($relativePath, PATHINFO_EXTENSION);
-
+        
         $audioFileName = "{$filename}_audio.mp3";
         $videoNoAudioFileName = "{$filename}_no_audio.{$extension}";
 
@@ -57,19 +57,13 @@ class ExtractAudioFromVideo implements ShouldQueue
                 ->save("{$audioFileName}");
 
             // ✅ إزالة الصوت من الفيديو
-            // \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk($disk)
-            //     ->open($video->path)
-            //     ->export()
-            //     ->withoutAudio()
-            //     ->toDisk($disk)
-            //     ->save("{$videoNoAudioFileName}");
-            \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk('teachers')
+            \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk($disk)
                 ->open($video->path)
                 ->export()
-                ->toDisk('teachers')
-                ->addFilter('-an') // هذا الفلتر يعني "remove audio"
-                ->save($videoNoAudioFileName)
-            ;
+                ->withoutAudio()
+                ->toDisk($disk)
+                ->save("{$videoNoAudioFileName}");
+
             echo "✅ Audio extracted to: uploads/{$audioFileName}" . PHP_EOL;
             echo "✅ Video without audio saved to: uploads/{$videoNoAudioFileName}" . PHP_EOL;
 

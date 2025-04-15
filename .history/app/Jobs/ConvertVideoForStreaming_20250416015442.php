@@ -16,7 +16,7 @@ class ConvertVideoForStreaming implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $video;
+     $video;
     public $timeout = 1200;
 
     public function __construct(Video $video)

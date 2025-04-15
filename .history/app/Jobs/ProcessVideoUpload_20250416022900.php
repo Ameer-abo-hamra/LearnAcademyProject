@@ -38,7 +38,7 @@ class ProcessVideoUpload implements ShouldQueue
             }
 
             // إرسال مهام تحويل الفيديو
-            dispatch(new ExtractAudioFromVideo( $this->videoId));
+            dispatch(new ExtractAudioFromVideo( $video->));
             // dispatch(new ConvertVideoForStreaming( $video));
         } catch (\Exception $e) {
             \Log::error('Error processing video upload: ' . $e->getMessage());

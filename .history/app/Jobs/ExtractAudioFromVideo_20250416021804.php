@@ -30,7 +30,7 @@ class ExtractAudioFromVideo implements ShouldQueue
      */
     public function handle(): void
     {
-        $video = Video::where("id", "=", $this->videoId)->first();
+        $video = Video::find($this->videoId);
 
         if (!$video) {
             echo "❌ Video not found with ID: {$this->videoId}";
@@ -54,22 +54,16 @@ class ExtractAudioFromVideo implements ShouldQueue
                 ->export()
                 ->toDisk($disk)
                 ->inFormat(new \FFMpeg\Format\Audio\Mp3)
-                ->save("{$audioFileName}");
+                ->save("uploads/{$audioFileName}");
 
             // ✅ إزالة الصوت من الفيديو
-            // \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk($disk)
-            //     ->open($video->path)
-            //     ->export()
-            //     ->withoutAudio()
-            //     ->toDisk($disk)
-            //     ->save("{$videoNoAudioFileName}");
-            \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk('teachers')
-                ->open($video->path)
+            \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk($disk)
+                ->open($relativePath)
                 ->export()
-                ->toDisk('teachers')
-                ->addFilter('-an') // هذا الفلتر يعني "remove audio"
-                ->save($videoNoAudioFileName)
-            ;
+                ->withoutAudio()
+                ->toDisk($disk)
+                ->save("uploads/{$videoNoAudioFileName}");
+
             echo "✅ Audio extracted to: uploads/{$audioFileName}" . PHP_EOL;
             echo "✅ Video without audio saved to: uploads/{$videoNoAudioFileName}" . PHP_EOL;
 

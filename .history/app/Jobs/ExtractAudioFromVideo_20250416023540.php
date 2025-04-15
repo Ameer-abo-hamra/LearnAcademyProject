@@ -57,19 +57,19 @@ class ExtractAudioFromVideo implements ShouldQueue
                 ->save("{$audioFileName}");
 
             // ✅ إزالة الصوت من الفيديو
-            // \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk($disk)
-            //     ->open($video->path)
-            //     ->export()
-            //     ->withoutAudio()
-            //     ->toDisk($disk)
-            //     ->save("{$videoNoAudioFileName}");
-            \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk('teachers')
+            \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk($disk)
                 ->open($video->path)
+                ->export()
+                ->withoutAudio()
+                ->toDisk($disk)
+                ->save("{$videoNoAudioFileName}");
+            \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::fromDisk('teachers')
+                ->open($videoPath)
                 ->export()
                 ->toDisk('teachers')
                 ->addFilter('-an') // هذا الفلتر يعني "remove audio"
-                ->save($videoNoAudioFileName)
-            ;
+                ->save($videoNoAudioPath);
+
             echo "✅ Audio extracted to: uploads/{$audioFileName}" . PHP_EOL;
             echo "✅ Video without audio saved to: uploads/{$videoNoAudioFileName}" . PHP_EOL;
 
