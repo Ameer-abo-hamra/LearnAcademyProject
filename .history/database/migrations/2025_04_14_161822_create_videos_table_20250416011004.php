@@ -4,17 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('course_category', function (Blueprint $table) {
+        Schema::create('videos', function (Blueprint $table) {
             $table->id();
+            $table->string("path");
+            $table->string("title");
+            $table->text("description");
+            $table->text("original_name");
+            $table->string("disk");
+            $table->integer("teacher_id");
             $table->foreignId("course_id")->references("id")->on("courses");
-            $table->foreignId("category_id")->references("id")->on("categories");
             $table->timestamps();
         });
     }
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_category');
+        Schema::dropIfExists('videos');
     }
 };
