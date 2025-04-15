@@ -30,13 +30,7 @@ class Course extends Model
         return $this->belongsToMany(Skill::class, "course_skill", "course_id", "skill_id");
     }
 
-    public function aquirements()
-    {
-        return $this->belongsToMany(Skill::class, "course_aquirement", "course_id", "skill_id");
-    }
-
-    public function students()
-    {
-        return $this->belongsToMany(Student::class, "course_student", "course_id", "student_id");
+    public function aquirements() {
+        return $this->belongsToMany(Skill::class , )
     }
 }
