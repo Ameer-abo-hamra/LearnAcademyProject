@@ -33,7 +33,7 @@ class VideoController extends Controller
             'questions.*.choices.*.is_correct' => 'required|boolean',
 
             // Optional extension
-            'extension.file' => 'nullable|file|mimes:pdf|max:20480',
+            'extension.file' => 'nullable|file|mimes:pdf,doc,docx,txt|max:20480',
             'extension.text' => 'nullable|string',
         ]);
 

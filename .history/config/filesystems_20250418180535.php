@@ -81,7 +81,7 @@ return [
         'video_extension' => [
             'driver' => 'local',
             'root' => public_path('video_extension'),
-            'url' => env('APP_URL') . '/video_extension',
+            'url' => env('APP_URL') . '/teacher_image',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

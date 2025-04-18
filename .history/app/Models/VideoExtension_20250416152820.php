@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class VideoExtension extends Model
 {
-    protected $fillable = ['file_path' , 'text' , 'video_id'];
+    //
 }

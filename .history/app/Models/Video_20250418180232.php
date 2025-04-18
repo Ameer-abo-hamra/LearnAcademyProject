@@ -26,7 +26,5 @@ class Video extends Model
         return $this->hasMany(VideoQuestion::class , "video_id");
     }
 
-    public function extensions() {
-        return $this->hasMany(VideoExtension::class , "video_id");
-    }
+    public function 
 }
