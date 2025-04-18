@@ -35,7 +35,7 @@ class VideoController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->returnError($validator->errors()->first() , 422);
+            return response()->json(['error' => ], 422);
         }
 
         DB::beginTransaction();

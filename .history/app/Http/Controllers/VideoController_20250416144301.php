@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Validator;
 use App\Jobs\ProcessVideoUpload;
 use Illuminate\Http\Request;
 
-use App\Models\Video;
-use App\Models\VideoQuestion;
-use App\Models\VideoQuestionChoice;
 class VideoController extends Controller
 {
     use ResponseTrait;
-
+    use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Facades\Validator;
+    use App\Models\Video;
+    use App\Models\VideoQuestion;
+    use App\Models\VideoQuestionChoice;
 
     public function store(Request $request)
     {
@@ -35,7 +36,7 @@ class VideoController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->returnError($validator->errors()->first() , 422);
+            return response()->json(['error' => $validator->errors()->first()], 422);
         }
 
         DB::beginTransaction();

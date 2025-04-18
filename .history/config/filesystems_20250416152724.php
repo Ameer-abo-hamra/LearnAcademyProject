@@ -78,7 +78,7 @@ return [
             'throw' => false,
             'report' => false,
         ],
-        'video_extension' => [
+        'video_ext' => [
             'driver' => 'local',
             'root' => public_path('teacher_image'),
             'url' => env('APP_URL') . '/teacher_image',

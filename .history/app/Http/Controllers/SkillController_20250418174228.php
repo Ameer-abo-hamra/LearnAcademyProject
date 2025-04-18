@@ -21,7 +21,7 @@ class SkillController extends Controller
             return $this->returnError("Category not found.");
         }
 
-        $skills = $category->skills->makeHidden(['created_at', 'updated_at', 'category_id']);
+        $skills = $category->skills;
 
         return $this->returnData("Skills fetched successfully", $skills);
     }
