@@ -35,10 +35,9 @@ class SpecilizationController extends Controller
                 'is_completed' => $request->is_completed,
                 "image" => ""
             ]);
-            $path = imageUpload($request, $spec->id, "specialization_image");
-            $path = assetFromDisk("specialization_image", $path);
-            $spec->image = $path;
-            $spec->save();
+                $path = imageUpload($request , $spec->id , "specialization_image") ;
+                $path = assetFromDisk("specialization_image" , $path) ;
+                $spec
             // ربط الكورسات
             foreach ($request->courses as $course_id) {
                 $spec->courses()->attach($course_id);

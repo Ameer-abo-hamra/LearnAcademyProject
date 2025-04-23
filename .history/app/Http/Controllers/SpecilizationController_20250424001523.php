@@ -17,6 +17,7 @@ class SpecilizationController extends Controller
             'title' => 'required|string|max:255',
             'is_completed' => 'required|boolean',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:4048',
+
             'courses' => 'required|array|min:2',
             'courses.*' => 'exists:courses,id',
         ]);
@@ -33,12 +34,8 @@ class SpecilizationController extends Controller
                 'title' => $request->title,
                 "teacher_id" => u("teacher")->id,
                 'is_completed' => $request->is_completed,
-                "image" => ""
             ]);
-            $path = imageUpload($request, $spec->id, "specialization_image");
-            $path = assetFromDisk("specialization_image", $path);
-            $spec->image = $path;
-            $spec->save();
+
             // ربط الكورسات
             foreach ($request->courses as $course_id) {
                 $spec->courses()->attach($course_id);

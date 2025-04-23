@@ -105,7 +105,7 @@ return [
         'specialization_image' => [
             'driver' => 'local',
             'root' => public_path('specialization_image'),
-            'url' => env('APP_URL') . '/specialization_image',
+            'url' => env('APP_URL') . '/video_thumbnail',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
