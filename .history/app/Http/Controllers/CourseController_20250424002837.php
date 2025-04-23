@@ -56,8 +56,8 @@ class CourseController extends Controller
                 'points_earned' => $request->points_earned,
             ]);
 
-            $path = imageUpload($request, $course->id, "course_image");
-            $course->image = assetFromDisk("course_image", $path);
+            $course->image = imageUpload($request, $course->id, "course_image");
+            $course->image = 
             $course->save();
 
             $course->skills()->sync($request->skills);
@@ -126,77 +126,35 @@ class CourseController extends Controller
     public function getCourseDetails($courseId)
     {
         $teacher = u("teacher");
-        $course = $teacher->courses()->where("id", $courseId)->first();
-
+        $course = $teacher->courses()->where("id", "=", $courseId)->first();
         if (!$course) {
-            return $this->returnError("You don't have permission to see course details");
+            return $this->returnError("you dont have permission to see course datails");
         }
-
-        // تحميل الفيديوهات المرتبة
-        $videos = $course->videos()
-            ->orderBy("sequential_order")
-            ->get()
-            ->map(function ($video) {
-                return (object) [
-                    "type" => "video",
-                    "id" => $video->id,
-                    "title" => $video->title,
-                    "description" => $video->description,
-                    "path" => assetFromDisk("streamable_videos", $video->path),
-                    "image" => assetFromDisk("video_thumbnail", $video->image),
-                    "sequential_order" => $video->sequential_order,
-                ];
-            });
-
-        // تحميل الكويزات
-        $quizes = $course->quiezes()
-            ->select("title", "from_video", "to_video" , "is_final")
-            ->get()
-            ->map(function ($quiz) {
-                return (object) [
-                    "type" => "quiz",
-                    "title" => $quiz->title,
-                    "from_video" => $quiz->from_video,
-                    "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final
-                ];
-            });
-
-        // تركيب الفيديوهات والكويزات معًا
-        $videosAndQuiz = [];
-        $videoMap = $videos->keyBy("id");
-
-        foreach ($videos as $video) {
-            $videosAndQuiz[] = $video;
-
-            // بعد كل فيديو، نبحث إذا فيه كويز ينتهي عند هذا الفيديو
-            foreach ($quizes as $quiz) {
-                if ($quiz->to_video == $video->id) {
-                    $videosAndQuiz[] = $quiz;
-                }
-            }
-        }
-
-        // باقي البيانات
-        $requirements = $course->skills->pluck("title");
-        $aquirements = $course->aquirements->pluck("title");
+        $requirements = $course->skills->select("title");
+        $aquirements = $course->aquirements->select("title");
         $attachments = $course->attachments->map(function ($attachment) {
             $attachment->file_path = assetFromDisk("course_attachments", $attachment->file_path);
             return $attachment;
         });
-        $category = $course->category->title;
 
+        $category = $course->category->title;
+        $videos = $course->videos->map(function ($video) {
+            $video->path = assetFromDisk("streamable_videos", $video->path);
+            $video->image = assetFromDisk("video_thumbnail", $video->image);
+            return $video;
+        });
+        $quizes = $course->quiezes->select("from_video", "to_video", "title");
         $data = [
             "requirements" => $requirements,
             "aquirements" => $aquirements,
             "attachments" => $attachments,
             "category" => $category,
-            "videosAndQuiz" => $videosAndQuiz
+            "viedos" => $videos,
+            "quizes" => $quizes
         ];
 
         return $this->returnData("", $data);
+
     }
-
-
 
 }

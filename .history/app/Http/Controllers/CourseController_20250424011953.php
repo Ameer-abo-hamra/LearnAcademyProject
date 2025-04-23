@@ -150,7 +150,7 @@ class CourseController extends Controller
 
         // تحميل الكويزات
         $quizes = $course->quiezes()
-            ->select("title", "from_video", "to_video" , "is_final")
+            ->select("title", "from_video", "to_video" , "is_com")
             ->get()
             ->map(function ($quiz) {
                 return (object) [
@@ -158,7 +158,6 @@ class CourseController extends Controller
                     "title" => $quiz->title,
                     "from_video" => $quiz->from_video,
                     "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final
                 ];
             });
 

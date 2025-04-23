@@ -50,6 +50,7 @@ class QuizeController extends Controller
                 'from_video' => $request->from_video,
                 'to_video' => $request->to_video,
                 'course_id' => $request->course_id,
+                'point' => $request->point,
                 "is_final" => $request->is_final,
                 "is_auto_generated" => $request->is_auto_generated,
             ]);

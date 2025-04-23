@@ -209,8 +209,8 @@ class VideoController extends Controller
         $course = $teacherCourses->find($id)->first();
         $videos = $course->videos()->paginate($perPage, ["*"], "page", $page);
         return $this->returnData("", $videos->items(), 200, $videos);
-        
+
     }
 
-
+    
 }

@@ -158,7 +158,7 @@ class CourseController extends Controller
                     "title" => $quiz->title,
                     "from_video" => $quiz->from_video,
                     "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final
+                    "is_final" => 
                 ];
             });
 
