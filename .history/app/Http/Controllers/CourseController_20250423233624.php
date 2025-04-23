@@ -104,13 +104,12 @@ class CourseController extends Controller
 
         $courses = u("teacher")->courses()->paginate($perPage, ['*'], 'page', $page);
         return $this->returnData("courses", $courses->items(), 200, $courses);
-
+        
     }
     public function getTeacherCoursesTitleId(Request $request)
     {
         $courses = u("teacher")->courses()
             ->select("id", "name")
-            // ->where("status" , 3)
             ->get()
             ->map(function ($course) {
                 return [

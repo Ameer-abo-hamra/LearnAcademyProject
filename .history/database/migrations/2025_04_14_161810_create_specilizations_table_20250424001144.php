@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('specilizations', function (Blueprint $table) {
             $table->id();
             $table->string("title");
-            $table->string("image");
+            $table->string("")
             $table->foreignId("teacher_id")->references("id")->on("teachers");
             $table->boolean("is_completed");
             $table->timestamps();

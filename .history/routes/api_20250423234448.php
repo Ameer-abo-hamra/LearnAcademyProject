@@ -58,7 +58,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::put("teacher/update-specialization/{specialization_id}" , [SpecilizationController::class , "updateSpecialization"]);
 
-    Route::get("teacher/specialization-courses/{spec_id}" , [SpecilizationController::class , "getSpecializationCourse"]);
+    Route::get("teacher/specialization-courses" , [SpecilizationController::class , "getSpecializationCo"])
 
     Route::get("teacher/course-details/{course_id}" , [CourseController::class , "getCourseDetails"]);
 });

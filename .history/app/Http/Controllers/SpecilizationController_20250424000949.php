@@ -134,9 +134,7 @@ class SpecilizationController extends Controller
         if (!$specialization) {
             return $this->returnError("Specialization not found or not assigned to you.");
         }
-        $specialization->courses->each(function ($course) {
-            unset($course->pivot);
-        });
+
         return $this->returnData("", $specialization);
     }
 

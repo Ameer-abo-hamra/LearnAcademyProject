@@ -110,7 +110,7 @@ class CourseController extends Controller
     {
         $courses = u("teacher")->courses()
             ->select("id", "name")
-            // ->where("status" , 3)
+            ->where("status" , 3)
             ->get()
             ->map(function ($course) {
                 return [

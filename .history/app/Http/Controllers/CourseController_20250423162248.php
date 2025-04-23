@@ -110,7 +110,6 @@ class CourseController extends Controller
     {
         $courses = u("teacher")->courses()
             ->select("id", "name")
-            // ->where("status" , 3)
             ->get()
             ->map(function ($course) {
                 return [
@@ -139,17 +138,15 @@ class CourseController extends Controller
         $category = $course->category->title;
         $videos = $course->videos->map(function ($video) {
             $video->path = assetFromDisk("streamable_videos", $video->path);
-            $video->image = assetFromDisk("video_thumbnail", $video->image);
+            $video->image = asser
             return $video;
         });
-        $quizes = $course->quiezes->select("from_video", "to_video", "title");
         $data = [
             "requirements" => $requirements,
             "aquirements" => $aquirements,
             "attachments" => $attachments,
             "category" => $category,
-            "viedos" => $videos,
-            "quizes" => $quizes
+            "viedos" => $videos
         ];
 
         return $this->returnData("", $data);

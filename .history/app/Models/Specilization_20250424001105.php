@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Specilization extends Model
 {
-    protected $fillable = ["title", "is_completed","teacher_id" , "image"];
+    protected $fillable = ["title", "is_completed","teacher_id" , ""];
 
     public function courses()
     {
