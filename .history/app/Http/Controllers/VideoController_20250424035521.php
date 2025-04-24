@@ -64,8 +64,7 @@ class VideoController extends Controller
             ]);
 
             $thumbail_path = imageUpload($request, $video->id, "video_thumbnail");
-            $thumbail_path = assetFromDisk("video_thumbnail", $thumbail_path);
-
+            
             $filePath = fileupload($request, $request->teacher_id, $request->course_id, $video->id);
             $video->path = $filePath;
             $video->image = $thumbail_path;

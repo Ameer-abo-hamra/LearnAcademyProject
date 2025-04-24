@@ -42,7 +42,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::post("teacher/upload-video", [VideoController::class, "store"]);
 
-    Route::post("teacher/update-video-info/{video_id}" , [VideoController::class , "updateVideoInfo"]);
+    Route::post("teacher/update-video-info" , [])
 
     Route::get("teacher/get-category", [CategoryController::class, "getAll"]);
 

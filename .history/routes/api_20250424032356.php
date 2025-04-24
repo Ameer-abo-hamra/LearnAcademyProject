@@ -42,8 +42,6 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::post("teacher/upload-video", [VideoController::class, "store"]);
 
-    Route::post("teacher/update-video-info/{video_id}" , [VideoController::class , "updateVideoInfo"]);
-
     Route::get("teacher/get-category", [CategoryController::class, "getAll"]);
 
     Route::get("teacher/skills/{category_id}", [SkillController::class, "getSkillFromCategory"]);
@@ -68,7 +66,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::get("teacher/specializations" , [SpecilizationController::class , "getSpecializations"]);
 
-    Route::post("teacher/update-specialization/{specialization_id}" , [SpecilizationController::class , "updateSpecialization"]);
+    Route::put("teacher/update-specialization/{specialization_id}" , [SpecilizationController::class , "updateSpecialization"]);
 
     Route::get("teacher/specialization-courses/{spec_id}" , [SpecilizationController::class , "getSpecializationCourse"]);
 
