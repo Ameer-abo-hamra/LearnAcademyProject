@@ -10,10 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('questions', function (Blueprint $table) {
+        Schema::create('specilizations', function (Blueprint $table) {
             $table->id();
-            $table->text("text");
-            $table->foreignId("quize_id")->references("id")->on("quizes")->cascadeOnDelete();
+            $table->string("title");
+            $table->string("image");
+            $table->foreignId("teacher_id")->references("id")->on("teachers")->;
+            $table->boolean("is_completed");
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('specilizations');
     }
 };

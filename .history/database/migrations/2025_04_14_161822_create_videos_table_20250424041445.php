@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string("image") ;
             $table->string("disk");
             $table->integer("teacher_id");
-            $table->foreignId("course_id")->references("id")->on("courses")->cascadeOnDelete();
+            $table->foreignId("course_id")->references("id")->on("courses")->;
             $table->timestamps();
         });
     }

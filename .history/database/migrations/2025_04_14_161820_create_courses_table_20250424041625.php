@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->integer("points_earned")->default(0);
             $table->timestamps();
         });
-    }
+    }8
 
     /**
      * Reverse the migrations.
