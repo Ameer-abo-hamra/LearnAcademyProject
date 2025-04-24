@@ -46,8 +46,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::post("teacher/add-course-attachmet", [CourseAttachmentsController::class, "addAttachment"]);
 
-    Route::post("teacher/update-attachments/{attachment_id}" , [CourseAttachmentsController::class, "updateAttachment"]);
-
+    
     Route::post("teacher/create-specialization", [SpecilizationController::class, "createSpecialization"]);
 
     Route::get("teacher/publish-course/{course_id}", [CourseController::class, "publishCourse"]);

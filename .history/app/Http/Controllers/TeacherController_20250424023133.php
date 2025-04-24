@@ -103,25 +103,6 @@ class TeacherController extends Controller
         }
     }
 
-    public function getProfile()
-{
-    try {
-        $teacher = u("teacher"); // أو u("teacher") إذا عندك هالـ helper
-
-        if (!$teacher) {
-            return $this->returnError("Teacher not authenticated", 401);
-        }
-
-        // إضافة رابط الصورة
-        $teacher->image_link = $teacher->image_url;
-
-        return $this->returnData("Teacher profile fetched successfully", $teacher->makeHidden("password"));
-
-    } catch (\Exception $e) {
-        return $this->returnError($e->getMessage());
-    }
-}
-
     public function login(Request $request)
     {
 

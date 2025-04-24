@@ -58,64 +58,44 @@ class TeacherController extends Controller
     }
 
     public function updateProfile(Request $request)
-    {
-        $teacher =u("teacher"); // أو u("teacher") إذا كنت تستخدمها
+{
+    $teacher = auth()->user(); // أو u("teacher") إذا كنت تستخدمها
 
-        $validator = Validator::make($request->all(), [
-            'full_name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:teachers,email,' . $teacher->id,
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:4048',
-            'specialization' => 'sometimes|required|string|max:255',
-            'age' => 'sometimes|required|integer|min:16|max:100',
-            'gender' => 'sometimes|required|in:0,1',
-            'username' => 'sometimes|required|string|min:4|max:50|unique:teachers,username,' . $teacher->id,
-        ]);
+    $validator = Validator::make($request->all(), [
+        'full_name' => 'sometimes|required|string|max:255',
+        'email' => 'sometimes|required|string|email|max:255|unique:teachers,email,' . $teacher->id,
+        'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:4048',
+        'specialization' => 'sometimes|required|string|max:255',
+        'age' => 'sometimes|required|integer|min:16|max:100',
+        'gender' => 'sometimes|required|in:0,1',
+        'password' => 'sometimes|required|string|min:6|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+        'username' => 'sometimes|required|string|min:4|max:50|unique:teachers,username,' . $teacher->id,
+    ]);
 
-        if ($validator->fails()) {
-            return $this->returnError($validator->errors()->first());
-        }
-
-        try {
-            if ($request->has('full_name'))
-                $teacher->full_name = $request->full_name;
-            if ($request->has('email'))
-                $teacher->email = $request->email;
-            if ($request->has('username'))
-                $teacher->username = $request->username;
-            if ($request->has('specialization'))
-                $teacher->specialization = $request->specialization;
-            if ($request->has('age'))
-                $teacher->age = $request->age;
-            if ($request->has('gender'))
-                $teacher->gender = $request->gender;
-
-            if ($request->hasFile('image')) {
-                $teacher->image = imageUpload($request, $teacher->id, "teacher_image");
-            }
-
-            $teacher->save();
-            $teacher->image_link = $teacher->image_url;
-
-            return $this->returnData('Your profile has been updated successfully.', $teacher, 200);
-
-        } catch (\Exception $e) {
-            return $this->returnError($e->getMessage());
-        }
+    if ($validator->fails()) {
+        return $this->returnError($validator->errors()->first());
     }
 
-    public function getProfile()
-{
     try {
-        $teacher = u("teacher"); // أو u("teacher") إذا عندك هالـ helper
+        if ($request->has('full_name')) $teacher->full_name = $request->full_name;
+        if ($request->has('email')) $teacher->email = $request->email;
+        if ($request->has('username')) $teacher->username = $request->username;
+        if ($request->has('specialization')) $teacher->specialization = $request->specialization;
+        if ($request->has('age')) $teacher->age = $request->age;
+        if ($request->has('gender')) $teacher->gender = $request->gender;
 
-        if (!$teacher) {
-            return $this->returnError("Teacher not authenticated", 401);
+        if ($request->has('password')) {
+            $teacher->password = Hash::make($request->password);
         }
 
-        // إضافة رابط الصورة
+        if ($request->hasFile('image')) {
+            $teacher->image = imageUpload($request, $teacher->id, "teacher_image");
+        }
+
+        $teacher->save();
         $teacher->image_link = $teacher->image_url;
 
-        return $this->returnData("Teacher profile fetched successfully", $teacher->makeHidden("password"));
+        return $this->returnData('Your profile has been updated successfully.', $teacher, 200);
 
     } catch (\Exception $e) {
         return $this->returnError($e->getMessage());

@@ -26,15 +26,11 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
 Route::group(["middleware" => 'checkuser:teacher'], function () {
 
-    Route::post("teacher/update-profile" , [TeacherController::class , "updateProfile"]);
-
-    Route::get("teacher/profile" , [TeacherController::class , "getProfile"]);
+    Route::post("teacher/update-profile" , [TeacherController::class , "updateProfile"])
 
     Route::get('teacher/logout', [TeacherController::class, "logout"]);
 
     Route::post("teacher/make-course", [CourseController::class, "makeCourse"]);
-
-    Route::post("teacher/update-course/{course_id}" , [CourseController::class , "updateCourse"]);
 
     Route::post('teacher/add-quiz', [QuizeController::class, "addQuize"]);
 
@@ -45,8 +41,6 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
     Route::get("teacher/skills/{category_id}", [SkillController::class, "getSkillFromCategory"]);
 
     Route::post("teacher/add-course-attachmet", [CourseAttachmentsController::class, "addAttachment"]);
-
-    Route::post("teacher/update-attachments/{attachment_id}" , [CourseAttachmentsController::class, "updateAttachment"]);
 
     Route::post("teacher/create-specialization", [SpecilizationController::class, "createSpecialization"]);
 

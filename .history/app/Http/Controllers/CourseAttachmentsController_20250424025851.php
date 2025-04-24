@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Models\CourseAttachments;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Validator;
@@ -34,7 +33,7 @@ class CourseAttachmentsController extends Controller
                 $file = $request->file("attachments.$index.file");
 
                 $folder = "$teacherId/{$course->id}";
-                $filePath = $file->storeAs($folder, $course->id . "." . $file->getClientOriginalExtension(), 'course_attachments');
+                $filePath = $file->storeAs($folder,$, 'course_attachments');
             }
 
             // أنشئ السطر في قاعدة البيانات
@@ -46,44 +45,5 @@ class CourseAttachmentsController extends Controller
 
         return $this->returnSuccess("Attachments uploaded successfully");
     }
-
-    public function updateAttachment(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'text' => 'nullable|string|required_without:file',
-            'file' => 'nullable|file|mimes:pdf|max:10240|required_without:text',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->returnError($validator->errors()->first(), 422);
-        }
-
-        $attachment = CourseAttachments::find($id);
-
-        if (!$attachment) {
-            return $this->returnError("Attachment not found", 404);
-        }
-
-        $course = $attachment->course;
-        $teacherId = $course->teacher_id;
-
-        // تحديث الملف إذا وُجد
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $folder = "$teacherId/{$course->id}";
-            $filePath = $file->storeAs($folder, $course->id . "." . $file->getClientOriginalExtension(), 'course_attachments');
-            $attachment->file_path = $filePath;
-        }
-
-        // تحديث النص إذا وُجد
-        if ($request->has('text')) {
-            $attachment->text = $request->input('text');
-        }
-
-        $attachment->save();
-
-        return $this->returnSuccess("Attachment updated successfully");
-    }
-
 
 }

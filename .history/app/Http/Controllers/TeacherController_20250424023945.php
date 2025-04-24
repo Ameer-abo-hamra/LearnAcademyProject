@@ -115,7 +115,7 @@ class TeacherController extends Controller
         // إضافة رابط الصورة
         $teacher->image_link = $teacher->image_url;
 
-        return $this->returnData("Teacher profile fetched successfully", $teacher->makeHidden("password"));
+        return $this->returnData("Teacher profile fetched successfully", $teacher);
 
     } catch (\Exception $e) {
         return $this->returnError($e->getMessage());

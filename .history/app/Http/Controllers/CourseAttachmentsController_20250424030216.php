@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Models\CourseAttachments;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Validator;
@@ -58,7 +57,7 @@ class CourseAttachmentsController extends Controller
             return $this->returnError($validator->errors()->first(), 422);
         }
 
-        $attachment = CourseAttachments::find($id);
+        $attachment = CourseAttachment::find($id);
 
         if (!$attachment) {
             return $this->returnError("Attachment not found", 404);

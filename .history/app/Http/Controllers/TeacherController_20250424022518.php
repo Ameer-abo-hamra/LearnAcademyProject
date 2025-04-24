@@ -59,7 +59,7 @@ class TeacherController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $teacher =u("teacher"); // أو u("teacher") إذا كنت تستخدمها
+        $teacher = auth()->user(); // أو u("teacher") إذا كنت تستخدمها
 
         $validator = Validator::make($request->all(), [
             'full_name' => 'sometimes|required|string|max:255',
@@ -68,6 +68,7 @@ class TeacherController extends Controller
             'specialization' => 'sometimes|required|string|max:255',
             'age' => 'sometimes|required|integer|min:16|max:100',
             'gender' => 'sometimes|required|in:0,1',
+            'password' => 'sometimes|required|string|min:6|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
             'username' => 'sometimes|required|string|min:4|max:50|unique:teachers,username,' . $teacher->id,
         ]);
 
@@ -89,6 +90,10 @@ class TeacherController extends Controller
             if ($request->has('gender'))
                 $teacher->gender = $request->gender;
 
+            if ($request->has('password')) {
+                $teacher->password = Hash::make($request->password);
+            }
+
             if ($request->hasFile('image')) {
                 $teacher->image = imageUpload($request, $teacher->id, "teacher_image");
             }
@@ -102,25 +107,6 @@ class TeacherController extends Controller
             return $this->returnError($e->getMessage());
         }
     }
-
-    public function getProfile()
-{
-    try {
-        $teacher = u("teacher"); // أو u("teacher") إذا عندك هالـ helper
-
-        if (!$teacher) {
-            return $this->returnError("Teacher not authenticated", 401);
-        }
-
-        // إضافة رابط الصورة
-        $teacher->image_link = $teacher->image_url;
-
-        return $this->returnData("Teacher profile fetched successfully", $teacher->makeHidden("password"));
-
-    } catch (\Exception $e) {
-        return $this->returnError($e->getMessage());
-    }
-}
 
     public function login(Request $request)
     {
