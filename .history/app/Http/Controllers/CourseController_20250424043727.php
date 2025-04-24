@@ -263,7 +263,7 @@ class CourseController extends Controller
         $category = $course->category->title;
 
         $data = [
-            "course" =>  $firstCourse,
+            "course" => ${},
             "requirements" => $requirements,
             "aquirements" => $aquirements,
             "attachments" => $attachments,

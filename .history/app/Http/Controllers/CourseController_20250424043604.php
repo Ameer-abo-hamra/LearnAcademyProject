@@ -110,12 +110,7 @@ class CourseController extends Controller
             $course = Course::findOrFail($id);
 
             $course->fill($request->only([
-                'name',
-                'description',
-                'level',
-                'point_to_enroll',
-                'points_earned',
-                'category_id'
+                'name', 'description', 'level', 'point_to_enroll', 'points_earned', 'category_id'
             ]));
 
             if ($request->hasFile('image')) {
@@ -196,14 +191,10 @@ class CourseController extends Controller
         $teacher = u("teacher");
         $course = $teacher->courses()->where("id", $courseId)->first();
         $firstCourse = [
-            "name" => $course->name,
-            "status" => $course->status,
-            "description" => $course->description,
-            "image" => $course->image,
-            "level" => $course->level,
-            "point_to_enroll" => $course->point_to_enroll,
-            "points_earned" => $course->points_earned
-        ];
+            "name" =>$course->name ,
+            "status" =>$course->status ,
+            "description"=>
+        ] ;
         if (!$course) {
             return $this->returnError("You don't have permission to see course details");
         }
@@ -226,7 +217,7 @@ class CourseController extends Controller
 
         // تحميل الكويزات
         $quizes = $course->quiezes()
-            ->select("title", "from_video", "to_video", "is_final")
+            ->select("title", "from_video", "to_video" , "is_final")
             ->get()
             ->map(function ($quiz) {
                 return (object) [
@@ -263,7 +254,7 @@ class CourseController extends Controller
         $category = $course->category->title;
 
         $data = [
-            "course" =>  $firstCourse,
+            "course"=>$firstCourse ,
             "requirements" => $requirements,
             "aquirements" => $aquirements,
             "attachments" => $attachments,
