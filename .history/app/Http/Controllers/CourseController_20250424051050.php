@@ -235,7 +235,7 @@ class CourseController extends Controller
                     "from_video" => $quiz->from_video,
                     "to_video" => $quiz->to_video,
                     "is_final" => $quiz->is_final,
-                    "id" => $quiz->id
+                    "id"
                 ];
             });
 
