@@ -26,23 +26,23 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
 Route::group(["middleware" => 'checkuser:teacher'], function () {
 
-    Route::post("teacher/update-profile", [TeacherController::class, "updateProfile"]);
+    Route::post("teacher/update-profile" , [TeacherController::class , "updateProfile"]);
 
-    Route::get("teacher/profile", [TeacherController::class, "getProfile"]);
+    Route::get("teacher/profile" , [TeacherController::class , "getProfile"]);
 
     Route::get('teacher/logout', [TeacherController::class, "logout"]);
 
     Route::post("teacher/make-course", [CourseController::class, "makeCourse"]);
 
-    Route::post("teacher/update-course/{course_id}", [CourseController::class, "updateCourse"]);
+    Route::post("teacher/update-course/{course_id}" , [CourseController::class , "updateCourse"]);
 
     Route::post('teacher/add-quiz', [QuizeController::class, "addQuize"]);
 
-    Route::put("teacher/update-quiz/{quiz_id}", [QuizeController::class, "updateQuize"]);
+    Route::put("teacher/update-quiz/{quiz_id}" , [QuizeController::class , "updateQuize"]);
 
     Route::post("teacher/upload-video", [VideoController::class, "store"]);
 
-    Route::post("teacher/update-video-info/{video_id}", [VideoController::class, "updateVideoInfo"]);
+    Route::post("teacher/update-video-info/{video_id}" , [VideoController::class , "updateVideoInfo"]);
 
     Route::get("teacher/get-category", [CategoryController::class, "getAll"]);
 
@@ -50,7 +50,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::post("teacher/add-course-attachmet", [CourseAttachmentsController::class, "addAttachment"]);
 
-    Route::post("teacher/update-attachments/{attachment_id}", [CourseAttachmentsController::class, "updateAttachment"]);
+    Route::post("teacher/update-attachments/{attachment_id}" , [CourseAttachmentsController::class, "updateAttachment"]);
 
     Route::post("teacher/create-specialization", [SpecilizationController::class, "createSpecialization"]);
 
@@ -60,19 +60,19 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::put('/teacher/{video}/questions', [VideoController::class, 'updateQuestions']);
 
-    Route::get("teacher/courses", [CourseController::class, "getTeacherCourses"]);
+    Route::get("teacher/courses" , [CourseController::class , "getTeacherCourses"]);
 
-    Route::get("teacher/courses-title-id", [CourseController::class, "getTeacherCoursesTitleId"]);
+    Route::get("teacher/courses-title-id" , [CourseController::class , "getTeacherCoursesTitleId"]);
 
-    Route::get("teacher/course-video", [VideoController::class, "getCourseVideo"]);
+    Route::get("teacher/course-video/{course_id}/{}" , [VideoController::class , "getCourseVideos"]);
 
-    Route::get("teacher/specializations", [SpecilizationController::class, "getSpecializations"]);
+    Route::get("teacher/specializations" , [SpecilizationController::class , "getSpecializations"]);
 
-    Route::post("teacher/update-specialization/{specialization_id}", [SpecilizationController::class, "updateSpecialization"]);
+    Route::post("teacher/update-specialization/{specialization_id}" , [SpecilizationController::class , "updateSpecialization"]);
 
-    Route::get("teacher/specialization-courses/{spec_id}", [SpecilizationController::class, "getSpecializationCourse"]);
+    Route::get("teacher/specialization-courses/{spec_id}" , [SpecilizationController::class , "getSpecializationCourse"]);
 
-    Route::get("teacher/course-details/{course_id}", [CourseController::class, "getCourseDetails"]);
+    Route::get("teacher/course-details/{course_id}" , [CourseController::class , "getCourseDetails"]);
 });
 
 

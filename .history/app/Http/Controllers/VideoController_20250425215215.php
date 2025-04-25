@@ -247,30 +247,17 @@ class VideoController extends Controller
         }
     }
 
-    public function getCourseVideo(Request $request)
+    public function getCourseVideo(Request $request, $id)
     {
-        $course_id = $request->query("course_id");
-        $video_id = $request->query("video_id");
+        $perPage = $request->input('per_page', 10); // القيمة الافتراضية هي 10
+        // الحصول على رقم الصفحة من الـ Request (افتراضي 1)
+        $page = $request->input('page_number', 1); // القيمة الافتراضية هي 1
+        $teacherCourses = u("teacher")->courses();
+        $course = $teacherCourses->find($id)->first();
+        $videos = $course->videos()->paginate($perPage, ["*"], "page", $page);
+        return $this->returnData("", $videos->items(), 200, $videos);
 
-        if (!$course_id || !$video_id) {
-            return $this->returnError("course_id and video_id are required", 400);
-        }
-
-        // تحقق من أن المعلم يمتلك الكورس
-        $course = u("teacher")->courses()->where("id", $course_id)->first();
-        if (!$course) {
-            return $this->returnError("Course not found or not authorized", 404);
-        }
-
-        // تحقق من وجود الفيديو داخل الكورس
-        $video = $course->videos()->where("id", $video_id)->first();
-        if (!$video) {
-            return $this->returnError("Video not found in this course", 404);
-        }
-
-        return $this->returnData("Video fetched successfully", $video, 200);
     }
-
 
 
 }

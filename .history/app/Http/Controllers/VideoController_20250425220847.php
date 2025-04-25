@@ -252,6 +252,7 @@ class VideoController extends Controller
         $course_id = $request->query("course_id");
         $video_id = $request->query("video_id");
 
+        // تحقق من وجود الـ course_id و video_id
         if (!$course_id || !$video_id) {
             return $this->returnError("course_id and video_id are required", 400);
         }
@@ -270,7 +271,7 @@ class VideoController extends Controller
 
         return $this->returnData("Video fetched successfully", $video, 200);
     }
-
+    
 
 
 }

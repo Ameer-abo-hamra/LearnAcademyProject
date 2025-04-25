@@ -64,7 +64,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 
     Route::get("teacher/courses-title-id", [CourseController::class, "getTeacherCoursesTitleId"]);
 
-    Route::get("teacher/course-video", [VideoController::class, "getCourseVideo"]);
+    Route::get("teacher/course-video/{course_id}/{video_id}", [VideoController::class, "getCourseVideos"]);
 
     Route::get("teacher/specializations", [SpecilizationController::class, "getSpecializations"]);
 
