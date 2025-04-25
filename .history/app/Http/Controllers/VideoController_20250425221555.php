@@ -267,17 +267,14 @@ class VideoController extends Controller
         if (!$video) {
             return $this->returnError("Video not found in this course", 404);
         }
-
-        // تحميل الأسئلة مع الخيارات
-        $video->load('questions.choices', 'scripts', 'extensions', 'audios');
-
+        $scripts  = $video->scripts ;
+            $ex
         $data = [
-            "scripts" => $video->scripts,
-            "extension" => $video->extensions,
-            "questionsWithChoices" => $video->questions,
-            "video_audios" => $video->audios
+            "scripts" => $video->scripts ,
+            "extension"=> $video->extensions,
+            "questionsWithChoices" => $video->questions()->with("choices") ,
+            "video_audios"=>$video->audios
         ];
-
         return $this->returnData("Video fetched successfully", $data, 200);
     }
 
