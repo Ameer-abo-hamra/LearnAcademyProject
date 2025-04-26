@@ -50,7 +50,10 @@ class ConvertVideoForStreaming implements ShouldQueue
         $path = $this->video->teacher_id . '/' .
             $this->video->course_id . '/' .
             $this->video->id . '/master.m3u8';
-        $this->video->path = assetFromDisk("streamable_videos", $path);
+        // $this->video->path = Storage::disk('streamable_videos')->url($path);
+        $this->video->path = rtrim(config('app.url'), '/') . '/streamable_videos/' . ltrim($path, '/');
+
         $this->video->save();
+
     }
 }

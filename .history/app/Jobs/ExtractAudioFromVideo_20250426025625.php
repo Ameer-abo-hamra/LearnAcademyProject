@@ -57,7 +57,7 @@ class ExtractAudioFromVideo implements ShouldQueue
                 ->inFormat(new Mp3)
                 ->save($audioFileName);
             $video->audios()->create([
-                "path" =>   assetFromDisk($disk , $audioFileName)
+                "path" =>   assetFromDisk("" )
             ]);
             // ✅ إزالة الصوت من الفيديو باستخدام الفلتر '-an'
             FFMpeg::fromDisk($disk)

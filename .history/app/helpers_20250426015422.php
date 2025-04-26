@@ -60,7 +60,7 @@ function assetFromDisk($disk, $filename)
     $path = $folder . '/' . ltrim($filename, '/');
 
     return rtrim(env('APP_URL'), '/') . '/' . $path;
-    // return  $path;x
+    return  $path;
 }
 
 function u($guard)

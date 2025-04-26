@@ -98,9 +98,8 @@ class VideoController extends Controller
                 if ($hasFile) {
                     $extFile = $request->file("extension.file");
                     $folderPath = "{$video->teacher_id}/{$video->course_id}/{$video->id}";
-                    $extFilePath = $extFile->storeAs($folderPath, $video->id . '.'. $request->file("extension.file")->getClientOriginalExtension(), 'video_extension');
-                    $extFilePath = assetFromDisk("video_extension", $extFilePath);
-                    // return $this->returnData("" , $extFilePath);
+                    $extFilePath = $extFile->storeAs($folderPath, $video->id.$request->file("extension.file")->getExtension(), 'video_extension');
+                    $extFilePath = assetFromDisk("video_extension" , extp)
                 }
 
                 $video->extensions()->create([

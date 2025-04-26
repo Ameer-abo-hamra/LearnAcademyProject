@@ -98,9 +98,7 @@ class VideoController extends Controller
                 if ($hasFile) {
                     $extFile = $request->file("extension.file");
                     $folderPath = "{$video->teacher_id}/{$video->course_id}/{$video->id}";
-                    $extFilePath = $extFile->storeAs($folderPath, $video->id . '.'. $request->file("extension.file")->getClientOriginalExtension(), 'video_extension');
-                    $extFilePath = assetFromDisk("video_extension", $extFilePath);
-                    // return $this->returnData("" , $extFilePath);
+                    $extFilePath = $extFile->storeAs($folderPath, $video->id, 'video_extension');
                 }
 
                 $video->extensions()->create([
@@ -273,9 +271,15 @@ class VideoController extends Controller
         // تحميل الأسئلة مع الخيارات
         $video->load('questions.choices', 'scripts', 'extensions', 'audios');
 
+        $data = [
+            "video" => $video
+            "scripts" => $video->scripts,
+            "extension" => $video->extensions,
+            "questionsWithChoices" => $video->questions,
+            "video_audios" => $video->audios
+        ];
 
-
-        return $this->returnData("Video fetched successfully", $video, 200);
+        return $this->returnData("Video fetched successfully", $data, 200);
     }
 
 

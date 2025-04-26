@@ -56,11 +56,11 @@ function imageUpload($request, $id, $diskname): string|bool
 
 function assetFromDisk($disk, $filename)
 {
-    $folder = basename(config("filesystems.disks.$disk.root")); // مثل: course_attachments
+    $folder = basename(config("filesystems.disks.$disk.url")); // مثل: course_attachments
     $path = $folder . '/' . ltrim($filename, '/');
 
     return rtrim(env('APP_URL'), '/') . '/' . $path;
-    // return  $path;x
+    return rtrim(env('APP_URL'), '/') . '/' . $path;
 }
 
 function u($guard)
