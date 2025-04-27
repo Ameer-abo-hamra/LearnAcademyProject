@@ -281,7 +281,6 @@ class VideoController extends Controller
 
     public function showVideo(Request $request)
     {
-        $x = $path;
         $path = $request->query('path'); // استقبل المسار كـ GET parameter
         if (!$path) {
             return response()->json(['error' => 'Path is required'], 400);
@@ -300,8 +299,7 @@ class VideoController extends Controller
         }
 
         // إرجاع الملف مباشرة
-        return response()->file($fullPath, [
-            'path' => $x,
+        return response()->streamJson($fullPath, [
             'Content-Type' => 'application/vnd.apple.mpegurl', // أو النوع المناسب للفيديو مثل .m3u8
             'Access-Control-Allow-Origin' => '*', // السماح لأي مصدر (أو تحديد 'http://localhost:3000' فقط)
         ]);

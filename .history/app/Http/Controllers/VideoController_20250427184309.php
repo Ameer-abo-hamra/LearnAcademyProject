@@ -281,27 +281,25 @@ class VideoController extends Controller
 
     public function showVideo(Request $request)
     {
-        $x = $path;
         $path = $request->query('path'); // استقبل المسار كـ GET parameter
-        if (!$path) {
-            return response()->json(['error' => 'Path is required'], 400);
-        }
-        $url = "http://127.0.0.1:8000/streamable_videos/1/1/2/master.m3u8";
+        // if (!$path) {
+        //     return response()->json(['error' => 'Path is required'], 400);
+        // }
+        // $url = "http://127.0.0.1:8000/streamable_videos/1/1/2/master.m3u8";
 
-        // استخدام parse_url للحصول على الـ path
-        $path = parse_url($path, PHP_URL_PATH);
+        // // استخدام parse_url للحصول على الـ path
+        // $path = parse_url($path, PHP_URL_PATH);
 
-        // إزالة أول `/` لو موجود
-        $path = ltrim($path, '/');
-        // تأكد أن الملف موجود
-        $fullPath = public_path($path);
-        if (!file_exists($fullPath)) {
-            return response()->json(['error' => 'File not found'], 404);
-        }
+        // // إزالة أول `/` لو موجود
+        // $path = ltrim($path, '/');
+        // // تأكد أن الملف موجود
+        // $fullPath = public_path($path);
+        // if (!file_exists($fullPath)) {
+        //     return response()->json(['error' => 'File not found'], 404);
+        // }
 
         // إرجاع الملف مباشرة
-        return response()->file($fullPath, [
-            'path' => $x,
+        return response()->file($path, [
             'Content-Type' => 'application/vnd.apple.mpegurl', // أو النوع المناسب للفيديو مثل .m3u8
             'Access-Control-Allow-Origin' => '*', // السماح لأي مصدر (أو تحديد 'http://localhost:3000' فقط)
         ]);
