@@ -7,7 +7,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class Student extends Authenticatable implements JWTSubject
 {
-    protected $fillable = ["image", "age", "gender", "full_name", "admin_activation", "username", "password", "email", "id", "activation_code", "is_active", "free_points"];
+    protected $fillable = ["image" , "age", "gender", "full_name", "admin_activation", "username", "password", "email", "id", "activation_code", "is_active", "free_points"];
     protected $appends = ['points'];
 
     public function getPointsAttribute()
@@ -17,7 +17,7 @@ class Student extends Authenticatable implements JWTSubject
 
     public function savedCourse()
     {
-        return $this->belongsToMany(Student::class, "student_saved_course", "student_id", "course_id");
+        return $this->belongsToMany(Student::class, "student_saved_course", "course_id", "student_id");
     }
 
     public function addFreePoints($points = 1)

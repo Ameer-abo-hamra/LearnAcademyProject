@@ -269,7 +269,9 @@ class StudentController extends Controller
 
             $pointsNeeded = $course->point_to_enroll;
 
+            // خصم النقاط
             if ($student->free_points >= $pointsNeeded) {
+                // يكفي من free_points فقط
                 $student->free_points -= $pointsNeeded;
             } else {
                 $remaining = $pointsNeeded - $student->free_points;

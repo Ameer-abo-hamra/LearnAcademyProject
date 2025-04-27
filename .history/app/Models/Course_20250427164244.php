@@ -14,10 +14,7 @@ class Course extends Model
         return $this->videos()->count();
     }
 
-    public function savedCourse()
-    {
-        return $this->belongsToMany(Student::class, "student_saved_course", "course_id", "student_id");
-    }
+    
     protected $fillable = ["points_earned", "category_id", "point_to_enroll", "name", "description", "specilization_id", "teacher_id", "status", "image", "level"];
     public function getImageUrlAttribute()
     {

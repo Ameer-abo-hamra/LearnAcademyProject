@@ -6,7 +6,7 @@ return [
 
     'allowed_methods' => ['*'], // جميع الميثودز مثل GET, POST, PUT
 
-    'allowed_origins' => ['http://127.0.0.1:3000/*'], // <-- عدل هنا، لا تستخدم *
+    'allowed_origins' => ['http://127.0.0.1:3000//'], // <-- عدل هنا، لا تستخدم *
 
     'allowed_origins_patterns' => [],
 

@@ -269,9 +269,12 @@ class StudentController extends Controller
 
             $pointsNeeded = $course->point_to_enroll;
 
+            // خصم النقاط
             if ($student->free_points >= $pointsNeeded) {
+                // يكفي من free_points فقط
                 $student->free_points -= $pointsNeeded;
             } else {
+                // خصم كل free_points ثم الباقي من paid_points
                 $remaining = $pointsNeeded - $student->free_points;
                 $student->free_points = 0;
                 $student->paid_points -= $remaining;
@@ -280,9 +283,10 @@ class StudentController extends Controller
             $student->save();
         }
 
+        // إلحاق الطالب بالكورس والمعلم
         $student->courses()->syncWithoutDetaching($course_id);
         $student->teachers()->syncWithoutDetaching($teacher_id);
-        broadcast(new TeacherEvent($course->teacher_id, "A new student has signed up for the course  \"$course->name\" "));
+        broadcast(new TeacherEvent($course->teacher_id, "'A new student has signed up for the course '  '\" ' .$course->name .  \" "));
 
         return $this->returnSuccess('You have been successfully enrolled in the course.');
     }
