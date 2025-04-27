@@ -288,31 +288,13 @@ class StudentController extends Controller
     }
 
 
-    public function saveCourse($course_id)
-    {
-        try {
-            // جلب الكورس أو إرسال خطأ 404
-            $course = Course::findOrFail($course_id);
+    public function saveCourse($course_id) {
 
-            $student = u('student');
-
-            // تأكد إذا الكورس محفوظ مسبقًا
-            if ($student->savedCourse()->wherePivot('course_id', $course_id)->exists()) {
-                return $this->returnError('You have already saved this course.', 409);
-            }
-
-            // حفظ الكورس بدون تكرار
-            $student->savedCourse()->attach($course_id);
-
-            return $this->returnSuccess('Course saved successfully :)');
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return $this->returnError('This course does not exist :(', 404);
-        } catch (\Exception $e) {
-            return $this->returnError('Something went wrong: ' . $e->getMessage(), 500);
+        $course = Course::find($course_id)->first();
+        if(!$course) {
+            return $this->returnError()
         }
     }
-
 }
 
 

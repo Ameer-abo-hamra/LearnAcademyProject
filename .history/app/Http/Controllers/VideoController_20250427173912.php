@@ -288,7 +288,7 @@ public function showVideo(Request $request)
     $url = "http://127.0.0.1:8000/streamable_videos/1/1/2/master.m3u8";
 
     // استخدام parse_url للحصول على الـ path
-    $path = parse_url($path, PHP_URL_PATH);
+    $path = parse_url($url, PHP_URL_PATH);
 
     // إزالة أول `/` لو موجود
     $path = ltrim($path, '/');

@@ -297,12 +297,12 @@ class StudentController extends Controller
             $student = u('student');
 
             // تأكد إذا الكورس محفوظ مسبقًا
-            if ($student->savedCourse()->wherePivot('course_id', $course_id)->exists()) {
+            if ($student->savedCourse->where('course_id', $course_id)->exists()) {
                 return $this->returnError('You have already saved this course.', 409);
             }
 
             // حفظ الكورس بدون تكرار
-            $student->savedCourse()->attach($course_id);
+            $student->savedCourse()->($course_id);
 
             return $this->returnSuccess('Course saved successfully :)');
 

@@ -17,7 +17,7 @@ class Student extends Authenticatable implements JWTSubject
 
     public function savedCourse()
     {
-        return $this->belongsToMany(Course::class, "student_saved_course", "student_id", "course_id");
+        return $this->belongsToMany(}خعقسث::class, "student_saved_course", "student_id", "course_id");
     }
 
     public function addFreePoints($points = 1)

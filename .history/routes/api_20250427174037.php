@@ -52,7 +52,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
     Route::post("teacher/update-video-info/{video_id}", [VideoController::class, "updateVideoInfo"]);
 
 
-    Route::get ("teacher/show-video" , [VideoController::class , "showVideo"]);
+    Route::get ("teacher/show")
     Route::post("teacher/add-course-attachmet", [CourseAttachmentsController::class, "addAttachment"]);
 
     Route::post("teacher/update-attachments/{attachment_id}", [CourseAttachmentsController::class, "updateAttachment"]);

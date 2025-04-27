@@ -278,30 +278,6 @@ class VideoController extends Controller
         return $this->returnData("Video fetched successfully", $video, 200);
     }
 
+    public function showVideo()
 
-public function showVideo(Request $request)
-{
-    $path = $request->query('path'); // استقبل المسار كـ GET parameter
-    if (!$path) {
-        return response()->json(['error' => 'Path is required'], 400);
-    }
-    $url = "http://127.0.0.1:8000/streamable_videos/1/1/2/master.m3u8";
-
-    // استخدام parse_url للحصول على الـ path
-    $path = parse_url($path, PHP_URL_PATH);
-
-    // إزالة أول `/` لو موجود
-    $path = ltrim($path, '/');
-    // تأكد أن الملف موجود
-    $fullPath = public_path($path);
-    if (!file_exists($fullPath)) {
-        return response()->json(['error' => 'File not found'], 404);
-    }
-
-    // إرجاع الملف مباشرة
-    return response()->file($fullPath, [
-        'Content-Type' => 'application/vnd.apple.mpegurl', // هذا الميم تايب الخاص بـ m3u8
-    ]);
-
-}
 }

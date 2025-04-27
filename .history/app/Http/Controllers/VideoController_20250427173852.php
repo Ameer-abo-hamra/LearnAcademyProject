@@ -285,13 +285,7 @@ public function showVideo(Request $request)
     if (!$path) {
         return response()->json(['error' => 'Path is required'], 400);
     }
-    $url = "http://127.0.0.1:8000/streamable_videos/1/1/2/master.m3u8";
 
-    // استخدام parse_url للحصول على الـ path
-    $path = parse_url($path, PHP_URL_PATH);
-
-    // إزالة أول `/` لو موجود
-    $path = ltrim($path, '/');
     // تأكد أن الملف موجود
     $fullPath = public_path($path);
     if (!file_exists($fullPath)) {
@@ -303,5 +297,4 @@ public function showVideo(Request $request)
         'Content-Type' => 'application/vnd.apple.mpegurl', // هذا الميم تايب الخاص بـ m3u8
     ]);
 
-}
 }

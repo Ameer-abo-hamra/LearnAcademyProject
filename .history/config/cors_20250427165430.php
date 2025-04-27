@@ -2,11 +2,11 @@
 
 return [
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie' , '/streamable_videos/*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'], // جميع الميثودز مثل GET, POST, PUT
 
-    'allowed_origins' => ['http://localhost:3000'], // <-- عدل هنا، لا تستخدم *
+    'allowed_origins' => ['http://local/*'], // <-- عدل هنا، لا تستخدم *
 
     'allowed_origins_patterns' => [],
 

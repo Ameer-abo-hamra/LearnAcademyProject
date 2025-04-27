@@ -28,7 +28,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::post("student/enroll-course/{course_id}" ,[StudentController::class , "courseEnroll"] );
 
-    Route::post("student/save-course/{course_id}" , [StudentController::class , "saveCourse"]);
+    Route::post("student/save-course/$course_id" , [])
 });
 
 Route::group(["middleware" => 'checkuser:teacher'], function () {
@@ -52,7 +52,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
     Route::post("teacher/update-video-info/{video_id}", [VideoController::class, "updateVideoInfo"]);
 
 
-    Route::get ("teacher/show-video" , [VideoController::class , "showVideo"]);
+
     Route::post("teacher/add-course-attachmet", [CourseAttachmentsController::class, "addAttachment"]);
 
     Route::post("teacher/update-attachments/{attachment_id}", [CourseAttachmentsController::class, "updateAttachment"]);
