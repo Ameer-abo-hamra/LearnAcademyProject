@@ -203,7 +203,7 @@ class QuizeController extends Controller
         $percentage = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100, 2) : 0;
 
         if ($quiz->is_final) {
-            // 1. تحديث حالة الكورس
+                  // 1. تحديث حالة الكورس
             $student->courses()->updateExistingPivot($quiz->course->id, [
                 'status' => 1
             ]);

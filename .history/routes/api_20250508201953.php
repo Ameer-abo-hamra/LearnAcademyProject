@@ -46,7 +46,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::get("student/courses-completed" , [StudentController::class , "getCoursesCompleted"]);
 
-    Route::get("student/courses-saved" , [StudentController::class , "getCoursesSaved"]);
+    Route::get("student/courses-saved" , [StudentController::class , "getCoursesCompleted"]);
 
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {

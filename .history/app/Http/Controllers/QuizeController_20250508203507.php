@@ -202,38 +202,7 @@ class QuizeController extends Controller
 
         $percentage = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100, 2) : 0;
 
-        if ($quiz->is_final) {
-            // 1. تحديث حالة الكورس
-            $student->courses()->updateExistingPivot($quiz->course->id, [
-                'status' => 1
-            ]);
 
-            // 2. تأكد من وجود سجل في quiz_student (حتى بدون نقاط)
-            $student->quizes()->syncWithoutDetaching([
-                $quiz->id => ['is_rewarded' => false]
-            ]);
-
-            // 3. التحقق من النسبة ومنح النقاط إن لم تُمنح مسبقًا
-            if ($percentage >= 70) {
-                $alreadyRewarded = $student->quizes()
-                    ->where('quiz_id', $quiz->id)
-                    ->wherePivot('is_rewarded', true)
-                    ->exists();
-
-                if (!$alreadyRewarded) {
-                    if ($quiz->course->point_to_enroll > 0 && $quiz->course->point_to_enroll < 10) {
-                        $student->free_points += $quiz->course->points_earned;
-                    } else {
-                        $student->paid_points += $quiz->course->points_earned;
-                    }
-
-                    $student->save();
-
-                    // تحديث is_rewarded إلى true
-                    $student->quizes()->updateExistingPivot($quiz->id, ['is_rewarded' => true]);
-                }
-            }
-        }
 
         return $this->returnData('Quiz Result', [
             'total_questions' => $totalQuestions,

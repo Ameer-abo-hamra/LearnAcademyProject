@@ -230,7 +230,7 @@ class QuizeController extends Controller
                     $student->save();
 
                     // تحديث is_rewarded إلى true
-                    $student->quizes()->updateExistingPivot($quiz->id, ['is_rewarded' => true]);
+                    $student->quizzes()->updateExistingPivot($quiz->id, ['is_rewarded' => true]);
                 }
             }
         }

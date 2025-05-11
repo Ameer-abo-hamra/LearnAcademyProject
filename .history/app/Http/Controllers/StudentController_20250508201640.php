@@ -352,14 +352,6 @@ class StudentController extends Controller
 
         return $this->returnData("Courses completed", $courses);
     }
-    public function getCoursesSaved()
-    {
-        $student = u("student");
-
-        $courses = $student->savedCourse;
-
-        return $this->returnData("saved courses ", $courses);
-    }
 
 
 

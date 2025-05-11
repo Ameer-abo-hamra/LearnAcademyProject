@@ -356,9 +356,11 @@ class StudentController extends Controller
     {
         $student = u("student");
 
-        $courses = $student->savedCourse;
+        $courses = $student->courses()
+            ->wherePivot("status", 1)
+            ->get();
 
-        return $this->returnData("saved courses ", $courses);
+        return $this->returnData("Courses completed", $courses);
     }
 
 

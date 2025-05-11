@@ -356,9 +356,9 @@ class StudentController extends Controller
     {
         $student = u("student");
 
-        $courses = $student->savedCourse;
+        $courses = $student->savedCourse ;
 
-        return $this->returnData("saved courses ", $courses);
+        return $this->returnData("saved ", $courses);
     }
 
 

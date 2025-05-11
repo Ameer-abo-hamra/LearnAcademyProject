@@ -215,7 +215,7 @@ class QuizeController extends Controller
 
             // 3. التحقق من النسبة ومنح النقاط إن لم تُمنح مسبقًا
             if ($percentage >= 70) {
-                $alreadyRewarded = $student->quizes()
+                $alreadyRewarded = $student->quizzes()
                     ->where('quiz_id', $quiz->id)
                     ->wherePivot('is_rewarded', true)
                     ->exists();
@@ -230,7 +230,7 @@ class QuizeController extends Controller
                     $student->save();
 
                     // تحديث is_rewarded إلى true
-                    $student->quizes()->updateExistingPivot($quiz->id, ['is_rewarded' => true]);
+                    $student->quizzes()->updateExistingPivot($quiz->id, ['is_rewarded' => true]);
                 }
             }
         }

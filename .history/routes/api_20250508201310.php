@@ -43,10 +43,8 @@ Route::group(["middleware" => 'checkuser:student'], function () {
     Route::post("student/solve-quiz", [QuizeController::class, 'submitQuizAnswers']);
 
     Route::get("student/courses-in-progerss" , [StudentController::class , "getCoursesInProgress"]);
-
-    Route::get("student/courses-completed" , [StudentController::class , "getCoursesCompleted"]);
-
-    Route::get("student/courses-saved" , [StudentController::class , "getCoursesSaved"]);
+    
+    Route::get("student/courses-in-progerss" , [StudentController::class , "getCoursesInProgress"]);
 
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {

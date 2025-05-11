@@ -332,35 +332,11 @@ class StudentController extends Controller
         }
     }
 
-    public function getCoursesInProgress()
-    {
-        $student = u("student");
+    public function getCoursesInProgress() {
 
-        $courses = $student->courses()
-            ->wherePivot("status", 0)
-            ->get();
+        $student = u
 
-        return $this->returnData("Courses in progress", $courses);
     }
-    public function getCoursesCompleted()
-    {
-        $student = u("student");
-
-        $courses = $student->courses()
-            ->wherePivot("status", 1)
-            ->get();
-
-        return $this->returnData("Courses completed", $courses);
-    }
-    public function getCoursesSaved()
-    {
-        $student = u("student");
-
-        $courses = $student->savedCourse;
-
-        return $this->returnData("saved courses ", $courses);
-    }
-
 
 
 
