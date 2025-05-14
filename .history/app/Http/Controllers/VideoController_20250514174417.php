@@ -380,8 +380,9 @@ class VideoController extends Controller
             "attachments" => $video->extensions->map(function ($attachment) {
                 return [
                     'id' => $attachment->id,
+                    'name' => $attachment->name,
                     'path' => $attachment->file_path,
-                    'text' => $attachment->text,
+                    'text' => $attachment->type,
                 ];
             }),
         ];

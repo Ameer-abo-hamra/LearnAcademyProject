@@ -316,8 +316,7 @@ class VideoController extends Controller
     {
         $student = u("student"); // Authenticated student
 
-        $video = Video::with(['course', 'questions.choices', 'extensions'])->find($video_id);
-
+        $video = Video::with('course')->find($video_id);
         if (!$video) {
             return $this->returnError("Video not found.");
         }
@@ -354,41 +353,18 @@ class VideoController extends Controller
         if (!$alreadyWatched) {
             $student->studentCourseVideos()->attach($video->id, ['completed_at' => now()]);
         }
-
-        // إعداد البيانات المسترجعة
-        $data = [
+            $question = $video->load("questions.choices") ;
+        // إرجاع بيانات الفيديو
+        return $this->returnData("video", [
             "id" => $video->id,
             "title" => $video->title,
             "description" => $video->description,
             "path" => $video->path,
             "image" => $video->image,
             "sequential_order" => $video->sequential_order,
-            "questions" => $video->questions->map(function ($question) {
-                return [
-                    'id' => $question->id,
-                    'question_text' => $question->question,
-                    "time_to_appear" => $question->time_to_appear,
-                    'choices' => $question->choices->map(function ($choice) {
-                        return [
-                            'id' => $choice->id,
-                            'text' => $choice->choice,
-                            'is_correct' => $choice->is_correct, // إذا بدك تحذفها للطالب ممكن تستثنيها
-                        ];
-                    }),
-                ];
-            }),
-            "attachments" => $video->extensions->map(function ($attachment) {
-                return [
-                    'id' => $attachment->id,
-                    'path' => $attachment->file_path,
-                    'text' => $attachment->text,
-                ];
-            }),
-        ];
-
-        return $this->returnData("Video loaded successfully", $data);
+            "questions" => $question
+        ]);
     }
-
 
 
     public function completeVideo($video_id)

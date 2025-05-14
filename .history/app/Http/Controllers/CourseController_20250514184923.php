@@ -446,10 +446,10 @@ class CourseController extends Controller
         if (!$course) {
             return $this->returnError("Course not found.");
         }
-        $isEnrolled = $student->courses()->where('courses.id', $course_id)->exists();
+    $isEnrolled = $student->courses()->where('courses.id', $course_id)->exists();
 
-        // التحقق من حفظ الكورس
-        $isSaved = $student->savedCourse()->where('courses.id', $course_id)->exists();
+    // التحقق من حفظ الكورس
+    $isSaved = $student->savedCourse()->where('courses.id', $course_id)->exists();
 
         // بيانات الدورة الأساسية
         $firstCourse = [
@@ -460,8 +460,8 @@ class CourseController extends Controller
             "level" => $course->level,
             "point_to_enroll" => $course->point_to_enroll,
             "points_earned" => $course->points_earned,
-            "is_enrolled" => $isEnrolled,
-            "is_saved" => $isSaved,
+                   "is_enrolled" => $isEnrolled,
+        "is_saved" => $isSaved,
         ];
 
         // تحميل الفيديوهات المرتبة

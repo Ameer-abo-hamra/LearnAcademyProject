@@ -312,82 +312,82 @@ class VideoController extends Controller
     // }
 
 
-    public function watchVideoForStudent($video_id)
-    {
-        $student = u("student"); // Authenticated student
+ public function watchVideoForStudent($video_id)
+{
+    $student = u("student"); // Authenticated student
 
-        $video = Video::with(['course', 'questions.choices', 'extensions'])->find($video_id);
+    $video = Video::with(['course', 'questions.choices', 'extensions'])->find($video_id);
 
-        if (!$video) {
-            return $this->returnError("Video not found.");
-        }
-
-        $course = $video->course;
-
-        // تحقق من التسجيل في الدورة
-        $isEnrolled = $student->courses()->where('courses.id', $course->id)->exists();
-        if (!$isEnrolled) {
-            return $this->returnError("You must enroll in the course to watch this video.");
-        }
-
-        // الحصول على الفيديوهات السابقة حسب الترتيب
-        $previousVideos = $course->videos()
-            ->where('sequential_order', '<', $video->sequential_order)
-            ->orderBy('sequential_order')
-            ->pluck('id')
-            ->toArray();
-
-        // جلب الفيديوهات التي شاهدها الطالب
-        $watchedVideos = $student->studentCourseVideos()
-            ->whereIn('video_id', $previousVideos)
-            ->pluck('video_id')
-            ->toArray();
-
-        // التأكد من أن كل الفيديوهات السابقة قد شاهدها الطالب
-        $unwatched = array_diff($previousVideos, $watchedVideos);
-        if (!empty($unwatched)) {
-            return $this->returnError("You must watch all previous videos before accessing this one.");
-        }
-
-        // تسجيل المشاهدة إذا لم تسجل مسبقًا
-        $alreadyWatched = $student->studentCourseVideos()->where('video_id', $video->id)->exists();
-        if (!$alreadyWatched) {
-            $student->studentCourseVideos()->attach($video->id, ['completed_at' => now()]);
-        }
-
-        // إعداد البيانات المسترجعة
-        $data = [
-            "id" => $video->id,
-            "title" => $video->title,
-            "description" => $video->description,
-            "path" => $video->path,
-            "image" => $video->image,
-            "sequential_order" => $video->sequential_order,
-            "questions" => $video->questions->map(function ($question) {
-                return [
-                    'id' => $question->id,
-                    'question_text' => $question->question,
-                    "time_to_appear" => $question->time_to_appear,
-                    'choices' => $question->choices->map(function ($choice) {
-                        return [
-                            'id' => $choice->id,
-                            'text' => $choice->choice,
-                            'is_correct' => $choice->is_correct, // إذا بدك تحذفها للطالب ممكن تستثنيها
-                        ];
-                    }),
-                ];
-            }),
-            "attachments" => $video->extensions->map(function ($attachment) {
-                return [
-                    'id' => $attachment->id,
-                    'path' => $attachment->file_path,
-                    'text' => $attachment->text,
-                ];
-            }),
-        ];
-
-        return $this->returnData("Video loaded successfully", $data);
+    if (!$video) {
+        return $this->returnError("Video not found.");
     }
+
+    $course = $video->course;
+
+    // تحقق من التسجيل في الدورة
+    $isEnrolled = $student->courses()->where('courses.id', $course->id)->exists();
+    if (!$isEnrolled) {
+        return $this->returnError("You must enroll in the course to watch this video.");
+    }
+
+    // الحصول على الفيديوهات السابقة حسب الترتيب
+    $previousVideos = $course->videos()
+        ->where('sequential_order', '<', $video->sequential_order)
+        ->orderBy('sequential_order')
+        ->pluck('id')
+        ->toArray();
+
+    // جلب الفيديوهات التي شاهدها الطالب
+    $watchedVideos = $student->studentCourseVideos()
+        ->whereIn('video_id', $previousVideos)
+        ->pluck('video_id')
+        ->toArray();
+
+    // التأكد من أن كل الفيديوهات السابقة قد شاهدها الطالب
+    $unwatched = array_diff($previousVideos, $watchedVideos);
+    if (!empty($unwatched)) {
+        return $this->returnError("You must watch all previous videos before accessing this one.");
+    }
+
+    // تسجيل المشاهدة إذا لم تسجل مسبقًا
+    $alreadyWatched = $student->studentCourseVideos()->where('video_id', $video->id)->exists();
+    if (!$alreadyWatched) {
+        $student->studentCourseVideos()->attach($video->id, ['completed_at' => now()]);
+    }
+
+    // إعداد البيانات المسترجعة
+    $data = [
+        "id" => $video->id,
+        "title" => $video->title,
+        "description" => $video->description,
+        "path" => $video->path,
+        "image" => $video->image,
+        "sequential_order" => $video->sequential_order,
+        "questions" => $video->questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'question_text' => $question->question,
+                'choices' => $question->choices->map(function ($choice) {
+                    return [
+                        'id' => $choice->id,
+                        'text' => $choice->text,
+                        'is_correct' => $choice->is_correct, // إذا بدك تحذفها للطالب ممكن تستثنيها
+                    ];
+                }),
+            ];
+        }),
+        "attachments" => $video->extensions->map(function ($attachment) {
+            return [
+                'id' => $attachment->id,
+                'name' => $attachment->name,
+                'path' => $attachment->path,
+                'type' => $attachment->type,
+            ];
+        }),
+    ];
+
+    return $this->returnData("Video loaded successfully", $data);
+}
 
 
 
