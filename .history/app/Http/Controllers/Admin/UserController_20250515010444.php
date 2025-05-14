@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Notification;
+use Notification;
 use Str;
 use Validator;
 

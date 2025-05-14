@@ -561,7 +561,7 @@ class UserController extends Controller
             // بث الحدث باستخدام TeacherEvent
             broadcast(new TeacherEvent($course->teacher->id, $message))->toOthers();
 
-            Notification::create([
+            \App\Models\Notification::create([
                 'notifiable_id' => $course->teacher->id,
                 'notifiable_type' => \App\Models\Teacher::class,
                 'sender_id' => u('admin')->id, // أو auth()->id() حسب نظام التوثيق

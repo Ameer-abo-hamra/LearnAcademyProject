@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Notification;
+use Notification;
 use Str;
 use Validator;
 
@@ -541,7 +541,7 @@ class UserController extends Controller
             }
 
             // تغيير الحالة إلى مرفوض (نفترض أن 3 = مرفوض)
-            $course->status = 0;
+            $course->status = 3;
             $course->save();
 
             // إعداد رسالة الإشعار
