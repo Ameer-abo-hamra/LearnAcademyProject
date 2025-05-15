@@ -167,7 +167,7 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/specializations/{id}/courses', [UserController::class, 'ge tCoursesBySpecialization']);
 
-    Route::get('/notifications', [UserController::class, 'getAdminNotifications']);
+        Route::get('/notifications', [UserController::class, 'getAdminNotifications']);
 
 });
 

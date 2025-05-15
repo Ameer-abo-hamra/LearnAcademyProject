@@ -411,7 +411,9 @@ class UserController extends Controller
         }
     }
 
-
+    use App\Models\Course;
+    use App\Models\Notification;
+    use App\Events\TeacherEvent;
 
     public function publishCourse($course_id)
     {
@@ -445,7 +447,7 @@ class UserController extends Controller
             Notification::create([
                 'notifiable_id' => $course->teacher->id,
                 'notifiable_type' => \App\Models\Teacher::class,
-                'sender_id' => u('admin')->id,
+                'sender_id' => u('admin')->id, // تأكد أنك تستخدم u("admin") أو auth()->id()
                 'sender_type' => \App\Models\Admin::class,
                 'title' => $message['title'],
                 'body' => $message['body'],
@@ -819,15 +821,5 @@ class UserController extends Controller
         }
     }
 
-    public function getAdminNotifications()
-    {
-        $admin = u('admin');
-
-        $notifications = $admin->notifications()
-            ->latest()
-            ->paginate(10, ['title', 'body']);
-
-        return $this->returnData('Notifications retrieved successfully', $notifications->getCollection());
-    }
 
 }

@@ -413,8 +413,7 @@ class UserController extends Controller
 
 
 
-    public function publishCourse($course_id)
-    {
+    public function publishCourse($course_id)    {
         try {
             $course = Course::with('teacher')->find($course_id);
 
@@ -819,15 +818,5 @@ class UserController extends Controller
         }
     }
 
-    public function getAdminNotifications()
-    {
-        $admin = u('admin');
-
-        $notifications = $admin->notifications()
-            ->latest()
-            ->paginate(10, ['title', 'body']);
-
-        return $this->returnData('Notifications retrieved successfully', $notifications->getCollection());
-    }
 
 }

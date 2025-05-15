@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Events\AdminEvent;
 use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseAttachments;
@@ -210,57 +209,57 @@ class CourseController extends Controller
     }
 
 
-    public function publishCourse($course_id)
-    {
-        // ✅ تحقق من وجود الكورس
-        $course = Course::with('teacher')->find($course_id);
+ public function publishCourse($course_id)
+{
+    // ✅ تحقق من وجود الكورس
+    $course = Course::with('teacher')->find($course_id);
 
-        if (!$course) {
-            return $this->returnError('Course not found', 404);
-        }
-
-        // ✅ تحقق من وجود كويز نهائي لهذا الكورس
-        $hasFinalQuiz = $course->quiezes()->where('is_final', true)->exists();
-
-        if (!$hasFinalQuiz) {
-            return $this->returnError('You must create a final quiz before publishing the course.');
-        }
-
-        // ✅ تحويل الحالة إلى 1 (بانتظار موافقة الأدمن)
-        $course->status = 1;
-        $course->save();
-
-        // ✅ تجهيز الرسالة
-        $message = [
-            'title' => 'New course pending approval',
-            'body' => "Teacher {$course->teacher->full_name} has submitted the course '{$course->name}' for review.",
-            'course' => [
-                'id' => $course->id,
-                'name' => $course->name,
-                'level' => $course->level,
-            ]
-        ];
-
-        // ✅ إرسال الإشعار إلى كل الأدمنز
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            // تخزين الإشعار في قاعدة البيانات
-            Notification::create([
-                'notifiable_id' => $admin->id,
-                'notifiable_type' => Admin::class,
-                'sender_id' => $course->teacher->id,
-                'sender_type' => \App\Models\Teacher::class,
-                'title' => $message['title'],
-                'body' => $message['body'],
-                'data' => json_encode($message['course']),
-            ]);
-
-            // بث الإشعار عبر القناة المخصصة للأدمن
-            broadcast(new AdminEvent($message, $admin->id));
-        }
-
-        return $this->returnSuccess('Course published successfully, now wait for admin to accept 🙂');
+    if (!$course) {
+        return $this->returnError('Course not found', 404);
     }
+
+    // ✅ تحقق من وجود كويز نهائي لهذا الكورس
+    $hasFinalQuiz = $course->quiezes()->where('is_final', true)->exists();
+
+    if (!$hasFinalQuiz) {
+        return $this->returnError('You must create a final quiz before publishing the course.');
+    }
+
+    // ✅ تحويل الحالة إلى 1 (بانتظار موافقة الأدمن)
+    $course->status = 1;
+    $course->save();
+
+    // ✅ تجهيز الرسالة
+    $message = [
+        'title' => 'New course pending approval',
+        'body' => "Teacher {$course->teacher->full_name} has submitted the course '{$course->name}' for review.",
+        'course' => [
+            'id' => $course->id,
+            'name' => $course->name,
+            'level' => $course->level,
+        ]
+    ];
+
+    // ✅ إرسال الإشعار إلى كل الأدمنز
+    $admins = Admin::all();
+    foreach ($admins as $admin) {
+        // تخزين الإشعار في قاعدة البيانات
+        Notification::create([
+            'notifiable_id' => $admin->id,
+            'notifiable_type' => Admin::class,
+            'sender_id' => $course->teacher->id,
+            'sender_type' => \App\Models\Teacher::class,
+            'title' => $message['title'],
+            'body' => $message['body'],
+            'data' => json_encode($message['course']),
+        ]);
+
+        // بث الإشعار عبر القناة المخصصة للأدمن
+        broadcast(new AdminEvent($message, $admin->id));
+    }
+
+    return $this->returnSuccess('Course published successfully, now wait for admin to accept 🙂');
+}
 
     public function getTeacherCourses(Request $request)
     {

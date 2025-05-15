@@ -14,10 +14,10 @@ class Admin extends Authenticatable implements JWTSubject
         return $this->morphMany(Notification::class, 'sender');
     }
 
-    public function notifications()
-    {
-        return $this->morphMany(Notification::class, 'notifiable');
-    }
+public function notifications()
+{
+    return $this->morphMany(Notification::class, 'notifiable');
+}
 
 
     public function getJWTIdentifier()

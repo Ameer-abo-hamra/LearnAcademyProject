@@ -411,56 +411,58 @@ class UserController extends Controller
         }
     }
 
+ use App\Models\Course;
+use App\Models\Notification;
+use App\Events\TeacherEvent;
 
+public function publishCourse($course_id)
+{
+    try {
+        $course = Course::with('teacher')->find($course_id);
 
-    public function publishCourse($course_id)
-    {
-        try {
-            $course = Course::with('teacher')->find($course_id);
-
-            if (!$course) {
-                return $this->returnError("Course not found.");
-            }
-
-            if ($course->status != 1) {
-                return $this->returnError("Course is not ready yet, so it cannot be moved to status 2.");
-            }
-
-            // ✅ تحديث الحالة إلى 2 (مقبول)
-            $course->status = 2;
-            $course->save();
-
-            // ✅ إعداد رسالة الإشعار
-            $message = [
-                'title' => "Course approved",
-                'body' => "Your course '{$course->name}' has been reviewed and approved by the admin.",
-                'course' => [
-                    'id' => $course->id,
-                    'name' => $course->name,
-                    'level' => $course->level,
-                ]
-            ];
-
-            // ✅ حفظ الإشعار في جدول notifications
-            Notification::create([
-                'notifiable_id' => $course->teacher->id,
-                'notifiable_type' => \App\Models\Teacher::class,
-                'sender_id' => u('admin')->id,
-                'sender_type' => \App\Models\Admin::class,
-                'title' => $message['title'],
-                'body' => $message['body'],
-                'data' => json_encode($message['course']),
-            ]);
-
-            // ✅ بث الإشعار مباشرة إلى المدرّس
-            broadcast(new TeacherEvent($message, $course->teacher->id));
-
-            return $this->returnSuccess("Course approved and teacher notified successfully.");
-
-        } catch (\Exception $e) {
-            return $this->returnError("Failed to update course status: " . $e->getMessage());
+        if (!$course) {
+            return $this->returnError("Course not found.");
         }
+
+        if ($course->status != 1) {
+            return $this->returnError("Course is not ready yet, so it cannot be moved to status 2.");
+        }
+
+        // ✅ تحديث الحالة إلى 2 (مقبول)
+        $course->status = 2;
+        $course->save();
+
+        // ✅ إعداد رسالة الإشعار
+        $message = [
+            'title' => "Course approved",
+            'body' => "Your course '{$course->name}' has been reviewed and approved by the admin.",
+            'course' => [
+                'id' => $course->id,
+                'name' => $course->name,
+                'level' => $course->level,
+            ]
+        ];
+
+        // ✅ حفظ الإشعار في جدول notifications
+        Notification::create([
+            'notifiable_id' => $course->teacher->id,
+            'notifiable_type' => \App\Models\Teacher::class,
+            'sender_id' => u('admin')->id, // تأكد أنك تستخدم u("admin") أو auth()->id()
+            'sender_type' => \App\Models\Admin::class,
+            'title' => $message['title'],
+            'body' => $message['body'],
+            'data' => json_encode($message['course']),
+        ]);
+
+        // ✅ بث الإشعار مباشرة إلى المدرّس
+        broadcast(new TeacherEvent($message, $course->teacher->id));
+
+        return $this->returnSuccess("Course approved and teacher notified successfully.");
+
+    } catch (\Exception $e) {
+        return $this->returnError("Failed to update course status: " . $e->getMessage());
     }
+}
 
 
     public function getPendingCourseDetails($courseId)
@@ -819,15 +821,5 @@ class UserController extends Controller
         }
     }
 
-    public function getAdminNotifications()
-    {
-        $admin = u('admin');
-
-        $notifications = $admin->notifications()
-            ->latest()
-            ->paginate(10, ['title', 'body']);
-
-        return $this->returnData('Notifications retrieved successfully', $notifications->getCollection());
-    }
 
 }

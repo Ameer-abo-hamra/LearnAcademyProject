@@ -25,8 +25,6 @@ Route::get("teacher/skills/{category_id}", [SkillController::class, "getSkillFro
 
 Route::group(["middleware" => 'checkuser:student'], function () {
 
-    Route::get('student/notifications', [StudentController::class, 'getStudentNotifications']);
-
     Route::get('student/logout', [StudentController::class, "logout"]);
 
     Route::post("student/enroll-course/{course_id}", [StudentController::class, "courseEnroll"]);
@@ -56,7 +54,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
 
-    Route::get('teacher/notifications', [TeacherController::class, 'getTeacherNotifications']);
+        Route::get('/notifications', [NotificationController::class, 'getTeacherNotifications']);
 
     Route::post("teacher/update-profile", [TeacherController::class, "updateProfile"]);
 
@@ -166,8 +164,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/get-specializations', [UserController::class, 'getSpecializations']);
 
     Route::get('/specializations/{id}/courses', [UserController::class, 'ge tCoursesBySpecialization']);
-
-    Route::get('/notifications', [UserController::class, 'getAdminNotifications']);
 
 });
 

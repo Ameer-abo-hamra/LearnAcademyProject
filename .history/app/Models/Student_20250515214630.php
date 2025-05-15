@@ -15,10 +15,10 @@ class Student extends Authenticatable implements JWTSubject
         return $this->free_points + $this->paid_points;
     }
 
-    public function notifications()
-    {
-        return $this->morphMany(Notification::class, 'notifiable');
-    }
+public function notifications()
+{
+    return $this->morphMany(Notification::class, 'notifiable');
+}
 
     public function studentCourseVideos()
     {
@@ -71,8 +71,11 @@ class Student extends Authenticatable implements JWTSubject
 
     public function quizes()
     {
-        return $this->belongsToMany(Quize::class, "student__quiz", "student_id", "quiz_id")->withPivot('is_rewarded', "completed_at");
+        return $this->belongsToMany(Quize::class, "student__quiz", "student_id", "quiz_id")->withPivot('is_rewarded',"completed_at");
     }
-
+    public function notifications()
+{
+    return $this->morphMany(Notification::class, 'notifiable');
+}
 
 }

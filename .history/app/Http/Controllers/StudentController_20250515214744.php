@@ -369,7 +369,7 @@ class StudentController extends Controller
         ->latest()
         ->paginate(10, ['title', 'body']);
 
-    return $this->returnData('Notifications retrieved successfully', $notifications->getCollection());
+    return $this->returnData('Notifications retrieved successfully', $notifications->getC);
 }
 
 

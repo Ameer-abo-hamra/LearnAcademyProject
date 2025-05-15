@@ -212,15 +212,4 @@ class TeacherController extends Controller
 
     }
 
-    public function getTeacherNotifications()
-    {
-        $teacher = u('teacher');
-
-        $notifications = $teacher->notifications()
-            ->latest()
-            ->paginate(10, ['title', 'body']);
-
-        return $this->returnData('Notifications retrieved successfully', $notifications->getCollection());
-    }
-
 }

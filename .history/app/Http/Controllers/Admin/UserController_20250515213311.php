@@ -819,15 +819,5 @@ class UserController extends Controller
         }
     }
 
-    public function getAdminNotifications()
-    {
-        $admin = u('admin');
-
-        $notifications = $admin->notifications()
-            ->latest()
-            ->paginate(10, ['title', 'body']);
-
-        return $this->returnData('Notifications retrieved successfully', $notifications->getCollection());
-    }
 
 }
