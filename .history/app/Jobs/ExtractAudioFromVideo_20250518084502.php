@@ -34,16 +34,12 @@ class ExtractAudioFromVideo implements ShouldQueue
         $video = Video::find($this->videoId);
 
         if (!$video) {
-            echo "❌ Video not found with ID: {$this->videoId}";
+            Log::error("❌ Video not found with ID: {$this->videoId}");
             return;
         }
 
         $disk = 'teachers'; // تأكد من أن هذا الـ disk معرف في config/filesystems.php
-        // استخراج المسار من الرابط الكامل
-        $videoPath = $video->path;
-
-        // إزالة الجزء الخاص بالرابط وترك فقط المسار داخل مجلد التخزين
-        $videoPath = ltrim(parse_url($videoPath, PHP_URL_PATH), '/uploads');
+        $videoPath = $video->path; // مسار الفيديو داخل الـ disk
 
         $directory = pathinfo($videoPath, PATHINFO_DIRNAME);
         $filename = pathinfo($videoPath, PATHINFO_FILENAME);
@@ -61,9 +57,9 @@ class ExtractAudioFromVideo implements ShouldQueue
                 ->inFormat(new Mp3)
                 ->save($audioFileName);
             $video->audios()->create([
-                "path" => assetFromDisk($disk, $audioFileName)
+                "path" =>   assetFromDisk($disk , $audioFileName)
             ]);
-            echo ' this is the video path ' . $videoPath;
+            echo $videoP
             // ✅ إزالة الصوت من الفيديو باستخدام الفلتر '-an'
             FFMpeg::fromDisk($disk)
                 ->open($videoPath)
@@ -74,12 +70,12 @@ class ExtractAudioFromVideo implements ShouldQueue
 
             $video->path = $videoNoAudioFileName;
             $video->save();
-            echo "hi man ";
+            echo "hi man " ;
             Log::info("✅ Audio extracted to: {$audioFileName}");
             Log::info("✅ Video without audio saved to: {$videoNoAudioFileName}");
 
         } catch (\Exception $e) {
-            echo "❌ FFmpeg process failed: " . $e->getMessage();
+            Log::error("❌ FFmpeg process failed: " . $e->getMessage());
         }
     }
 }

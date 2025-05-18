@@ -23,7 +23,7 @@ class ProcessVideoUpload implements ShouldQueue
         $this->videoId = $videoId;
     }
 
-    /*
+    /**
      * تنفيذ Job رفع الفيديو.
      */
     public function handle()
@@ -38,8 +38,8 @@ class ProcessVideoUpload implements ShouldQueue
             }
 
             // إرسال مهام تحويل الفيديو
-            dispatch(new ExtractAudioFromVideo($this->videoId));
-            // dispatch(new ConvertVideoForStreaming($video));
+            dispatch(new ExtractAudioFromVideo( $this->videoId));
+            dispatch(new ConvertVideoForStreaming($video));
         } catch (\Exception $e) {
             \Log::error('Error processing video upload: ' . $e->getMessage());
         }

@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('scripts', function (Blueprint $table) {
             $table->id();
             $table->foreignId("video_id")->references("id")->on("videos")->cascadeOnDelete();
-            $table->text("script_path");
-            $table->string("language");
+            $table->string("script_path");
+            $table->
             $table->timestamps();
         });
     }

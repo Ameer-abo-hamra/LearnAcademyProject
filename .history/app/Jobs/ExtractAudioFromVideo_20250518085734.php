@@ -43,7 +43,7 @@ class ExtractAudioFromVideo implements ShouldQueue
         $videoPath = $video->path;
 
         // إزالة الجزء الخاص بالرابط وترك فقط المسار داخل مجلد التخزين
-        $videoPath = ltrim(parse_url($videoPath, PHP_URL_PATH), '/uploads');
+        $videoPath = ltrim(parse_url($videoPath, PHP_URL_PATH.'/'), '/');
 
         $directory = pathinfo($videoPath, PATHINFO_DIRNAME);
         $filename = pathinfo($videoPath, PATHINFO_FILENAME);

@@ -23,7 +23,7 @@ class ProcessVideoUpload implements ShouldQueue
         $this->videoId = $videoId;
     }
 
-    /*
+    /**
      * تنفيذ Job رفع الفيديو.
      */
     public function handle()

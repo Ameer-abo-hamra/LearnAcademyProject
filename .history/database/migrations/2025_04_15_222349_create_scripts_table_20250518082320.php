@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId("video_id")->references("id")->on("videos")->cascadeOnDelete();
             $table->text("script_path");
-            $table->string("language");
+            $table->string("land")
             $table->timestamps();
         });
     }

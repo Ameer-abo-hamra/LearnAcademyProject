@@ -57,7 +57,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             // event(new TeacherEvent($this->video->teacher_id, "Video conversion successful you can now see your video in multi resolutions"));
 
         } catch (\Exception $e) {
-            echo "there are maybe many problems : " . $e->getMessage();
+            echo 
             // TeacherEvent::broadcast($this->video->teacher_id, "there are a problem  please try upload video again :(");
         }
     }
