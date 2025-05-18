@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 //YourNewPassword123!
-//StrongPassword123!
 Route::post('teacher/sign-up', [TeacherController::class, "signUp"]);
 
 Route::post('teacher/login', [TeacherController::class, "login"]);
