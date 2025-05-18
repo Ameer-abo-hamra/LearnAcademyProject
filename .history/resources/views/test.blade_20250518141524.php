@@ -16,10 +16,10 @@
 
 <script>
     setTimeout(() => {
-        window.Echo.channel('teacher.1')
+        window.Echo.channel('teacher.2')
             .listen('TeacherEvent', (e) => {
                 console.log(e.message);
-                console.log("hi there ");
+                console.log("hi there ")
             });
 
     }, 700);
