@@ -172,7 +172,7 @@ Route::prefix('admin')->group(function () {
 
 });
 
-Route::get("w", function () {
+Route::get("w" , function() {
     return view("test");
 });
 
