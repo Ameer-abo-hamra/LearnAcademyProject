@@ -70,7 +70,7 @@ function u($guard)
 function currentUser()
 {
     foreach (['admin', 'teacher', 'student'] as $guard) {
-        if (u($guard)) {
+        if (u()) {
             return auth($guard)->user();
         }
     }

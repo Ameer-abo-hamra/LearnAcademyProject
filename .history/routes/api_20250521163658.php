@@ -27,8 +27,10 @@ Route::get("teacher/skills/{category_id}", [SkillController::class, "getSkillFro
 
 Route::group(["middleware" => 'checkuser:student'], function () {
 
+    // إرسال رسالة دعم
     Route::post('/support/send', [SupportController::class, 'sendSupportMessage']);
 
+    // جلب جميع الرسائل التي تخص المستخدم (مرسلة أو مستقبلة)
     Route::get('/support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('student/notifications', [StudentController::class, 'getStudentNotifications']);

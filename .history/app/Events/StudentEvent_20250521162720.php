@@ -35,7 +35,7 @@ class StudentEvent implements ShouldBroadcast
             new Channel('student' . $this->id),
         ];
     }
-    public function broadcastWith()
+       public function broadcastWith()
     {
         return [
             "message" => $this->message

@@ -51,25 +51,24 @@ class SupportController extends Controller
         return $this->returnSuccess('Message sent to all admins');
     }
 
-public function getSupportMessages()
-{
-    $user = currentUser();
+    public function getSupportMessages()
+    {
+        $user = currentUser();
 
-    if (!$user) {
-        return $this->returnError('User not authenticated');
+        if (!$user) {
+            return $this->returnError('User not authenticated');
+        }
+
+        $messages = $user->sentSupports()
+            ->with(['sender', 'receiver'])
+            ->get()
+            ->merge(
+                $user->receivedSupports()->with(['sender', 'receiver'])->get()
+            )
+            ->sortBy('created_at')
+            ->values(); // لضبط الترتيب كمجموعة جديدة
+
+        return $this->returnSuccess('Support messages retrieved successfully.', $messages);
     }
-
-    $messages = $user->sentSupports()
-        ->with(['sender', 'receiver'])
-        ->get()
-        ->merge(
-            $user->receivedSupports()->with(['sender', 'receiver'])->get()
-        )
-        ->sortBy('created_at')
-        ->values();
-
-    return $this->returnSuccess('Messages retrieved', $messages);
-}
-
 
 }

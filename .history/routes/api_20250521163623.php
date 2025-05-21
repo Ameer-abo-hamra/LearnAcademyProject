@@ -7,7 +7,6 @@ use App\Http\Controllers\QuizeController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\SpecilizationController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
@@ -26,10 +25,6 @@ Route::get("teacher/get-category", [CategoryController::class, "getAll"]);
 Route::get("teacher/skills/{category_id}", [SkillController::class, "getSkillFromCategory"]);
 
 Route::group(["middleware" => 'checkuser:student'], function () {
-
-    Route::post('/support/send', [SupportController::class, 'sendSupportMessage']);
-
-    Route::get('/support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('student/notifications', [StudentController::class, 'getStudentNotifications']);
 
@@ -61,10 +56,6 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
-
-    Route::post('/support/send', [SupportController::class, 'sendSupportMessage']);
-
-    Route::get('/support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('teacher/notifications', [TeacherController::class, 'getTeacherNotifications']);
 

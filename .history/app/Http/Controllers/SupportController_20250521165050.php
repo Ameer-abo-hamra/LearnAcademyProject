@@ -53,7 +53,7 @@ class SupportController extends Controller
 
 public function getSupportMessages()
 {
-    $user = currentUser();
+    $user = $this->getAuthenticatedUser();
 
     if (!$user) {
         return $this->returnError('User not authenticated');
