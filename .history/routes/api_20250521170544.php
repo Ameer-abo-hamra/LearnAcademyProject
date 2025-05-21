@@ -27,9 +27,9 @@ Route::get("teacher/skills/{category_id}", [SkillController::class, "getSkillFro
 
 Route::group(["middleware" => 'checkuser:student'], function () {
 
-    Route::post('student/support/send', [SupportController::class, 'sendSupportMessage']);
+    Route::post('support/send', [SupportController::class, 'sendSupportMessage']);
 
-    Route::get('student/support/messages', [SupportController::class, 'getSupportMessages']);
+    Route::get('support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('student/notifications', [StudentController::class, 'getStudentNotifications']);
 
@@ -62,9 +62,9 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
 
-    Route::post('teacher/support/send', [SupportController::class, 'sendSupportMessage']);
+    Route::post('tea/support/send', [SupportController::class, 'sendSupportMessage']);
 
-    Route::get('teacher/support/messages', [SupportController::class, 'getSupportMessages']);
+    Route::get('support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('teacher/notifications', [TeacherController::class, 'getTeacherNotifications']);
 

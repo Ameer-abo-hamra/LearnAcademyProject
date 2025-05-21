@@ -29,7 +29,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::post('student/support/send', [SupportController::class, 'sendSupportMessage']);
 
-    Route::get('student/support/messages', [SupportController::class, 'getSupportMessages']);
+    Route::get('support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('student/notifications', [StudentController::class, 'getStudentNotifications']);
 
