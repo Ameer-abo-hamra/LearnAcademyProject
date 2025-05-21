@@ -22,15 +22,15 @@ class Student extends Authenticatable implements JWTSubject
 
     // app/Models/Admin.php
 
-    public function sentSupports()
-    {
-        return $this->morphMany(Support::class, 'sender');
-    }
+public function sentSupports()
+{
+    return $this->morphMany(Support::class, 'sender');
+}
 
-    public function receivedSupports()
-    {
-        return $this->morphMany(Support::class, 'receiver');
-    }
+public function receivedSupports()
+{
+    return $this->morphMany(Support::class, 'receiver');
+}
 
     public function studentCourseVideos()
     {

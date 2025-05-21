@@ -13,14 +13,6 @@ return new class extends Migration
     {
         Schema::create('supports', function (Blueprint $table) {
             $table->id();
-            $table->text('message');
-
-            // المرسل
-            $table->morphs('sender'); // sender_id, sender_type
-
-            // المستقبل
-            $table->morphs('receiver'); // receiver_id, receiver_type
-
             $table->timestamps();
         });
     }

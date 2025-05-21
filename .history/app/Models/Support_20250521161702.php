@@ -9,10 +9,8 @@ class Support extends Model
 
     protected $fillable = [
         'message',
-        'sender_id',
-        'sender_type',
-        'receiver_id',
-        'receiver_type',
+        'sender_id', 'sender_type',
+        'receiver_id', 'receiver_type',
     ];
 
     public function sender()

@@ -67,12 +67,3 @@ function u($guard)
 {
     return Auth::guard($guard)->user();
 }
-function currentUser()
-{
-    foreach (['admin', 'teacher', 'student'] as $guard) {
-        if (auth($guard)->check()) {
-            return auth($guard)->user();
-        }
-    }
-    return null;
-}

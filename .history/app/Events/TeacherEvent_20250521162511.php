@@ -18,7 +18,7 @@ class TeacherEvent implements ShouldBroadcast
      * Create a new event instance.
      */
     public $teacher_id, $message;
-    public function __construct($message, $teacher_id)
+    public function __construct($message , $teacher_id)
     {
         $this->message = $message;
         $this->teacher_id = $teacher_id;

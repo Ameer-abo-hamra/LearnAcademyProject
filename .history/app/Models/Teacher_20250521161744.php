@@ -13,23 +13,23 @@ class Teacher extends Authenticatable implements JWTSubject
     protected $fillable = ["age", "gender", "image", "specialization", "full_name", "username", "password", "admin_activation", "email", "id", "activation_code", "is_active", "teacher_id"];
 
 
-    public function notifications()
-    {
-        return $this->morphMany(Notification::class, 'notifiable');
-    }
-    // app/Models/Admin.php
+public function notifications()
+{
+    return $this->morphMany(Notification::class, 'notifiable');
+}
+// app/Models/Admin.php
 
-    public function sentSupports()
-    {
-        return $this->morphMany(Support::class, 'sender');
-    }
+public function sentSupports()
+{
+    return $this->morphMany(Support::class, 'sender');
+}
 
-    public function receivedSupports()
-    {
-        return $this->morphMany(Support::class, 'receiver');
-    }
+public function receivedSupports()
+{
+    return $this->morphMany(Support::class, 'receiver');
+}
 
-    public function courses()
+public function courses()
     {
         return $this->hasMany(Course::class, "teacher_id");
     }

@@ -10,18 +10,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TeacherEvent implements ShouldBroadcast
+class StudentEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public $teacher_id, $message;
-    public function __construct($message, $teacher_id)
+    public $message , $id ;
+    public function __construct($message , )
     {
-        $this->message = $message;
-        $this->teacher_id = $teacher_id;
+        //
     }
 
     /**
@@ -32,14 +31,7 @@ class TeacherEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('teacher.' . $this->teacher_id),
-        ];
-    }
-
-    public function broadcastWith()
-    {
-        return [
-            "message" => $this->message
+            new PrivateChannel('channel-name'),
         ];
     }
 }
