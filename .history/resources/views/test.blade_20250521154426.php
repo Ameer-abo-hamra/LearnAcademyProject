@@ -16,7 +16,7 @@
 
 <script>
     setTimeout(() => {
-        window.Echo.channel('teacher.'.${{ teacher_id }})
+        window.Echo.channel('teacher.{$teacher_id}')
             .listen('TeacherEvent', (e) => {
                 console.log(e.message);
                 console.log("hi there ");
