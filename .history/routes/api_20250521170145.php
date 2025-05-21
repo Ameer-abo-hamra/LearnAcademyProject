@@ -62,9 +62,9 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
 
-    Route::post('support/send', [SupportController::class, 'sendSupportMessage']);
+    Route::post('/support/send', [SupportController::class, 'sendSupportMessage']);
 
-    Route::get('support/messages', [SupportController::class, 'getSupportMessages']);
+    Route::get('/support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('teacher/notifications', [TeacherController::class, 'getTeacherNotifications']);
 
