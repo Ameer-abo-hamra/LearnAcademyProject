@@ -79,53 +79,11 @@ class ExtractAudioFromVideo implements ShouldQueue
             echo "hi man ";
             Log::info("✅ Audio extracted to: {$audioFileName}");
             Log::info("✅ Video without audio saved to: {$videoNoAudioFileName}");
-            $audioAbsolutePath = public_path('uploads/' . ltrim($audioFileName, '/'));
+              $response = Http::post('http://localhost:8002/api/v1/jobs', [
+        'audio_path' => assetFromDisk($disk, $audioFileName),
+        'video_id' => $video->id,
+    ]);
 
-            // ✅ إرسال الملف إلى API
-            $response = Http::withHeaders([
-                'accept' => 'application/json'
-            ])->attach(
-                    'file',
-                    file_get_contents($audioAbsolutePath),
-                    basename($audioAbsolutePath)
-                )->post('http://localhost:8002/api/v1/jobs', [
-                        'target_languages' => 'ar,en'
-                    ]);
-
-            $jobId = $response->json('job_id');
-
-            if (!$jobId) {
-                Log::error("❌ Job creation failed or no job ID returned.");
-                return;
-            }
-
-            // polling status
-            $status = null;
-            $maxAttempts = 300;
-            $attempts = 0;
-
-            do {
-                sleep(1);
-                $attempts++;
-
-                $statusCheck = Http::withHeaders([
-                    'accept' => 'application/json'
-                ])->get("http://localhost:8002/api/v1/jobs/{$jobId}");
-
-                $status = $statusCheck->json('status');
-
-                Log::info("Job #{$jobId} status: {$status}");
-
-            } while ($status !== 'completed' && $attempts < $maxAttempts);
-
-            if ($status === 'completed') {
-                // ✅ هنا يمكنك تنفيذ المنطق المطلوب بعد إكمال المهمة
-                Log::info("🎯 Job #{$jobId} completed successfully.");
-            } else {
-                Log::warning("⚠️ Job #{$jobId} did not complete in time.");
-            }
-
-            echo "this is response :  /n " . $response;
         } catch (\Exception $e) {
             echo "❌ FFmpeg process failed: " . $e->getMessage();
         }

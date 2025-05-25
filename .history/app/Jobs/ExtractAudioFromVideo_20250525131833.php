@@ -101,7 +101,7 @@ class ExtractAudioFromVideo implements ShouldQueue
 
             // polling status
             $status = null;
-            $maxAttempts = 300;
+            $maxAttempts = 30;
             $attempts = 0;
 
             do {

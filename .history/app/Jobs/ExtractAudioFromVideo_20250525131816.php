@@ -82,48 +82,48 @@ class ExtractAudioFromVideo implements ShouldQueue
             $audioAbsolutePath = public_path('uploads/' . ltrim($audioFileName, '/'));
 
             // ✅ إرسال الملف إلى API
-            $response = Http::withHeaders([
-                'accept' => 'application/json'
-            ])->attach(
-                    'file',
-                    file_get_contents($audioAbsolutePath),
-                    basename($audioAbsolutePath)
-                )->post('http://localhost:8002/api/v1/jobs', [
-                        'target_languages' => 'ar,en'
-                    ]);
+       $response = Http::withHeaders([
+    'accept' => 'application/json'
+])->attach(
+    'file',
+    file_get_contents($audioAbsolutePath),
+    basename($audioAbsolutePath)
+)->post('http://localhost:8002/api/v1/jobs', [
+    'target_languages' => 'ar,en'
+]);
 
-            $jobId = $response->json('job_id');
+$jobId = $response->json('id');
 
-            if (!$jobId) {
-                Log::error("❌ Job creation failed or no job ID returned.");
-                return;
-            }
+if (!$jobId) {
+    Log::error("❌ Job creation failed or no job ID returned.");
+    return;
+}
 
-            // polling status
-            $status = null;
-            $maxAttempts = 300;
-            $attempts = 0;
+// polling status
+$status = null;
+$maxAttempts = 30;
+$attempts = 0;
 
-            do {
-                sleep(1);
-                $attempts++;
+do {
+    sleep(1);
+    $attempts++;
 
-                $statusCheck = Http::withHeaders([
-                    'accept' => 'application/json'
-                ])->get("http://localhost:8002/api/v1/jobs/{$jobId}");
+    $statusCheck = Http::withHeaders([
+        'accept' => 'application/json'
+    ])->get("http://localhost:8002/api/v1/jobs/{$jobId}");
 
-                $status = $statusCheck->json('status');
+    $status = $statusCheck->json('status');
 
-                Log::info("Job #{$jobId} status: {$status}");
+    Log::info("Job #{$jobId} status: {$status}");
 
-            } while ($status !== 'completed' && $attempts < $maxAttempts);
+} while ($status !== 'completed' && $attempts < $maxAttempts);
 
-            if ($status === 'completed') {
-                // ✅ هنا يمكنك تنفيذ المنطق المطلوب بعد إكمال المهمة
-                Log::info("🎯 Job #{$jobId} completed successfully.");
-            } else {
-                Log::warning("⚠️ Job #{$jobId} did not complete in time.");
-            }
+if ($status === 'completed') {
+    // ✅ هنا يمكنك تنفيذ المنطق المطلوب بعد إكمال المهمة
+    Log::info("🎯 Job #{$jobId} completed successfully.");
+} else {
+    Log::warning("⚠️ Job #{$jobId} did not complete in time.");
+}
 
             echo "this is response :  /n " . $response;
         } catch (\Exception $e) {

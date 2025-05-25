@@ -92,7 +92,7 @@ class ExtractAudioFromVideo implements ShouldQueue
                         'target_languages' => 'ar,en'
                     ]);
 
-            $jobId = $response->json('job_id');
+            $jobId = $response->json('id');
 
             if (!$jobId) {
                 Log::error("❌ Job creation failed or no job ID returned.");
@@ -101,7 +101,7 @@ class ExtractAudioFromVideo implements ShouldQueue
 
             // polling status
             $status = null;
-            $maxAttempts = 300;
+            $maxAttempts = 30;
             $attempts = 0;
 
             do {

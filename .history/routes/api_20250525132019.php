@@ -64,7 +64,7 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
     /*
 
     1- add three apis for status 0,1,2 for teacher
-    2- add publish logic for students courses
+    2- add publish logic for students courses 
     */
 
     Route::get('teacher/courses/in-progress', [CourseController::class, 'getInProgressCourses']);

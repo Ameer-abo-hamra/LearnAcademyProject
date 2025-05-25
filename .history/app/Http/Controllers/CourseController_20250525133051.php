@@ -366,112 +366,24 @@ class CourseController extends Controller
 
 
 
-    public function getCourseForEnrolledStudents($course_id)
-    {
-        $student = u("student");
-
-        // التحقق من تسجيل الطالب في الدورة
-        $isEnrolled = $student->courses()
-            ->where('courses.id', $course_id)
-            ->exists();
-
-        if (!$isEnrolled) {
-            return $this->returnError("You can't access this course. Please enroll first.");
-        }
-
-        // جلب الدورة
-        $course = Course::find($course_id);
-        if (!$course) {
-            return $this->returnError("Course not found.");
-        }
-
-        // بيانات الدورة الأساسية
-        $firstCourse = [
-            "name" => $course->name,
-            "status" => $course->status,
-            "description" => $course->description,
-            "image" => $course->image,
-            "level" => $course->level,
-            "point_to_enroll" => $course->point_to_enroll,
-            "points_earned" => $course->points_earned
-        ];
-
-        // تحميل الفيديوهات المرتبة
-        $videos = $course->videos()->orderBy("sequential_order")->get();
-        $videoMap = $videos->keyBy("id");
-
-        // تحميل الكويزات
-        $quizzes = $course->quiezes()
-            ->select("title", "from_video", "to_video", "is_final", "id")
-            ->get();
-
-        // دمج الفيديوهات والكويزات حسب الترتيب
-        $videosAndQuiz = collect();
-
-        foreach ($videos as $video) {
-            // التحقق من حالة الفيديو للطالب
-            $isLocked = StudentCourseVideo::where("course_id", $course->id)
-                ->where("video_id", $video->id)
-                ->first();
-
-            // إضافة الفيديو
-            $videosAndQuiz->push((object) [
-                "type" => "video",
-                "id" => $video->id,
-                "title" => $video->title,
-                "description" => $video->description,
-                "path" => $video->path,
-                "image" => $video->image,
-                "sequential_order" => $video->sequential_order,
-                "is_locked" => $isLocked->locked ?? false,
-            ]);
-
-            // إضافة الكويزات التي تنتهي عند هذا الفيديو
-            foreach ($quizzes as $quiz) {
-                if ($quiz->to_video == $video->sequential_order) {
-                    $videosAndQuiz->push((object) [
-                        "type" => "quiz",
-                        "id" => $quiz->id,
-                        "title" => $quiz->title,
-                        "from_video" => $quiz->from_video,
-                        "to_video" => $quiz->to_video,
-                        "is_final" => $quiz->is_final,
-                    ]);
-                }
-            }
-        }
-
-        // باقي البيانات
-        $requirements = $course->skills->pluck("title");
-        $aquirements = $course->aquirements->pluck("title");
-        $attachments = $course->attachments;
-        $category = optional($course->category)->title;
-
-        // تجميع البيانات النهائية
-        $data = [
-            "course" => $firstCourse,
-            "requirements" => $requirements,
-            "aquirements" => $aquirements,
-            "attachments" => $attachments,
-            "category" => $category,
-            "videosAndQuiz" => $videosAndQuiz->values(),
-        ];
-
-        return $this->returnData("", $data);
-    }
-
-  public function getCourseForStudent($course_id)
+  public function getCourseForEnrolledStudents($course_id)
 {
     $student = u("student");
+
+    // التحقق من تسجيل الطالب في الدورة
+    $isEnrolled = $student->courses()
+        ->where('courses.id', $course_id)
+        ->exists();
+
+    if (!$isEnrolled) {
+        return $this->returnError("You can't access this course. Please enroll first.");
+    }
 
     // جلب الدورة
     $course = Course::find($course_id);
     if (!$course) {
         return $this->returnError("Course not found.");
     }
-
-    $isEnrolled = $student->courses()->where('courses.id', $course_id)->exists();
-    $isSaved = $student->savedCourse()->where('courses.id', $course_id)->exists();
 
     // بيانات الدورة الأساسية
     $firstCourse = [
@@ -481,9 +393,7 @@ class CourseController extends Controller
         "image" => $course->image,
         "level" => $course->level,
         "point_to_enroll" => $course->point_to_enroll,
-        "points_earned" => $course->points_earned,
-        "is_enrolled" => $isEnrolled,
-        "is_saved" => $isSaved,
+        "points_earned" => $course->points_earned
     ];
 
     // تحميل الفيديوهات المرتبة
@@ -491,39 +401,45 @@ class CourseController extends Controller
         ->orderBy("sequential_order")
         ->get();
 
-    // تحميل الكويزات
-    $quizzes = $course->quiezes()
-        ->select("title", "from_video", "to_video", "is_final", "id")
-        ->get();
+    $videoMap = $videos->pluck("sequential_order", "id");
 
-    // دمج الفيديوهات والكويزات حسب الترتيب
-    $videosAndQuiz = collect();
+    $videosWithInfo = $videos->map(function ($video) use ($course) {
+        $isLocked = StudentCourseVideo::where("course_id", $course->id)
+            ->where("video_id", $video->id)
+            ->first();
 
-    foreach ($videos as $video) {
-        // إضافة الفيديو
-        $videosAndQuiz->push((object) [
+        return (object) [
             "type" => "video",
             "id" => $video->id,
             "title" => $video->title,
             "description" => $video->description,
+            "path" => $video->path,
             "image" => $video->image,
             "sequential_order" => $video->sequential_order,
-        ]);
+            "is_locked" => $isLocked->locked ?? false,
+        ];
+    });
 
-        // إضافة الكويزات التي تنتهي عند هذا الفيديو
-        foreach ($quizzes as $quiz) {
-            if ($quiz->to_video == $video->sequential_order) {
-                $videosAndQuiz->push((object) [
-                    "type" => "quiz",
-                    "id" => $quiz->id,
-                    "title" => $quiz->title,
-                    "from_video" => $quiz->from_video,
-                    "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final,
-                ]);
-            }
-        }
-    }
+    // تحميل الكويزات وإسناد ترتيب وهمي بناءً على to_video
+    $quizzes = $course->quiezes()
+        ->select("title", "from_video", "to_video", "is_final", "id")
+        ->get()
+        ->map(function ($quiz) use ($videoMap) {
+            return (object) [
+                "type" => "quiz",
+                "title" => $quiz->title,
+                "from_video" => $quiz->from_video,
+                "to_video" => $quiz->to_video,
+                "is_final" => $quiz->is_final,
+                "id" => $quiz->id,
+                "sequential_order" => ($videoMap[$quiz->to_video] ?? 9999) + 0.5,
+            ];
+        });
+
+    // دمج الفيديوهات والكويزات ثم ترتيبهم
+    $videosAndQuiz = $videosWithInfo->merge($quizzes)
+        ->sortBy('sequential_order')
+        ->values();
 
     // تحميل باقي البيانات
     $requirements = $course->skills->pluck("title");
@@ -538,12 +454,103 @@ class CourseController extends Controller
         "aquirements" => $aquirements,
         "attachments" => $attachments,
         "category" => $category,
-        "videosAndQuiz" => $videosAndQuiz->values(),
+        "videosAndQuiz" => $videosAndQuiz
     ];
 
     return $this->returnData("", $data);
 }
 
+    public function getCourseForStudent($course_id)
+    {
+        $student = u("student");
+
+
+
+        // جلب الدورة
+        $course = Course::find($course_id);
+        if (!$course) {
+            return $this->returnError("Course not found.");
+        }
+        $isEnrolled = $student->courses()->where('courses.id', $course_id)->exists();
+
+        // التحقق من حفظ الكورس
+        $isSaved = $student->savedCourse()->where('courses.id', $course_id)->exists();
+
+        // بيانات الدورة الأساسية
+        $firstCourse = [
+            "name" => $course->name,
+            "status" => $course->status,
+            "description" => $course->description,
+            "image" => $course->image,
+            "level" => $course->level,
+            "point_to_enroll" => $course->point_to_enroll,
+            "points_earned" => $course->points_earned,
+            "is_enrolled" => $isEnrolled,
+            "is_saved" => $isSaved,
+        ];
+
+        // تحميل الفيديوهات المرتبة
+        $videos = $course->videos()
+            ->orderBy("sequential_order")
+            ->get()
+            ->map(function ($video) use ($course) {
+                return (object) [
+                    "type" => "video",
+                    "id" => $video->id,
+                    "title" => $video->title,
+                    "description" => $video->description,
+                    "image" => $video->image,
+                    "sequential_order" => $video->sequential_order,
+                ];
+            });
+
+        // تحميل الكويزات
+        $quizzes = $course->quiezes()
+            ->select("title", "from_video", "to_video", "is_final", "id")
+            ->get()
+            ->map(function ($quiz) {
+                return (object) [
+                    "type" => "quiz",
+                    "title" => $quiz->title,
+                    "from_video" => $quiz->from_video,
+                    "to_video" => $quiz->to_video,
+                    "is_final" => $quiz->is_final,
+                    "id" => $quiz->id
+                ];
+            });
+
+        // تنظيم الكويزات حسب الفيديو المرتبط بها لتحسين الأداء
+        $quizzesByVideo = $quizzes->groupBy('to_video');
+
+        // دمج الفيديوهات والكويزات معًا حسب الترتيب
+        $videosAndQuiz = [];
+        foreach ($videos as $video) {
+            $videosAndQuiz[] = $video;
+            if (isset($quizzesByVideo[$video->id])) {
+                foreach ($quizzesByVideo[$video->id] as $quiz) {
+                    $videosAndQuiz[] = $quiz;
+                }
+            }
+        }
+
+        // تحميل باقي البيانات
+        $requirements = $course->skills->pluck("title");
+        $aquirements = $course->aquirements->pluck("title");
+        $attachments = $course->attachments;
+        $category = optional($course->category)->title;
+
+        // تجميع البيانات النهائية
+        $data = [
+            "course" => $firstCourse,
+            "requirements" => $requirements,
+            "aquirements" => $aquirements,
+            "attachments" => $attachments,
+            "category" => $category,
+            "videosAndQuiz" => $videosAndQuiz
+        ];
+
+        return $this->returnData("", $data);
+    }
 
     public function getInProgressCourses()
     {
