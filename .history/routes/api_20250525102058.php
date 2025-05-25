@@ -64,7 +64,6 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
 /*
 
 1- add three apis for status 0,1,2 for teacher
-2- 
 */
     Route::post('teacher/support/send', [SupportController::class, 'sendSupportMessage']);
 

@@ -288,83 +288,89 @@ class CourseController extends Controller
         return $this->returnData("courses", $courses);
     }
 
-  public function getCourseDetails($courseId)
-{
-    $teacher = u("teacher");
-    $course = $teacher->courses()->where("id", $courseId)->first();
-    if (!$course) {
-        return $this->returnError("this course does not exist");
-    }
+    public function getCourseDetails($courseId)
+    {
+        $teacher = u("teacher");
+        $course = $teacher->courses()->where("id", $courseId)->first();
+        if (!$course) {
+            return $this->returnError("this course does not exist");
+        }
+        $firstCourse = [
+            "name" => $course->name,
+            "status" => $course->status,
+            "description" => $course->description,
+            "image" => $course->image,
+            "level" => $course->level,
+            "point_to_enroll" => $course->point_to_enroll,
+            "points_earned" => $course->points_earned
+        ];
+        if (!$course) {
+            return $this->returnError("You don't have permission to see course details");
+        }
 
-    $firstCourse = [
-        "name" => $course->name,
-        "status" => $course->status,
-        "description" => $course->description,
-        "image" => $course->image,
-        "level" => $course->level,
-        "point_to_enroll" => $course->point_to_enroll,
-        "points_earned" => $course->points_earned
-    ];
+        // تحميل الفيديوهات المرتبة
+        $videos = $course->videos()
+            ->orderBy("sequential_order")
+            ->get()
+            ->map(function ($video) {
+                return (object) [
+                    "type" => "video",
+                    "id" => $video->id,
+                    "title" => $video->title,
+                    "description" => $video->description,
+                    "path" => $video->path,
+                    "image" => $video->image,
+                    "sequential_order" => $video->sequential_order,
+                ];
+            });
 
-    // تحميل الفيديوهات المرتبة
-    $videos = $course->videos()->orderBy("sequential_order")->get();
-    $videoMap = $videos->keyBy("id");
-
-    // تحميل الكويزات
-    $quizes = $course->quiezes()
-        ->select("title", "from_video", "to_video", "is_final", "id")
-        ->get();
-
-    // دمج الفيديوهات والكويزات بترتيب جاهز
-    $videosAndQuiz = collect();
-
-    foreach ($videos as $video) {
-        // إضافة الفيديو
-        $videosAndQuiz->push((object)[
-            "type" => "video",
-            "id" => $video->id,
-            "title" => $video->title,
-            "description" => $video->description,
-            "path" => $video->path,
-            "image" => $video->image,
-            "sequential_order" => $video->sequential_order,
-        ]);
-
-        // إضافة أي كويز ينتهي عند هذا الفيديو
-        foreach ($quizes as $quiz) {
-            if ($quiz->to_video == $video->sequential_order) {
-                $videosAndQuiz->push((object)[
+        // تحميل الكويزات
+        $quizes = $course->quiezes()
+            ->select("title", "from_video", "to_video", "is_final", "id")
+            ->get()
+            ->map(function ($quiz) {
+                return (object) [
                     "type" => "quiz",
-                    "id" => $quiz->id,
                     "title" => $quiz->title,
                     "from_video" => $quiz->from_video,
                     "to_video" => $quiz->to_video,
                     "is_final" => $quiz->is_final,
-                    // نربط الكويز بالفيديو لكن لا نحتاج ترتيب إضافي هنا لأنه موضوع بعد الفيديو
-                ]);
+                    "id" => $quiz->id
+                ];
+            });
+
+        // تركيب الفيديوهات والكويزات معًا
+        $videosAndQuiz = [];
+        $videoMap = $videos->keyBy("id");
+
+        foreach ($videos as $video) {
+            $videosAndQuiz[] = $video;
+
+            // بعد كل فيديو، نبحث إذا فيه كويز ينتهي عند هذا الفيديو
+            foreach ($quizes as $quiz) {
+                if ($quiz->to_video == $video->id) {
+                    $videosAndQuiz[] = $quiz;
+                }
             }
         }
+
+        // باقي البيانات
+        $requirements = $course->skills->pluck("title");
+        $aquirements = $course->aquirements->pluck("title");
+        $attachments = $course->attachments;
+        $category = $course->category->title;
+
+        $data = [
+            "course" => $firstCourse,
+            "requirements" => $requirements,
+            "aquirements" => $aquirements,
+            "attachments" => $attachments,
+            "category" => $category,
+            "videosAndQuiz" => $videosAndQuiz
+        ];
+
+        return $this->returnData("", $data);
     }
-
-    // باقي البيانات
-    $requirements = $course->skills->pluck("title");
-    $aquirements = $course->aquirements->pluck("title");
-    $attachments = $course->attachments;
-    $category = $course->category->title;
-
-    $data = [
-        "course" => $firstCourse,
-        "requirements" => $requirements,
-        "aquirements" => $aquirements,
-        "attachments" => $attachments,
-        "category" => $category,
-        "videosAndQuiz" => $videosAndQuiz->values(), // ترتيب نهائي
-    ];
-
-    return $this->returnData("", $data);
-}
-
-
 
     public function getCourseForEnrolledStudents($course_id)
     {

@@ -288,82 +288,83 @@ class CourseController extends Controller
         return $this->returnData("courses", $courses);
     }
 
-  public function getCourseDetails($courseId)
-{
-    $teacher = u("teacher");
-    $course = $teacher->courses()->where("id", $courseId)->first();
-    if (!$course) {
-        return $this->returnError("this course does not exist");
-    }
-
-    $firstCourse = [
-        "name" => $course->name,
-        "status" => $course->status,
-        "description" => $course->description,
-        "image" => $course->image,
-        "level" => $course->level,
-        "point_to_enroll" => $course->point_to_enroll,
-        "points_earned" => $course->points_earned
-    ];
-
-    // تحميل الفيديوهات المرتبة
-    $videos = $course->videos()->orderBy("sequential_order")->get();
-    $videoMap = $videos->keyBy("id");
-
-    // تحميل الكويزات
-    $quizes = $course->quiezes()
-        ->select("title", "from_video", "to_video", "is_final", "id")
-        ->get();
-
-    // دمج الفيديوهات والكويزات بترتيب جاهز
-    $videosAndQuiz = collect();
-
-    foreach ($videos as $video) {
-        // إضافة الفيديو
-        $videosAndQuiz->push((object)[
-            "type" => "video",
-            "id" => $video->id,
-            "title" => $video->title,
-            "description" => $video->description,
-            "path" => $video->path,
-            "image" => $video->image,
-            "sequential_order" => $video->sequential_order,
-        ]);
-
-        // إضافة أي كويز ينتهي عند هذا الفيديو
-        foreach ($quizes as $quiz) {
-            if ($quiz->to_video == $video->sequential_order) {
-                $videosAndQuiz->push((object)[
-                    "type" => "quiz",
-                    "id" => $quiz->id,
-                    "title" => $quiz->title,
-                    "from_video" => $quiz->from_video,
-                    "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final,
-                    // نربط الكويز بالفيديو لكن لا نحتاج ترتيب إضافي هنا لأنه موضوع بعد الفيديو
-                ]);
-            }
+    public function getCourseDetails($courseId)
+    {
+        $teacher = u("teacher");
+        $course = $teacher->courses()->where("id", $courseId)->first();
+        if (!$course) {
+            return $this->returnError("this course does not exist");
         }
+
+        $firstCourse = [
+            "name" => $course->name,
+            "status" => $course->status,
+            "description" => $course->description,
+            "image" => $course->image,
+            "level" => $course->level,
+            "point_to_enroll" => $course->point_to_enroll,
+            "points_earned" => $course->points_earned
+        ];
+
+        $videos = $course->videos()
+            ->orderBy("sequential_order")
+            ->get();
+
+        $videoMap = $videos->pluck("sequential_order", "id");
+
+        $items = collect();
+
+        // إضافة الفيديوهات
+        foreach ($videos as $video) {
+            $items->push((object) [
+                "type" => "video",
+                "id" => $video->id,
+                "title" => $video->title,
+                "description" => $video->description,
+                "path" => $video->path,
+                "image" => $video->image,
+                "sequential_order" => $video->sequential_order,
+            ]);
+        }
+
+        // إضافة الكويزات بترتيبهم حسب to_video
+        $quizes = $course->quiezes()
+            ->select("title", "from_video", "to_video", "is_final", "id")
+            ->get();
+
+        foreach ($quizes as $quiz) {
+            $order = $videoMap[$quiz->to_video] ?? 9999; // fallback في حال الفيديو غير موجود
+
+            $items->push((object) [
+                "type" => "quiz",
+                "title" => $quiz->title,
+                "from_video" => $quiz->from_video,
+                "to_video" => $quiz->to_video,
+                "is_final" => $quiz->is_final,
+                "id" => $quiz->id,
+                "sequential_order" => $order + 0.5 // حتى يظهر بعد الفيديو مباشرة
+            ]);
+        }
+
+        // ترتيب العناصر حسب sequential_order
+        $videosAndQuiz = $items->sortBy("sequential_order")->values();
+
+        $requirements = $course->skills->pluck("title");
+        $aquirements = $course->aquirements->pluck("title");
+        $attachments = $course->attachments;
+        $category = $course->category->title;
+
+        $data = [
+            "course" => $firstCourse,
+            "requirements" => $requirements,
+            "aquirements" => $aquirements,
+            "attachments" => $attachments,
+            "category" => $category,
+            "videosAndQuiz" => $videosAndQuiz
+        ];
+
+        return $this->returnData("", $data);
     }
-
-    // باقي البيانات
-    $requirements = $course->skills->pluck("title");
-    $aquirements = $course->aquirements->pluck("title");
-    $attachments = $course->attachments;
-    $category = $course->category->title;
-
-    $data = [
-        "course" => $firstCourse,
-        "requirements" => $requirements,
-        "aquirements" => $aquirements,
-        "attachments" => $attachments,
-        "category" => $category,
-        "videosAndQuiz" => $videosAndQuiz->values(), // ترتيب نهائي
-    ];
-
-    return $this->returnData("", $data);
-}
-
 
 
     public function getCourseForEnrolledStudents($course_id)

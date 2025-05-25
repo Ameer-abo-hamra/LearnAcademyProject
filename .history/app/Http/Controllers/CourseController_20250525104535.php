@@ -332,7 +332,7 @@ class CourseController extends Controller
 
         // إضافة أي كويز ينتهي عند هذا الفيديو
         foreach ($quizes as $quiz) {
-            if ($quiz->to_video == $video->sequential_order) {
+            if ($quiz->to_video == $video->id) {
                 $videosAndQuiz->push((object)[
                     "type" => "quiz",
                     "id" => $quiz->id,
