@@ -61,17 +61,13 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
-    /*
+/*
 
-    1- add three apis for status 0,1,2 for teacher
-    2-
-    */
+1- add three apis for status 0,1,2 for teacher
+2-
+*/
 
-    Route::get('teacher/courses/in-progress', [CourseController::class, 'getInProgressCourses']);
-
-    Route::get('teacher/courses/pending', [CourseController::class, 'getPendingCourses']);
-
-    Route::get('teacher/courses/published', [CourseController::class, 'getPublishedCourses']);
+    Route::get("teacher/get-in-progress-courses" , [Course::]) ;
 
     Route::post('teacher/support/send', [SupportController::class, 'sendSupportMessage']);
 

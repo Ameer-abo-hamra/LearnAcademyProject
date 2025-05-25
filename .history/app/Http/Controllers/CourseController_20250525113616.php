@@ -288,81 +288,81 @@ class CourseController extends Controller
         return $this->returnData("courses", $courses);
     }
 
-    public function getCourseDetails($courseId)
-    {
-        $teacher = u("teacher");
-        $course = $teacher->courses()->where("id", $courseId)->first();
-        if (!$course) {
-            return $this->returnError("this course does not exist");
-        }
+  public function getCourseDetails($courseId)
+{
+    $teacher = u("teacher");
+    $course = $teacher->courses()->where("id", $courseId)->first();
+    if (!$course) {
+        return $this->returnError("this course does not exist");
+    }
 
-        $firstCourse = [
-            "name" => $course->name,
-            "status" => $course->status,
-            "description" => $course->description,
-            "image" => $course->image,
-            "level" => $course->level,
-            "point_to_enroll" => $course->point_to_enroll,
-            "points_earned" => $course->points_earned
-        ];
+    $firstCourse = [
+        "name" => $course->name,
+        "status" => $course->status,
+        "description" => $course->description,
+        "image" => $course->image,
+        "level" => $course->level,
+        "point_to_enroll" => $course->point_to_enroll,
+        "points_earned" => $course->points_earned
+    ];
 
-        // تحميل الفيديوهات المرتبة
-        $videos = $course->videos()->orderBy("sequential_order")->get();
-        $videoMap = $videos->keyBy("id");
+    // تحميل الفيديوهات المرتبة
+    $videos = $course->videos()->orderBy("sequential_order")->get();
+    $videoMap = $videos->keyBy("id");
 
-        // تحميل الكويزات
-        $quizes = $course->quiezes()
-            ->select("title", "from_video", "to_video", "is_final", "id")
-            ->get();
+    // تحميل الكويزات
+    $quizes = $course->quiezes()
+        ->select("title", "from_video", "to_video", "is_final", "id")
+        ->get();
 
-        // دمج الفيديوهات والكويزات بترتيب جاهز
-        $videosAndQuiz = collect();
+    // دمج الفيديوهات والكويزات بترتيب جاهز
+    $videosAndQuiz = collect();
 
-        foreach ($videos as $video) {
-            // إضافة الفيديو
-            $videosAndQuiz->push((object) [
-                "type" => "video",
-                "id" => $video->id,
-                "title" => $video->title,
-                "description" => $video->description,
-                "path" => $video->path,
-                "image" => $video->image,
-                "sequential_order" => $video->sequential_order,
-            ]);
+    foreach ($videos as $video) {
+        // إضافة الفيديو
+        $videosAndQuiz->push((object)[
+            "type" => "video",
+            "id" => $video->id,
+            "title" => $video->title,
+            "description" => $video->description,
+            "path" => $video->path,
+            "image" => $video->image,
+            "sequential_order" => $video->sequential_order,
+        ]);
 
-            // إضافة أي كويز ينتهي عند هذا الفيديو
-            foreach ($quizes as $quiz) {
-                if ($quiz->to_video == $video->sequential_order) {
-                    $videosAndQuiz->push((object) [
-                        "type" => "quiz",
-                        "id" => $quiz->id,
-                        "title" => $quiz->title,
-                        "from_video" => $quiz->from_video,
-                        "to_video" => $quiz->to_video,
-                        "is_final" => $quiz->is_final,
-                        // نربط الكويز بالفيديو لكن لا نحتاج ترتيب إضافي هنا لأنه موضوع بعد الفيديو
-                    ]);
-                }
+        // إضافة أي كويز ينتهي عند هذا الفيديو
+        foreach ($quizes as $quiz) {
+            if ($quiz->to_video == $video->sequential_order) {
+                $videosAndQuiz->push((object)[
+                    "type" => "quiz",
+                    "id" => $quiz->id,
+                    "title" => $quiz->title,
+                    "from_video" => $quiz->from_video,
+                    "to_video" => $quiz->to_video,
+                    "is_final" => $quiz->is_final,
+                    // نربط الكويز بالفيديو لكن لا نحتاج ترتيب إضافي هنا لأنه موضوع بعد الفيديو
+                ]);
             }
         }
-
-        // باقي البيانات
-        $requirements = $course->skills->pluck("title");
-        $aquirements = $course->aquirements->pluck("title");
-        $attachments = $course->attachments;
-        $category = $course->category->title;
-
-        $data = [
-            "course" => $firstCourse,
-            "requirements" => $requirements,
-            "aquirements" => $aquirements,
-            "attachments" => $attachments,
-            "category" => $category,
-            "videosAndQuiz" => $videosAndQuiz->values(), // ترتيب نهائي
-        ];
-
-        return $this->returnData("", $data);
     }
+
+    // باقي البيانات
+    $requirements = $course->skills->pluck("title");
+    $aquirements = $course->aquirements->pluck("title");
+    $attachments = $course->attachments;
+    $category = $course->category->title;
+
+    $data = [
+        "course" => $firstCourse,
+        "requirements" => $requirements,
+        "aquirements" => $aquirements,
+        "attachments" => $attachments,
+        "category" => $category,
+        "videosAndQuiz" => $videosAndQuiz->values(), // ترتيب نهائي
+    ];
+
+    return $this->returnData("", $data);
+}
 
 
 
@@ -553,35 +553,35 @@ class CourseController extends Controller
         return $this->returnData("", $data);
     }
 
-    public function getInProgressCourses()
-    {
-        $teacher = u('teacher');
-        $courses = $teacher->courses()
-            ->where("status", 0)
-            ->get();
+public function getInProgressCourses()
+{
+    $teacher = u('teacher');
+    $courses = $teacher->courses()
+        ->where("status", 0)
+        ->get();
 
-        return $this->returnData("In-progress courses fetched successfully", $courses);
-    }
+    return $this->returnData("In-progress courses fetched successfully", $courses);
+}
 
-    public function getPendingCourses()
-    {
-        $teacher = u('teacher');
-        $courses = $teacher->courses()
-            ->where("status", 1)
-            ->get();
+public function getPendingCourses()
+{
+    $teacher = u('teacher');
+    $courses = $teacher->courses()
+        ->where("status", 1)
+        ->get();
 
-        return $this->returnData("Pending courses fetched successfully", $courses);
-    }
+    return $this->returnData("Pending courses fetched successfully", $courses);
+}
 
-    public function getPublishedCourses()
-    {
-        $teacher = u('teacher');
-        $courses = $teacher->courses()
-            ->where("status", 2)
-            ->get();
+public function getPublishedCourses()
+{
+    $teacher = u('teacher');
+    $courses = $teacher->courses()
+        ->where("status", 2)
+        ->get();
 
-        return $this->returnData("Published courses fetched successfully", $courses);
-    }
+    return $this->returnData("Published courses fetched successfully", $courses);
+}
 
 
 

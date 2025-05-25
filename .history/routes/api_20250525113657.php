@@ -67,12 +67,9 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
     2-
     */
 
-    Route::get('teacher/courses/in-progress', [CourseController::class, 'getInProgressCourses']);
-
-    Route::get('teacher/courses/pending', [CourseController::class, 'getPendingCourses']);
-
-    Route::get('teacher/courses/published', [CourseController::class, 'getPublishedCourses']);
-
+    Route::get('courses/in-progress', [::class, 'getInProgressCourses']);
+    Route::get('courses/pending', [::class, 'getPendingCourses']);
+    Route::get('courses/published', [::class, 'getPublishedCourses']);
     Route::post('teacher/support/send', [SupportController::class, 'sendSupportMessage']);
 
     Route::get('teacher/support/messages', [SupportController::class, 'getSupportMessages']);
