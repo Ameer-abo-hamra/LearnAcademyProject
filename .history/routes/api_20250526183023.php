@@ -15,11 +15,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 //YourNewPassword123!
 //StrongPassword123!
-
-/**
- * update video audios when the request done from AI
- *
- */
 Route::post('teacher/sign-up', [TeacherController::class, "signUp"]);
 
 Route::post('teacher/login', [TeacherController::class, "login"]);
@@ -63,10 +58,6 @@ Route::group(["middleware" => 'checkuser:student'], function () {
     Route::get("student/courses-saved", [StudentController::class, "getCoursesSaved"]);
 
     Route::get('student/course-for-unenrolled-student/{course_id}', [CourseController::class, "getCourseForStudent"]);
-
-    Route::get('/student/profile', [StudentController::class, 'getProfile']);
-
-    Route::post('/student/profile/update', [StudentController::class, 'updateProfile']);
 
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
@@ -159,7 +150,7 @@ Route::post('student/login', [StudentController::class, "login"]);
 
 
 
-Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
+Route::prefix('admin')->group(function () {
 
     Route::post("login", [UserController::class, "adminLogin"]);
     // Students

@@ -63,9 +63,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
     Route::get("student/courses-saved", [StudentController::class, "getCoursesSaved"]);
 
     Route::get('student/course-for-unenrolled-student/{course_id}', [CourseController::class, "getCourseForStudent"]);
-
-    Route::get('/student/profile', [StudentController::class, 'getProfile']);
-
+     Route::get('/student/profile', [StudentController::class, 'getProfile']);
     Route::post('/student/profile/update', [StudentController::class, 'updateProfile']);
 
 });
@@ -159,7 +157,7 @@ Route::post('student/login', [StudentController::class, "login"]);
 
 
 
-Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
+Route::prefix('admin')->group(function () {
 
     Route::post("login", [UserController::class, "adminLogin"]);
     // Students

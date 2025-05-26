@@ -274,7 +274,7 @@ class VideoController extends Controller
         }
 
         // تحميل الأسئلة مع الخيارات
-        $video->load('questions.choices', 'scripts', 'extensions', 'audios', "videoSubtitles");
+        $video->load('questions.choices', 'scripts', 'extensions', 'audios' , "videoSubtitles");
 
 
 

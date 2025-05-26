@@ -378,57 +378,6 @@ public function getProfile()
     $student = u('student'); // اعتمادًا على الـ Auth guard الخاص بك
     return $this->returnData('Profile retrieved successfully.', $student);
 }
-public function updateProfile(Request $request)
-{
-    $student = u('student');
-
-    $validator = Validator::make($request->all(), [
-        'full_name' => 'nullable|string|max:100',
-        'username' => 'nullable|string|min:4|max:50|unique:students,username,' . $student->id,
-        'age' => 'nullable|integer|min:16|max:100',
-        'gender' => 'nullable|in:0,1',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4048',
-        'password' => 'nullable|string|min:6|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/'
-    ]);
-
-    if ($validator->fails()) {
-        return $this->returnError($validator->errors()->first());
-    }
-
-    try {
-        if ($request->has('full_name')) {
-            $student->full_name = $request->full_name;
-        }
-
-        if ($request->has('username')) {
-            $student->username = $request->username;
-        }
-
-        if ($request->has('age')) {
-            $student->age = $request->age;
-        }
-
-        if ($request->has('gender')) {
-            $student->gender = $request->gender;
-        }
-
-        if ($request->has('password')) {
-            $student->password = Hash::make($request->password);
-        }
-
-        if ($request->hasFile("image")) {
-            $image = imageUpload($request, $student->id, "student_image");
-            $path = assetFromDisk("student_image", $image);
-            $student->image = $path;
-        }
-
-        $student->save();
-
-        return $this->returnData('Profile updated successfully.', $student);
-    } catch (\Exception $e) {
-        return $this->returnError($e->getMessage());
-    }
-}
 
 
 }

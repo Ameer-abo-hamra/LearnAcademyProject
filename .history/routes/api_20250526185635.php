@@ -159,7 +159,7 @@ Route::post('student/login', [StudentController::class, "login"]);
 
 
 
-Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     Route::post("login", [UserController::class, "adminLogin"]);
     // Students

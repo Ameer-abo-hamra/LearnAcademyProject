@@ -135,7 +135,7 @@ class ExtractAudioFromVideo implements ShouldQueue
                     };
 
                     // المسار النهائي = teacher_id/course_id/video_id/files/
-                    $baseFolder = "{$video->course->teacher_id}/{$video->course_id}/{$video->id}";
+                    $baseFolder = "{$video->course->teacher_id}/{$video->course_id}/{$video->id}/";
 
                     // تفريغ الأصلي
                     if (!empty($transcription)) {
