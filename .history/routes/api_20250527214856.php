@@ -70,7 +70,6 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::post('/student/profile/update', [StudentController::class, 'updateProfile']);
 
-    Route::get("student/get-spec/{spec_id}" , [SpecilizationController::class , "getSpecForStudent"]);
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
     /*
@@ -129,8 +128,6 @@ Route::group(["middleware" => 'checkuser:teacher'], function () {
     Route::get("teacher/courses-title-id", [CourseController::class, "getTeacherCoursesTitleId"]);
 
     Route::get("teacher/course-video", [VideoController::class, "getCourseVideo"]);
-
-    Route::get("teacher/get-subtitles/{video_id}/{lang}", [VideoController::class, "getSubTitles"]);
 
     Route::get("teacher/specializations", [SpecilizationController::class, "getSpecializations"]);
 

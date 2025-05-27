@@ -468,13 +468,11 @@ class VideoController extends Controller
         return $this->returnData("progress", $percentage);
     }
 
-    public function getSubTitles($video_id, $lang)
-    {
+    public function getSubTitles() {
 
-        $video = Video::find($video_id);
-        $teacher_id = $video->course->teacher->id;
-        $course_id = $video->course->id;
-        return response()->download(public_path('video_subTitle/' . $teacher_id . '/' . $course_id . '/' . $video_id . '/' . $video_id . '_' . $lang . '.vtt'));
+
+        $student = 
+return response()->download(public_path('video_subTitle/5/12/33_ar.vtt'));
 
     }
 }

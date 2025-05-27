@@ -163,10 +163,8 @@ class SpecilizationController extends Controller
     public function getSpecForStudent($id)
     {
 
-        $spec = Specilization::find($id);
-        $courses = $spec->courses;
+        
 
-        return $this->returnData("", $courses);
     }
 
 }

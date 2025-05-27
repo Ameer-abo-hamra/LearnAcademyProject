@@ -472,6 +472,7 @@ class VideoController extends Controller
     {
 
         $video = Video::find($video_id);
+        $student = u("student");
         $teacher_id = $video->course->teacher->id;
         $course_id = $video->course->id;
         return response()->download(public_path('video_subTitle/' . $teacher_id . '/' . $course_id . '/' . $video_id . '/' . $video_id . '_' . $lang . '.vtt'));

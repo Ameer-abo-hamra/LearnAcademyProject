@@ -70,7 +70,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::post('/student/profile/update', [StudentController::class, 'updateProfile']);
 
-    Route::get("student/get-spec/{spec_id}" , [SpecilizationController::class , "getSpecForStudent"]);
+    Route::get("student/get-spec/{spec_id}" , [])
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
     /*
