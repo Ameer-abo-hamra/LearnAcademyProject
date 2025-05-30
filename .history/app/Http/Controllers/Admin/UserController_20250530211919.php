@@ -882,39 +882,13 @@ class UserController extends Controller
         return $this->returnData("Quiz fetched successfully", $quiz);
     }
 
-    public function getSpecForAdmin($id)
+      public function getSpecForStudent($id)
     {
 
         $spec = Specilization::find($id);
         $courses = $spec->load("courses");
 
         return $this->returnData("", $courses);
-    }
-
-    public function getCoursesByTeacher(Request $request)
-    {
-        $teacher_id = $request->query('teacher_id');
-
-        if (!$teacher_id) {
-            return $this->returnError('teacher_id is required');
-        }
-
-        $teacher = Teacher::with(['courses:id,teacher_id,name'])
-            ->find($teacher_id);
-
-        if (!$teacher) {
-            return $this->returnError('Teacher not found', 404);
-        }
-
-        // فقط إرجاع id و title من الكورسات
-        $courses = $teacher->courses->map(function ($course) {
-            return [
-                'id' => $course->id,
-                'title' => $course->name
-            ];
-        });
-
-        return $this->returnData('courses', $courses);
     }
 
 }

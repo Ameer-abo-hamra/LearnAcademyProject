@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Events\TeacherEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
-use App\Models\Quize;
 use App\Models\Specilization;
 use App\Traits\ResponseTrait;
 use Auth;
@@ -832,89 +831,36 @@ class UserController extends Controller
     }
 
     public function getAdminCourseVideo(Request $request)
-    {
-        $course_id = $request->query("course_id");
-        $video_id = $request->query("video_id");
+{
+    $course_id = $request->query("course_id");
+    $video_id = $request->query("video_id");
 
-        if (!$course_id || !$video_id) {
-            return $this->returnError("course_id and video_id are required", 400);
-        }
-
-        // ✅ التأكد من وجود الكورس (لا حاجة للتحقق من ملكية)
-        $course = Course::find($course_id);
-        if (!$course) {
-            return $this->returnError("Course not found", 404);
-        }
-
-        // ✅ التأكد من أن الفيديو تابع لهذا الكورس
-        $video = $course->videos()->where("id", $video_id)->first();
-        if (!$video) {
-            return $this->returnError("Video not found in this course", 404);
-        }
-
-        // ✅ تحميل العلاقات
-        $video->load([
-            'questions.choices',
-            'scripts',
-            'extensions',
-            'audios',
-            'videoSubtitles'
-        ]);
-
-        return $this->returnData("Video fetched successfully", $video, 200);
+    if (!$course_id || !$video_id) {
+        return $this->returnError("course_id and video_id are required", 400);
     }
 
-    public function getQuizForAdmin($quiz_id)
-    {
-        $quiz = Quize::with([
-            'questions.choices' => function ($query) {
-                $query->select('id', 'choice', 'question_id'); // تحديد الأعمدة
-            },
-            'questions' => function ($query) {
-                $query->select('id', 'text', 'quize_id'); // تحديد الأعمدة
-            }
-        ])->find($quiz_id);
-
-        if (!$quiz) {
-            return $this->returnError("Quiz not found", 404);
-        }
-
-        return $this->returnData("Quiz fetched successfully", $quiz);
+    // ✅ التأكد من وجود الكورس (لا حاجة للتحقق من ملكية)
+    $course = Course::find($course_id);
+    if (!$course) {
+        return $this->returnError("Course not found", 404);
     }
 
-    public function getSpecForAdmin($id)
-    {
-
-        $spec = Specilization::find($id);
-        $courses = $spec->load("courses");
-
-        return $this->returnData("", $courses);
+    // ✅ التأكد من أن الفيديو تابع لهذا الكورس
+    $video = $course->videos()->where("id", $video_id)->first();
+    if (!$video) {
+        return $this->returnError("Video not found in this course", 404);
     }
 
-    public function getCoursesByTeacher(Request $request)
-    {
-        $teacher_id = $request->query('teacher_id');
+    // ✅ تحميل العلاقات
+    $video->load([
+        'questions.choices',
+        'scripts',
+        'extensions',
+        'audios',
+        'videoSubtitles'
+    ]);
 
-        if (!$teacher_id) {
-            return $this->returnError('teacher_id is required');
-        }
-
-        $teacher = Teacher::with(['courses:id,teacher_id,name'])
-            ->find($teacher_id);
-
-        if (!$teacher) {
-            return $this->returnError('Teacher not found', 404);
-        }
-
-        // فقط إرجاع id و title من الكورسات
-        $courses = $teacher->courses->map(function ($course) {
-            return [
-                'id' => $course->id,
-                'title' => $course->name
-            ];
-        });
-
-        return $this->returnData('courses', $courses);
-    }
+    return $this->returnData("Video fetched successfully", $video, 200);
+}
 
 }

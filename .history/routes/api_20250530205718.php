@@ -70,7 +70,7 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::post('/student/profile/update', [StudentController::class, 'updateProfile']);
 
-    Route::get("student/get-spec/{spec_id}", [SpecilizationController::class, "getSpecForStudent"]);
+    Route::get("student/get-spec/{spec_id}" , [SpecilizationController::class , "getSpecForStudent"]);
 });
 Route::group(["middleware" => 'checkuser:teacher'], function () {
     /*
@@ -164,10 +164,9 @@ Route::post('student/login', [StudentController::class, "login"]);
 
 
 
-Route::post("admin/login", [UserController::class, "adminLogin"]);
-
 Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
 
+    Route::post("login", [UserController::class, "adminLogin"]);
     // Students
     Route::post('/students', [UserController::class, 'createStudent']);
 
@@ -216,13 +215,7 @@ Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
     // جلب جميع الرسائل التي تخص المستخدم (مرسلة أو مستقبلة)
     Route::get('/support/messages', [SupportController::class, 'getSupportMessages']);
 
-    Route::get('video', [UserController::class, 'getAdminCourseVideo']);
-
-    Route::get('get-quiz-for-admin/{quiz_id}', [UserController::class, 'getQuizForAdmin']);
-
-    Route::get('get-spec-for-admin/{spec_id}', [UserController::class, 'getSpecForAdmin']);
-
-    Route::get('get-courses-by-teacher', [UserController::class, 'getCoursesByTeacher']);
+     Route::get('admin/video', [AdminVideoController::class, 'getAdminCourseVideo']);
 });
 
 Route::get("w", function () {

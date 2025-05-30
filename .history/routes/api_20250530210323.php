@@ -165,7 +165,6 @@ Route::post('student/login', [StudentController::class, "login"]);
 
 
 Route::post("admin/login", [UserController::class, "adminLogin"]);
-
 Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
 
     // Students
@@ -217,12 +216,6 @@ Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
     Route::get('/support/messages', [SupportController::class, 'getSupportMessages']);
 
     Route::get('video', [UserController::class, 'getAdminCourseVideo']);
-
-    Route::get('get-quiz-for-admin/{quiz_id}', [UserController::class, 'getQuizForAdmin']);
-
-    Route::get('get-spec-for-admin/{spec_id}', [UserController::class, 'getSpecForAdmin']);
-
-    Route::get('get-courses-by-teacher', [UserController::class, 'getCoursesByTeacher']);
 });
 
 Route::get("w", function () {

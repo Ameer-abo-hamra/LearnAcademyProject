@@ -222,7 +222,7 @@ Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
 
     Route::get('get-spec-for-admin/{spec_id}', [UserController::class, 'getSpecForAdmin']);
 
-    Route::get('get-courses-by-teacher', [UserController::class, 'getCoursesByTeacher']);
+    Route::get('get-courses-by-teacher/{teacher_id}', [UserController::class, 'getSpecForAdmin']);
 });
 
 Route::get("w", function () {

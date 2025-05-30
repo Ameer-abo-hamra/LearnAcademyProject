@@ -221,8 +221,6 @@ Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
     Route::get('get-quiz-for-admin/{quiz_id}', [UserController::class, 'getQuizForAdmin']);
 
     Route::get('get-spec-for-admin/{spec_id}', [UserController::class, 'getSpecForAdmin']);
-
-    Route::get('get-courses-by-teacher', [UserController::class, 'getCoursesByTeacher']);
 });
 
 Route::get("w", function () {

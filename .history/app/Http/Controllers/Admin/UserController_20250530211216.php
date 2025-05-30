@@ -865,56 +865,21 @@ class UserController extends Controller
     }
 
     public function getQuizForAdmin($quiz_id)
-    {
-        $quiz = Quize::with([
-            'questions.choices' => function ($query) {
-                $query->select('id', 'choice', 'question_id'); // تحديد الأعمدة
-            },
-            'questions' => function ($query) {
-                $query->select('id', 'text', 'quize_id'); // تحديد الأعمدة
-            }
-        ])->find($quiz_id);
-
-        if (!$quiz) {
-            return $this->returnError("Quiz not found", 404);
+{
+    $quiz = Quize::with([
+        'questions.choices' => function ($query) {
+            $query->select('id', 'choice', 'question_id'); // تحديد الأعمدة
+        },
+        'questions' => function ($query) {
+            $query->select('id', 'question', 'quiz_id'); // تحديد الأعمدة
         }
+    ])->find($quiz_id);
 
-        return $this->returnData("Quiz fetched successfully", $quiz);
+    if (!$quiz) {
+        return $this->returnError("Quiz not found", 404);
     }
 
-    public function getSpecForAdmin($id)
-    {
-
-        $spec = Specilization::find($id);
-        $courses = $spec->load("courses");
-
-        return $this->returnData("", $courses);
-    }
-
-    public function getCoursesByTeacher(Request $request)
-    {
-        $teacher_id = $request->query('teacher_id');
-
-        if (!$teacher_id) {
-            return $this->returnError('teacher_id is required');
-        }
-
-        $teacher = Teacher::with(['courses:id,teacher_id,name'])
-            ->find($teacher_id);
-
-        if (!$teacher) {
-            return $this->returnError('Teacher not found', 404);
-        }
-
-        // فقط إرجاع id و title من الكورسات
-        $courses = $teacher->courses->map(function ($course) {
-            return [
-                'id' => $course->id,
-                'title' => $course->name
-            ];
-        });
-
-        return $this->returnData('courses', $courses);
-    }
+    return $this->returnData("Quiz fetched successfully", $quiz);
+}
 
 }

@@ -164,7 +164,7 @@ class SpecilizationController extends Controller
     {
 
         $spec = Specilization::find($id);
-        $courses = $spec->load("courses");
+        $courses = $spec-;
 
         return $this->returnData("", $courses);
     }

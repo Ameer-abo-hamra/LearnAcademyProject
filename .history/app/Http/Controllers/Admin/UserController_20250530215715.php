@@ -899,7 +899,7 @@ class UserController extends Controller
             return $this->returnError('teacher_id is required');
         }
 
-        $teacher = Teacher::with(['courses:id,teacher_id,name'])
+        $teacher = Teacher::with(['courses:id,teacher_id,title'])
             ->find($teacher_id);
 
         if (!$teacher) {
