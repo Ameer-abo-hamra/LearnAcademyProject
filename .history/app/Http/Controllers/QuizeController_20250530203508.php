@@ -262,13 +262,13 @@ class QuizeController extends Controller
             ]);
         }
 
+        // ✅ استدعاء completeContent بعد حل الكويز حتى لو لم يكن نهائيًا
         $requestForCompletion = new \Illuminate\Http\Request();
         $requestForCompletion->merge([
             'id' => $quiz->id,
             'type' => 'quiz'
         ]);
-
-        app()->make(\App\Http\Controllers\VideoController::class)->completeContent($requestForCompletion);
+        app()->call([\App\Http\Controllers\VideoController::class, 'completeContent'], ['request' => $requestForCompletion]);
 
         return $this->returnData('Quiz Result', [
             'total_questions' => $totalQuestions,

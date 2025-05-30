@@ -331,7 +331,7 @@ class StudentController extends Controller
                     $orderedItems[] = [
                         'type' => 'quiz',
                         'model' => $quiz,
-                        'order_key' => $to_order + 0.5, // بين الفيديوين
+                        'order_key' => $from_order + 0.5, // بين الفيديوين
                     ];
                 }
             }

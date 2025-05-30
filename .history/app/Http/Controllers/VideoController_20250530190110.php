@@ -406,7 +406,7 @@ class VideoController extends Controller
             return $this->returnError("Invalid content type or id.");
         }
 
-        $contentType = $type === 'video' ? \App\Models\Video::class : \App\Models\Quize::class;
+        $contentType = $type === 'video' ? \App\Models\Video::class : \App\Models\Quiz::class;
 
         $entry = StudentCourseContent::where('student_id', $student->id)
             ->where('content_id', $content_id)

@@ -50,9 +50,9 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::get("student/get-subtitles/{video_id}/{lang}", [VideoController::class, "getSubTitles"]);
 
-    Route::post("student/mark-content-as-done", [VideoController::class, "completeContent"]);
+    Route::post("student/mark-video-as-watched/{video_id}", [VideoController::class, "completeVideo"]);
 
-    Route::get('student/get-percentage-for-course/{course_id}', [VideoController::class, "getCoursePercentage"]);
+    Route::get('student/get-percentage-for-course/{course_id}', [VideoController::class, "getCoursePrecentage"]);
 
     Route::get("student/get-quiz/{quiz_id}", [QuizeController::class, "getQuizForStudent"]);
 
@@ -173,16 +173,13 @@ Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
     Route::post('/students/{id}', [UserController::class, 'updateStudent']);
 
     Route::delete('/students/{id}', [UserController::class, 'deleteStudent']);
-
+    
     Route::get('/get-students', [UserController::class, 'getStudents']);
 
     // Teachers
     Route::post('/teachers', [UserController::class, 'createTeacher']);
-
     Route::post('/teachers/{id}', [UserController::class, 'updateTeacher']);
-
     Route::delete('/teachers/{id}', [UserController::class, 'deleteTeacher']);
-
     Route::get('/get-teachers', [UserController::class, 'getTeachers']);
 
     // Course Subscriptions

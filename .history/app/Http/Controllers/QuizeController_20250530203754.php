@@ -262,13 +262,13 @@ class QuizeController extends Controller
             ]);
         }
 
-        $requestForCompletion = new \Illuminate\Http\Request();
-        $requestForCompletion->merge([
-            'id' => $quiz->id,
-            'type' => 'quiz'
-        ]);
+    $requestForCompletion = new \Illuminate\Http\Request();
+$requestForCompletion->merge([
+    'id' => $quiz->id,
+    'type' => 'quiz'
+]);
 
-        app()->make(\App\Http\Controllers\VideoController::class)->completeContent($requestForCompletion);
+app()->make(\App\Http\Controllers\VideoController::class)->completeContent($requestForCompletion);
 
         return $this->returnData('Quiz Result', [
             'total_questions' => $totalQuestions,

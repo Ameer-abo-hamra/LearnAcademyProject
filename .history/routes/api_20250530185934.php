@@ -50,9 +50,9 @@ Route::group(["middleware" => 'checkuser:student'], function () {
 
     Route::get("student/get-subtitles/{video_id}/{lang}", [VideoController::class, "getSubTitles"]);
 
-    Route::post("student/mark-content-as-done", [VideoController::class, "completeContent"]);
+    Route::post("student/mark-content-as-done/{content_id}/{type}", [VideoController::class, "completeContent"]);
 
-    Route::get('student/get-percentage-for-course/{course_id}', [VideoController::class, "getCoursePercentage"]);
+    Route::get('student/get-percentage-for-course/{course_id}', [VideoController::class, "getCoursePrecentage"]);
 
     Route::get("student/get-quiz/{quiz_id}", [QuizeController::class, "getQuizForStudent"]);
 

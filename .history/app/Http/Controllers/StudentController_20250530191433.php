@@ -327,11 +327,11 @@ class StudentController extends Controller
                 $from_order = $videos[$quiz->from_video]->sequential_order ?? null;
                 $to_order = $videos[$quiz->to_video]->sequential_order ?? null;
 
-                if ($to_order === $video->sequential_order) {
+                if ($from_order === $video->sequential_order) {
                     $orderedItems[] = [
                         'type' => 'quiz',
                         'model' => $quiz,
-                        'order_key' => $to_order + 0.5, // بين الفيديوين
+                        'order_key' => $from_order + 0.5, // بين الفيديوين
                     ];
                 }
             }

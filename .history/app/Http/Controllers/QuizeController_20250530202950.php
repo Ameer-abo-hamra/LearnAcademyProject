@@ -156,33 +156,33 @@ class QuizeController extends Controller
         }
     }
 
-    public function getQuizeForTeacher(Request $request)
-    {
-        $course_id = $request->query("course_id");
-        $quiz_id = $request->query("quiz_id");
+public function getQuizeForTeacher(Request $request)
+{
+    $course_id = $request->query("course_id");
+    $quiz_id = $request->query("quiz_id");
 
-        // الخطوة 1: نتأكد أن المدرّس يملك هذا الكورس
-        $course = u("teacher")->courses()->where("id", $course_id)->first();
+    // الخطوة 1: نتأكد أن المدرّس يملك هذا الكورس
+    $course = u("teacher")->courses()->where("id", $course_id)->first();
 
-        if ($course) {
-            // الخطوة 2: نبحث عن الكويز بشكل مباشر كـ object
-            $quiz = $course->quiezes()->where("id", $quiz_id)->first();
+    if ($course) {
+        // الخطوة 2: نبحث عن الكويز بشكل مباشر كـ object
+        $quiz = $course->quiezes()->where("id", $quiz_id)->first();
 
-            if (!$quiz) {
-                // لو ما وجدنا الكويز
-                return $this->returnError("Quiz not found.");
-            }
-
-            // الخطوة 3: تحميل الأسئلة والاختيارات المرتبطة
-            $quiz->load("questions.choices");
-
-            // الخطوة 4: نعيد الكويز كـ object
-            return $this->returnData("quiz", $quiz);
-        } else {
-            // لو المدرّس لا يملك هذا الكورس
-            return $this->returnError("You cannot show this quiz :(");
+        if (!$quiz) {
+            // لو ما وجدنا الكويز
+            return $this->returnError("Quiz not found.");
         }
+
+        // الخطوة 3: تحميل الأسئلة والاختيارات المرتبطة
+        $quiz->load("questions.choices");
+
+        // الخطوة 4: نعيد الكويز كـ object
+        return $this->returnData("quiz", $quiz);
+    } else {
+        // لو المدرّس لا يملك هذا الكورس
+        return $this->returnError("You cannot show this quiz :(");
     }
+}
 
     public function getQuizForStudent($quiz_id)
     {
@@ -218,7 +218,7 @@ class QuizeController extends Controller
 
         $percentage = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100, 2) : 0;
 
-        // ...
+       // ...
 
         if ($quiz->is_final) {
             if ($percentage >= 70) {
@@ -262,13 +262,13 @@ class QuizeController extends Controller
             ]);
         }
 
+        // ✅ استدعاء completeContent بعد حل الكويز حتى لو لم يكن نهائيًا
         $requestForCompletion = new \Illuminate\Http\Request();
         $requestForCompletion->merge([
             'id' => $quiz->id,
             'type' => 'quiz'
         ]);
-
-        app()->make(\App\Http\Controllers\VideoController::class)->completeContent($requestForCompletion);
+        app()->call([self::class, 'completeContent'], ['request' => $requestForCompletion]);
 
         return $this->returnData('Quiz Result', [
             'total_questions' => $totalQuestions,

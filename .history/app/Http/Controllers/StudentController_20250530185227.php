@@ -9,7 +9,6 @@ use App\Models\Specilization;
 use App\Models\StudentCourseContent;
 use App\Models\StudentCourseVideo;
 use App\Models\Teacher;
-use App\Models\Video;
 use DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\createStudent;
@@ -309,7 +308,7 @@ class StudentController extends Controller
             ->get()
             ->keyBy('id'); // لتسهيل الوصول إلى video عبر ID لاحقًا
 
-        $quizzes = Quize::where('course_id', $course_id)->get();
+        $quizzes = Quiz::where('course_id', $course_id)->get();
 
         // تحويل الفيديوهات إلى مصفوفة مرتبة حسب sequential_order
         $orderedItems = [];
@@ -324,14 +323,14 @@ class StudentController extends Controller
             // إضافة الكويزات التي تأتي بعد هذا الفيديو
             foreach ($quizzes as $quiz) {
                 // نحصل على sequential_order للفيديوين المرتبطين بالكويز
-                $from_order = $videos[$quiz->from_video]->sequential_order ?? null;
-                $to_order = $videos[$quiz->to_video]->sequential_order ?? null;
+                $from_order = $videos[$quiz->from_video_id]->sequential_order ?? null;
+                $to_order = $videos[$quiz->to_video_id]->sequential_order ?? null;
 
-                if ($to_order === $video->sequential_order) {
+                if ($from_order === $video->sequential_order) {
                     $orderedItems[] = [
                         'type' => 'quiz',
                         'model' => $quiz,
-                        'order_key' => $to_order + 0.5, // بين الفيديوين
+                        'order_key' => $from_order + 0.5, // بين الفيديوين
                     ];
                 }
             }
@@ -351,7 +350,7 @@ class StudentController extends Controller
                 'student_id' => $student_id,
                 'course_id' => $course_id,
                 'content_id' => $item['model']->id,
-                'content_type' => $item['type'] === 'video' ? Video::class : Quize::class,
+                'content_type' => $item['type'] === 'video' ? Video::class : Quiz::class,
                 'order_index' => $orderIndex++,
                 'locked' => !$isFirst, // فقط أول عنصر غير مقفل
                 'created_at' => now(),

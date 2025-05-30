@@ -161,26 +161,12 @@ class QuizeController extends Controller
         $course_id = $request->query("course_id");
         $quiz_id = $request->query("quiz_id");
 
-        // الخطوة 1: نتأكد أن المدرّس يملك هذا الكورس
-        $course = u("teacher")->courses()->where("id", $course_id)->first();
-
-        if ($course) {
-            // الخطوة 2: نبحث عن الكويز بشكل مباشر كـ object
-            $quiz = $course->quiezes()->where("id", $quiz_id)->first();
-
-            if (!$quiz) {
-                // لو ما وجدنا الكويز
-                return $this->returnError("Quiz not found.");
-            }
-
-            // الخطوة 3: تحميل الأسئلة والاختيارات المرتبطة
-            $quiz->load("questions.choices");
-
-            // الخطوة 4: نعيد الكويز كـ object
-            return $this->returnData("quiz", $quiz);
+        if ($quiz = u("teacher")->courses->where("id", $course_id)->first()) {
+            $quiz = $quiz-
+            $data = $quiz->load("questions.choices");
+            return $this->returnData("", $data);
         } else {
-            // لو المدرّس لا يملك هذا الكورس
-            return $this->returnError("You cannot show this quiz :(");
+            return $this->returnError("you can not show this quiz :(");
         }
     }
 
@@ -218,9 +204,10 @@ class QuizeController extends Controller
 
         $percentage = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100, 2) : 0;
 
-        // ...
-
         if ($quiz->is_final) {
+
+
+            // 3. التحقق من النسبة ومنح النقاط إن لم تُمنح مسبقًا
             if ($percentage >= 70) {
                 $alreadyRewarded = $student->quizes()
                     ->where('quiz_id', $quiz->id)
@@ -235,47 +222,31 @@ class QuizeController extends Controller
                     }
 
                     $student->save();
-
+                    // تحديث is_rewarded إلى true
                     $student->quizes()->updateExistingPivot($quiz->id, [
                         'is_rewarded' => true,
                         "completed_at" => Carbon::now()
                     ]);
-
-                    // تعليم الكويز كمكتمل وفتح التالي
-                    $requestForCompletion = new \Illuminate\Http\Request();
-                    $requestForCompletion->merge([
-                        'id' => $quiz->id,
-                        'type' => 'quiz'
-                    ]);
-                    app()->call([self::class, 'completeContent'], ['request' => $requestForCompletion]);
-
                     return $this->returnData("", "hi");
                 }
-
+                // 1. تحديث حالة الكورس
                 $student->courses()->updateExistingPivot($quiz->course->id, [
                     'status' => 1
                 ]);
-            }
 
+                // 2. تأكد من وجود سجل في quiz_student (حتى بدون نقاط)
+
+            }
             $student->quizes()->syncWithoutDetaching([
                 $quiz->id => ['is_rewarded' => false]
             ]);
         }
-
-        $requestForCompletion = new \Illuminate\Http\Request();
-        $requestForCompletion->merge([
-            'id' => $quiz->id,
-            'type' => 'quiz'
-        ]);
-
-        app()->make(\App\Http\Controllers\VideoController::class)->completeContent($requestForCompletion);
 
         return $this->returnData('Quiz Result', [
             'total_questions' => $totalQuestions,
             'correct_answers' => $correctCount,
             'score_percentage' => $percentage
         ]);
-
     }
 
 }

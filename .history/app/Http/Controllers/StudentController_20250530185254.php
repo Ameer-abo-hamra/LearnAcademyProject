@@ -324,14 +324,14 @@ class StudentController extends Controller
             // إضافة الكويزات التي تأتي بعد هذا الفيديو
             foreach ($quizzes as $quiz) {
                 // نحصل على sequential_order للفيديوين المرتبطين بالكويز
-                $from_order = $videos[$quiz->from_video]->sequential_order ?? null;
-                $to_order = $videos[$quiz->to_video]->sequential_order ?? null;
+                $from_order = $videos[$quiz->from_video_id]->sequential_order ?? null;
+                $to_order = $videos[$quiz->to_video_id]->sequential_order ?? null;
 
-                if ($to_order === $video->sequential_order) {
+                if ($from_order === $video->sequential_order) {
                     $orderedItems[] = [
                         'type' => 'quiz',
                         'model' => $quiz,
-                        'order_key' => $to_order + 0.5, // بين الفيديوين
+                        'order_key' => $from_order + 0.5, // بين الفيديوين
                     ];
                 }
             }

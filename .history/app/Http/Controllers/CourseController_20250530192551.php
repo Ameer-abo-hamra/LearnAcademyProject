@@ -6,7 +6,6 @@ use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseAttachments;
 use App\Models\Notification;
-use App\Models\StudentCourseContent;
 use App\Models\StudentCourseVideo;
 use App\Traits\ResponseTrait;
 use DB;
@@ -424,7 +423,7 @@ class CourseController extends Controller
                 "is_locked" => $content->locked,
                 "completed_at" => $content->completed_at,
             ]);
-        } elseif ($content->content_type === \App\Models\Quize::class) {
+        } elseif ($content->content_type === \App\Models\Quiz::class) {
             $videosAndQuiz->push((object) [
                 "type" => "quiz",
                 "id" => $model->id,

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use App\Models\Course;
-use App\Models\StudentCourseContent;
 use App\Models\StudentCourseVideo;
 use App\Traits\ResponseTrait;
 use DB;
@@ -395,72 +394,78 @@ class VideoController extends Controller
 
 
 
-    public function completeContent(Request $request)
+    public function completeVideo($video_id)
     {
         $student = u("student");
 
-        $content_id = $request->query('id');
-        $type = $request->query('type');
-
-        if (!$content_id || !$type || !in_array($type, ['video', 'quiz'])) {
-            return $this->returnError("Invalid content type or id.");
+        $video = Video::find($video_id);
+        if (!$video) {
+            return $this->returnError("Video not found.");
         }
 
-        $contentType = $type === 'video' ? \App\Models\Video::class : \App\Models\Quize::class;
+        // ✅ التحقق من الاشتراك في الكورس
+        $isEnrolled = StudentCourseVideo::where('student_id', $student->id)
+            ->where('course_id', $video->course_id)
+            ->exists();
 
-        $entry = StudentCourseContent::where('student_id', $student->id)
-            ->where('content_id', $content_id)
-            ->where('content_type', $contentType)
+        if (!$isEnrolled) {
+            return $this->returnError("You are not enrolled in this course.");
+        }
+
+        // ✅ جلب سجل الطالب والفيديو من جدول student_course_videos
+        $entry = StudentCourseVideo::where('student_id', $student->id)
+            ->where('video_id', $video->id)
             ->first();
 
-        if (!$entry) {
-            return $this->returnError("Content not found or not assigned to you.");
+        if (!$entry || $entry->locked) {
+            return $this->returnError("This video is locked.");
         }
 
-        if ($entry->locked) {
-            return $this->returnError("This content is locked.");
-        }
-
-        // ✅ تعليم كمكتمل
+        // ✅ تعليم الفيديو كمكتمل
         $entry->update(['completed_at' => now()]);
 
-        // ✅ محاولة فتح العنصر التالي في الترتيب
-        $next = StudentCourseContent::where('student_id', $student->id)
-            ->where('course_id', $entry->course_id)
-            ->where('order_index', '>', $entry->order_index)
-            ->orderBy('order_index')
+        // ✅ محاولة فتح الفيديو التالي (إن وجد)
+        $nextVideo = Video::where('course_id', $video->course_id)
+            ->where('sequential_order', '=', $video->sequential_order + 1)
             ->first();
 
-        if ($next && $next->locked) {
-            $next->update(['locked' => false]);
+        if ($nextVideo) {
+            $nextEntry = StudentCourseVideo::where('student_id', $student->id)
+                ->where('video_id', $nextVideo->id)
+                ->first();
+
+            if ($nextEntry && $nextEntry->locked) {
+                $nextEntry->update(['locked' => false]);
+            } elseif ($nextEntry && !$nextEntry->locked) {
+                return $this->returnError("The next video is already unlocked.");
+            }
         }
 
-        return $this->returnSuccess("Content completed successfully.");
+        return $this->returnSuccess("Video completed successfully.");
     }
 
 
+ public function getCoursePercentage($course_id)
+{
+    $student = u("student");
 
-    public function getCoursePercentage($course_id)
-    {
-        $student = u("student");
+    $total = StudentCourseContent::where('student_id', $student->id)
+        ->where('course_id', $course_id)
+        ->count();
 
-        $total = StudentCourseContent::where('student_id', $student->id)
-            ->where('course_id', $course_id)
-            ->count();
-
-        if ($total === 0) {
-            return $this->returnData("progress", 0);
-        }
-
-        $completed = StudentCourseContent::where('student_id', $student->id)
-            ->where('course_id', $course_id)
-            ->whereNotNull('completed_at')
-            ->count();
-
-        $percentage = round(($completed / $total) * 100, 2);
-
-        return $this->returnData("progress", $percentage);
+    if ($total === 0) {
+        return $this->returnData("progress", 0);
     }
+
+    $completed = StudentCourseContent::where('student_id', $student->id)
+        ->where('course_id', $course_id)
+        ->whereNotNull('completed_at')
+        ->count();
+
+    $percentage = round(($completed / $total) * 100, 2);
+
+    return $this->returnData("progress", $percentage);
+}
 
     public function getSubTitles($video_id, $lang)
     {

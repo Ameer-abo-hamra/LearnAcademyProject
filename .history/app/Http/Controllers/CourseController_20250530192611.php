@@ -424,7 +424,7 @@ class CourseController extends Controller
                 "is_locked" => $content->locked,
                 "completed_at" => $content->completed_at,
             ]);
-        } elseif ($content->content_type === \App\Models\Quize::class) {
+        } elseif ($content->content_type === \App\Models\Quiz::class) {
             $videosAndQuiz->push((object) [
                 "type" => "quiz",
                 "id" => $model->id,

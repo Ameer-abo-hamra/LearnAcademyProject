@@ -395,49 +395,41 @@ class VideoController extends Controller
 
 
 
-    public function completeContent(Request $request)
-    {
-        $student = u("student");
+ public function completeContent($content_id, $type)
+{
+    $student = u("student");
 
-        $content_id = $request->query('id');
-        $type = $request->query('type');
+    $contentType = $type === 'video' ? \App\Models\Video::class : \App\Models\Quiz::class;
 
-        if (!$content_id || !$type || !in_array($type, ['video', 'quiz'])) {
-            return $this->returnError("Invalid content type or id.");
-        }
+    $entry = StudentCourseContent::where('student_id', $student->id)
+        ->where('content_id', $content_id)
+        ->where('content_type', $contentType)
+        ->first();
 
-        $contentType = $type === 'video' ? \App\Models\Video::class : \App\Models\Quize::class;
-
-        $entry = StudentCourseContent::where('student_id', $student->id)
-            ->where('content_id', $content_id)
-            ->where('content_type', $contentType)
-            ->first();
-
-        if (!$entry) {
-            return $this->returnError("Content not found or not assigned to you.");
-        }
-
-        if ($entry->locked) {
-            return $this->returnError("This content is locked.");
-        }
-
-        // ✅ تعليم كمكتمل
-        $entry->update(['completed_at' => now()]);
-
-        // ✅ محاولة فتح العنصر التالي في الترتيب
-        $next = StudentCourseContent::where('student_id', $student->id)
-            ->where('course_id', $entry->course_id)
-            ->where('order_index', '>', $entry->order_index)
-            ->orderBy('order_index')
-            ->first();
-
-        if ($next && $next->locked) {
-            $next->update(['locked' => false]);
-        }
-
-        return $this->returnSuccess("Content completed successfully.");
+    if (!$entry) {
+        return $this->returnError("Content not found or not assigned to you.");
     }
 
+    if ($entry->locked) {
+        return $this->returnError("This content is locked.");
+    }
+
+    // تعليم كمكتمل
+    $entry->update(['completed_at' => now()]);
+
+    // محاولة فتح العنصر التالي حسب الترتيب
+    $next = StudentCourseContent::where('student_id', $student->id)
+        ->where('course_id', $entry->course_id)
+        ->where('order_index', '>', $entry->order_index)
+        ->orderBy('order_index')
+        ->first();
+
+    if ($next && $next->locked) {
+        $next->update(['locked' => false]);
+    }
+
+    return $this->returnSuccess("Content completed successfully.");
+}
 
 
     public function getCoursePercentage($course_id)
