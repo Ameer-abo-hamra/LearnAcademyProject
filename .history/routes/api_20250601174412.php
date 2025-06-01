@@ -169,19 +169,13 @@ Route::post("admin/login", [UserController::class, "adminLogin"]);
 Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
 
     Route::get('categories', [CategoryController::class, 'index']);
-
     Route::post('categories', [CategoryController::class, 'store']);
-
     Route::put('categories/{id}', [CategoryController::class, 'update']);
-
     Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
 
     Route::get('skills', [SkillController::class, 'index']);
-
     Route::post('skills', [SkillController::class, 'store']);
-
     Route::put('skills/{id}', [SkillController::class, 'update']);
-
     Route::delete('skills/{id}', [SkillController::class, 'destroy']);
 
     // Students

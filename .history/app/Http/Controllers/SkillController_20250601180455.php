@@ -26,27 +26,24 @@ class SkillController extends Controller
 
         return $this->returnData("Skills fetched successfully", $skills);
     }
+ public function index()
+    {
+        $skills = Skill::with('category:id,title')
+            ->select('id', 'title', 'category_id')
+            ->get()
+            ->map(function ($skill) {
+                return [
+                    'id' => $skill->id,
+                    'title' => $skill->title,
+                    'category' => [
+                        'id' => $skill->category->id,
+                        'title' => $skill->category->title
+                    ]
+                ];
+            });
 
-public function index()
-{
-    $skillsPaginated = Skill::with('category:id,title')
-        ->select('id', 'title', 'category_id')
-        ->paginate(10); // حدد العدد حسب الحاجة
-
-    $skills = $skillsPaginated->getCollection()->map(function ($skill) {
-        return [
-            'id' => $skill->id,
-            'title' => $skill->title,
-            'category' => [
-                'id' => $skill->category->id,
-                'title' => $skill->category->title
-            ]
-        ];
-    });
-
-    return $this->returnData('skills', $skills, 200, [$skillsPaginated]);
-}
-
+        return $this->returnData('skills', $skills);
+    }
 
     public function store(Request $request)
     {

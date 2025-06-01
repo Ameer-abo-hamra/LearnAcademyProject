@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use App\Models\Category;
-use App\Models\Skill;
 use App\Traits\ResponseTrait;
 use Validator;
 use Illuminate\Http\Request;
@@ -26,27 +25,24 @@ class SkillController extends Controller
 
         return $this->returnData("Skills fetched successfully", $skills);
     }
+ public function index()
+    {
+        $skills = Skill::with('category:id,title')
+            ->select('id', 'title', 'category_id')
+            ->get()
+            ->map(function ($skill) {
+                return [
+                    'id' => $skill->id,
+                    'title' => $skill->title,
+                    'category' => [
+                        'id' => $skill->category->id,
+                        'title' => $skill->category->title
+                    ]
+                ];
+            });
 
-public function index()
-{
-    $skillsPaginated = Skill::with('category:id,title')
-        ->select('id', 'title', 'category_id')
-        ->paginate(10); // حدد العدد حسب الحاجة
-
-    $skills = $skillsPaginated->getCollection()->map(function ($skill) {
-        return [
-            'id' => $skill->id,
-            'title' => $skill->title,
-            'category' => [
-                'id' => $skill->category->id,
-                'title' => $skill->category->title
-            ]
-        ];
-    });
-
-    return $this->returnData('skills', $skills, 200, [$skillsPaginated]);
-}
-
+        return $this->returnData('skills', $skills);
+    }
 
     public function store(Request $request)
     {
@@ -73,24 +69,12 @@ public function index()
         return $this->returnSuccess("Skill updated successfully");
     }
 
-   public function destroy($id)
-{
-    $skill = Skill::find($id);
-    if (!$skill) {
-        return $this->returnError("Skill not found", 404);
+    public function destroy($id)
+    {
+        $skill = Skill::find($id);
+        if (!$skill) return $this->returnError("Skill not found", 404);
+
+        $skill->delete();
+        return $this->returnSuccess("Skill deleted successfully");
     }
-
-    // تحقق من الارتباطات
-    if (
-        $skill->courses()->exists() ||
-        $skill->aquirements()->exists() ||
-        $skill->specializations()->exists()
-    ) {
-        return $this->returnError("Cannot delete: Skill is linked to courses, aquirements, or specializations.");
-    }
-
-    $skill->delete();
-    return $this->returnSuccess("Skill deleted successfully");
-}
-
 }

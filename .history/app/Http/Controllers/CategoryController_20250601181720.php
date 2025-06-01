@@ -14,11 +14,11 @@ class CategoryController extends Controller
         return $this->returnData("categories", Category::all()->makeHidden(['created_at', 'updated_at']));
 
     }
-  public function index()
-{
-    $categories = Category::select('id', 'title')->paginate(10); // حدد عدد العناصر في كل صفحة حسب الحاجة
-    return $this->returnData('categories', $categories->items(), 200, [$categories]);
-}
+    public function index()
+    {
+        $categories = Category::select('id', 'title')->get();
+        return $this->returnData('categories', $categories);
+    }
 
     public function store(Request $request)
     {

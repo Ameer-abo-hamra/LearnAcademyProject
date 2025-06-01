@@ -73,12 +73,12 @@ class ExtractAudioFromVideo implements ShouldQueue
             $response = Http::withHeaders([
                 'accept' => 'application/json'
             ])->attach(
-                    'file',
-                    file_get_contents($audioAbsolutePath),
-                    basename($audioAbsolutePath)
-                )->post('http://localhost:8002/api/v1/jobs', [
-                        'target_languages' => 'ar,en,fr'
-                    ]);
+                'file',
+                file_get_contents($audioAbsolutePath),
+                basename($audioAbsolutePath)
+            )->post('http://localhost:8002/api/v1/jobs', [
+                'target_languages' => 'ar,en,fr'
+            ]);
 
             $jobId = $response->json('job_id');
 
@@ -109,35 +109,35 @@ class ExtractAudioFromVideo implements ShouldQueue
                     'accept' => 'application/json'
                 ])->get("http://localhost:8002/api/v1/jobs/{$jobId}/result");
 
-                // داخل if ($status === 'completed') { بعد جلب $resultData
                 if ($resultResponse->successful()) {
                     $resultData = $resultResponse->json();
                     $transcription = $resultData['transcription']['segments'] ?? [];
                     $translations = collect($resultData['translations'])->keyBy('language');
 
-                    // ✅ دوال مساعدة محدّثة
+                    // 📝 دوال مساعدة
                     $makeScript = function (array $segments): string {
                         return collect($segments)->map(function ($s) {
-                            return "[{$s['start_timestamp']}] {$s['text']}";
+                            return "[{$s['timestamp']}] {$s['text']}";
                         })->implode("\n");
                     };
 
                     $generateVttContent = function (array $segments): string {
                         $lines = ["WEBVTT\n"];
                         foreach ($segments as $i => $s) {
-                            $start = $s['start_timestamp'];
-                            $end = $s['end_timestamp'] ?? $start;
+                            $start = $s['timestamp'];
+                            $end = isset($segments[$i + 1]) ? $segments[$i + 1]['timestamp'] : $start;
                             $lines[] = $i + 1;
-                            $lines[] = "{$start} --> {$end}";
+                            $lines[] = "{$start}.000 --> {$end}.000";
                             $lines[] = $s['text'];
                             $lines[] = "";
                         }
                         return implode("\n", $lines);
                     };
 
+                    // المسار النهائي = teacher_id/course_id/video_id/files/
                     $baseFolder = "{$video->course->teacher_id}/{$video->course_id}/{$video->id}";
 
-                    // ✅ تفريغ الأصلي
+                    // تفريغ الأصلي
                     if (!empty($transcription)) {
                         $lang = $resultData['transcription']['language'] ?? 'ar';
 
@@ -158,7 +158,7 @@ class ExtractAudioFromVideo implements ShouldQueue
                         ]);
                     }
 
-                    // ✅ الترجمات
+                    // الترجمات
                     foreach ($translations as $lang => $data) {
                         if (!empty($data['segments'])) {
                             $video->scripts()->create([

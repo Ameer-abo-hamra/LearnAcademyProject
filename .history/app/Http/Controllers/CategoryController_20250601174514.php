@@ -14,11 +14,11 @@ class CategoryController extends Controller
         return $this->returnData("categories", Category::all()->makeHidden(['created_at', 'updated_at']));
 
     }
-  public function index()
-{
-    $categories = Category::select('id', 'title')->paginate(10); // حدد عدد العناصر في كل صفحة حسب الحاجة
-    return $this->returnData('categories', $categories->items(), 200, [$categories]);
-}
+    public function index()
+    {
+        $categories = Category::select('id', 'title')->get();
+        return $this->returnData('categories', $categories);
+    }
 
     public function store(Request $request)
     {
@@ -31,26 +31,18 @@ class CategoryController extends Controller
     {
         $request->validate(['title' => 'required|string|max:255']);
         $category = Category::find($id);
-        if (!$category)
-            return $this->returnError("Category not found", 404);
+        if (!$category) return $this->returnError("Category not found", 404);
 
         $category->update(['title' => $request->title]);
         return $this->returnSuccess("Category updated successfully");
     }
 
- public function destroy($id)
-{
-    $category = Category::find($id);
-    if (!$category) {
-        return $this->returnError("Category not found", 404);
+    public function destroy($id)
+    {
+        $category = Category::find($id);
+        if (!$category) return $this->returnError("Category not found", 404);
+
+        $category->delete();
+        return $this->returnSuccess("Category deleted successfully");
     }
-
-    if ($category->skills()->exists() || $category->courses()->exists()) {
-        return $this->returnError("Cannot delete: Category is linked to skills or courses.");
-    }
-
-    $category->delete();
-    return $this->returnSuccess("Category deleted successfully");
-}
-
 }

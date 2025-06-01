@@ -177,11 +177,9 @@ Route::prefix('admin')->middleware(['checkuser:admin'])->group(function () {
     Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
 
     Route::get('skills', [SkillController::class, 'index']);
-
+    
     Route::post('skills', [SkillController::class, 'store']);
-
     Route::put('skills/{id}', [SkillController::class, 'update']);
-
     Route::delete('skills/{id}', [SkillController::class, 'destroy']);
 
     // Students

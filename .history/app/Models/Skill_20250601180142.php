@@ -18,13 +18,8 @@ class Skill extends Model
         return $this->belongsToMany(Specilization::class, '_skill__specilization', "skill_id", "specialization_id"); // افتراضًا
     }
 
-    public function aquirements()
+        public function aquirements()
     {
-        return $this->belongsToMany(Course::class, "course_aquirement", "skill_id", "course_id");
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class, "category_id");
+        return $this->belongsToMany(Course::class, "course_aquirement", "course_id");
     }
 }

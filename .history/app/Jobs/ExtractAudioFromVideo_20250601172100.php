@@ -73,12 +73,12 @@ class ExtractAudioFromVideo implements ShouldQueue
             $response = Http::withHeaders([
                 'accept' => 'application/json'
             ])->attach(
-                    'file',
-                    file_get_contents($audioAbsolutePath),
-                    basename($audioAbsolutePath)
-                )->post('http://localhost:8002/api/v1/jobs', [
-                        'target_languages' => 'ar,en,fr'
-                    ]);
+                'file',
+                file_get_contents($audioAbsolutePath),
+                basename($audioAbsolutePath)
+            )->post('http://localhost:8002/api/v1/jobs', [
+                'target_languages' => 'ar,en,fr'
+            ]);
 
             $jobId = $response->json('job_id');
 
@@ -109,78 +109,79 @@ class ExtractAudioFromVideo implements ShouldQueue
                     'accept' => 'application/json'
                 ])->get("http://localhost:8002/api/v1/jobs/{$jobId}/result");
 
-                // داخل if ($status === 'completed') { بعد جلب $resultData
-                if ($resultResponse->successful()) {
-                    $resultData = $resultResponse->json();
-                    $transcription = $resultData['transcription']['segments'] ?? [];
-                    $translations = collect($resultData['translations'])->keyBy('language');
+               // داخل if ($status === 'completed') { بعد جلب $resultData
+if ($resultResponse->successful()) {
+    $resultData = $resultResponse->json();
+    $transcription = $resultData['transcription']['segments'] ?? [];
+    $translations = collect($resultData['translations'])->keyBy('language');
 
-                    // ✅ دوال مساعدة محدّثة
-                    $makeScript = function (array $segments): string {
-                        return collect($segments)->map(function ($s) {
-                            return "[{$s['start_timestamp']}] {$s['text']}";
-                        })->implode("\n");
-                    };
+    // ✅ دوال مساعدة محدّثة
+    $makeScript = function (array $segments): string {
+        return collect($segments)->map(function ($s) {
+            return "[{$s['start_timestamp']}] {$s['text']}";
+        })->implode("\n");
+    };
 
-                    $generateVttContent = function (array $segments): string {
-                        $lines = ["WEBVTT\n"];
-                        foreach ($segments as $i => $s) {
-                            $start = $s['start_timestamp'];
-                            $end = $s['end_timestamp'] ?? $start;
-                            $lines[] = $i + 1;
-                            $lines[] = "{$start} --> {$end}";
-                            $lines[] = $s['text'];
-                            $lines[] = "";
-                        }
-                        return implode("\n", $lines);
-                    };
+    $generateVttContent = function (array $segments): string {
+        $lines = ["WEBVTT\n"];
+        foreach ($segments as $i => $s) {
+            $start = $s['start_timestamp'];
+            $end = $s['end_timestamp'] ?? $start;
+            $lines[] = $i + 1;
+            $lines[] = "{$start} --> {$end}";
+            $lines[] = $s['text'];
+            $lines[] = "";
+        }
+        return implode("\n", $lines);
+    };
 
-                    $baseFolder = "{$video->course->teacher_id}/{$video->course_id}/{$video->id}";
+    $baseFolder = "{$video->course->teacher_id}/{$video->course_id}/{$video->id}";
 
-                    // ✅ تفريغ الأصلي
-                    if (!empty($transcription)) {
-                        $lang = $resultData['transcription']['language'] ?? 'ar';
+    // ✅ تفريغ الأصلي
+    if (!empty($transcription)) {
+        $lang = $resultData['transcription']['language'] ?? 'ar';
 
-                        $video->scripts()->create([
-                            'language' => $lang,
-                            'script_path' => $makeScript($transcription),
-                        ]);
+        $video->scripts()->create([
+            'language' => $lang,
+            'script_path' => $makeScript($transcription),
+        ]);
 
-                        $fileName = "{$video->id}_{$lang}.vtt";
-                        $fullPath = "{$baseFolder}/{$fileName}";
-                        $vttContent = $generateVttContent($transcription);
+        $fileName = "{$video->id}_{$lang}.vtt";
+        $fullPath = "{$baseFolder}/{$fileName}";
+        $vttContent = $generateVttContent($transcription);
 
-                        Storage::disk('video_subTitle')->put($fullPath, $vttContent);
+        Storage::disk('video_subTitle')->put($fullPath, $vttContent);
 
-                        $video->videoSubtitles()->create([
-                            'language' => $lang,
-                            'path' => assetFromDisk('video_subTitle', $fullPath),
-                        ]);
-                    }
+        $video->videoSubtitles()->create([
+            'language' => $lang,
+            'path' => assetFromDisk('video_subTitle', $fullPath),
+        ]);
+    }
 
-                    // ✅ الترجمات
-                    foreach ($translations as $lang => $data) {
-                        if (!empty($data['segments'])) {
-                            $video->scripts()->create([
-                                'language' => $lang,
-                                'script_path' => $makeScript($data['segments']),
-                            ]);
+    // ✅ الترجمات
+    foreach ($translations as $lang => $data) {
+        if (!empty($data['segments'])) {
+            $video->scripts()->create([
+                'language' => $lang,
+                'script_path' => $makeScript($data['segments']),
+            ]);
 
-                            $fileName = "{$video->id}_{$lang}.vtt";
-                            $fullPath = "{$baseFolder}/{$fileName}";
-                            $vttContent = $generateVttContent($data['segments']);
+            $fileName = "{$video->id}_{$lang}.vtt";
+            $fullPath = "{$baseFolder}/{$fileName}";
+            $vttContent = $generateVttContent($data['segments']);
 
-                            Storage::disk('video_subTitle')->put($fullPath, $vttContent);
+            Storage::disk('video_subTitle')->put($fullPath, $vttContent);
 
-                            $video->videoSubtitles()->create([
-                                'language' => $lang,
-                                'path' => assetFromDisk('video_subTitle', $fullPath),
-                            ]);
-                        }
-                    }
+            $video->videoSubtitles()->create([
+                'language' => $lang,
+                'path' => assetFromDisk('video_subTitle', $fullPath),
+            ]);
+        }
+    }
 
-                    echo "✅ Script and subtitle (VTT) generation completed.\n";
-                } else {
+    echo "✅ Script and subtitle (VTT) generation completed.\n";
+}
+else {
                     echo "❌ Failed to retrieve transcription result for job {$jobId}\n";
                 }
             } else {
