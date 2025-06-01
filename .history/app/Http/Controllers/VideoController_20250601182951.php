@@ -312,9 +312,10 @@ class VideoController extends Controller
 
     // }
 
+
     public function watchVideoForStudent($video_id)
     {
-        $student = u("student");
+        $student = u("student"); // Authenticated student
 
         $video = Video::with(['course', 'questions.choices', 'extensions'])->find($video_id);
 
@@ -322,37 +323,40 @@ class VideoController extends Controller
             return $this->returnError("Video not found.");
         }
 
-        $course = $video->course;
+        $course = $video->course;StudentCourseVideo
 
-        // تحقق من تسجيل الطالب في الكورس
-        if (!$student->courses()->where('courses.id', $course->id)->exists()) {
+        // تحقق من التسجيل في الدورة
+        $isEnrolled = $student->courses()->where('courses.id', $course->id)->exists();
+        if (!$isEnrolled) {
             return $this->returnError("You must enroll in the course to watch this video.");
         }
 
-        // التحقق من أن هذا الفيديو غير مقفل
-        $entry = $student->studentCourseContents()
-            ->where('course_id', $course->id)
-            ->where('content_type', StudentCourseContent::TYPE_VIDEO)
-            ->where('content_id', $video->id)
-            ->first();
+        // الحصول على الفيديوهات السابقة حسب الترتيب
+        $previousVideos = $course->videos()
+            ->where('sequential_order', '<', $video->sequential_order)
+            ->orderBy('sequential_order')
+            ->pluck('id')
+            ->toArray();
 
-        if (!$entry || $entry->locked) {
-            return $this->returnError("This video is locked.");
-        }
+        // جلب الفيديوهات التي شاهدها الطالب
+        $watchedVideos = $student->studentCourseVideos()
+            ->whereIn('video_id', $previousVideos)
+            ->pluck('video_id')
+            ->toArray();
 
-        // التحقق من أن جميع الفيديوهات السابقة قد تمت مشاهدتها (completed_at)
-        $previousContentIds = StudentCourseContent::where('student_id', $student->id)
-            ->where('course_id', $course->id)
-            ->where('content_type', Video::class)
-            ->where('order_index', '<', $entry->order_index)
-            ->pluck('completed_at');
-
-        if ($previousContentIds->contains(null)) {
+        // التأكد من أن كل الفيديوهات السابقة قد شاهدها الطالب
+        $unwatched = array_diff($previousVideos, $watchedVideos);
+        if (!empty($unwatched)) {
             return $this->returnError("You must watch all previous videos before accessing this one.");
         }
 
+        // تسجيل المشاهدة إذا لم تسجل مسبقًا
+        $alreadyWatched = $student->studentCourseVideos()->where('video_id', $video->id)->exists();
+        if (!$alreadyWatched) {
+            $student->studentCourseVideos()->attach($video->id, ['completed_at' => now()]);
+        }
 
-        // إعداد الداتا
+        // إعداد البيانات المسترجعة
         $data = [
             "id" => $video->id,
             "title" => $video->title,
@@ -369,7 +373,7 @@ class VideoController extends Controller
                         return [
                             'id' => $choice->id,
                             'text' => $choice->choice,
-                            'is_correct' => $choice->is_correct, // يمكنك إخفاؤها للطالب
+                            'is_correct' => $choice->is_correct, // إذا بدك تحذفها للطالب ممكن تستثنيها
                         ];
                     }),
                 ];

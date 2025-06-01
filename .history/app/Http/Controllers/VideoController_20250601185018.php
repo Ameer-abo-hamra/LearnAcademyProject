@@ -344,7 +344,7 @@ class VideoController extends Controller
         $previousContentIds = StudentCourseContent::where('student_id', $student->id)
             ->where('course_id', $course->id)
             ->where('content_type', Video::class)
-            ->where('order_index', '<', $entry->order_index)
+            ->where('sequential_order', '<', $entry->order_index)
             ->pluck('completed_at');
 
         if ($previousContentIds->contains(null)) {

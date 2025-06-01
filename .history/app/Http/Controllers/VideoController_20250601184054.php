@@ -332,8 +332,8 @@ class VideoController extends Controller
         // التحقق من أن هذا الفيديو غير مقفل
         $entry = $student->studentCourseContents()
             ->where('course_id', $course->id)
-            ->where('content_type', StudentCourseContent::TYPE_VIDEO)
-            ->where('content_id', $video->id)
+            ->where('content_type', Video::class)
+            ->where('contentable_id', $video->id)
             ->first();
 
         if (!$entry || $entry->locked) {
@@ -343,8 +343,8 @@ class VideoController extends Controller
         // التحقق من أن جميع الفيديوهات السابقة قد تمت مشاهدتها (completed_at)
         $previousContentIds = StudentCourseContent::where('student_id', $student->id)
             ->where('course_id', $course->id)
-            ->where('content_type', Video::class)
-            ->where('order_index', '<', $entry->order_index)
+            ->where('contentable_type', Video::class)
+            ->where('sequential_order', '<', $entry->sequential_order)
             ->pluck('completed_at');
 
         if ($previousContentIds->contains(null)) {

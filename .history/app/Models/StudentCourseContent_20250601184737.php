@@ -8,16 +8,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class StudentCourseContent extends Model
 {
     protected $fillable = [
-        'student_id',
-        'course_id',
-        'content_id',
-        'content_type',
-        'locked',
-        'completed_at',
-        'order_index'
+        'student_id', 'course_id', 'content_id', 'content_type', 'locked', 'completed_at', 'order_index'
     ];
 
-    const TYPE_VIDEO = 'App\Models\Video';
+       const TYPE_VIDEO = 'App\Models\Video';
     const TYPE_QUIZ = 'App\Models\Quize';
     public function content(): MorphTo
     {

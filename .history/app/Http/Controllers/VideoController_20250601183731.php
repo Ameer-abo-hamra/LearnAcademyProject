@@ -312,82 +312,82 @@ class VideoController extends Controller
 
     // }
 
-    public function watchVideoForStudent($video_id)
-    {
-        $student = u("student");
+public function watchVideoForStudent($video_id)
+{
+    $student = u("student");
 
-        $video = Video::with(['course', 'questions.choices', 'extensions'])->find($video_id);
+    $video = Video::with(['course', 'questions.choices', 'extensions'])->find($video_id);
 
-        if (!$video) {
-            return $this->returnError("Video not found.");
-        }
-
-        $course = $video->course;
-
-        // تحقق من تسجيل الطالب في الكورس
-        if (!$student->courses()->where('courses.id', $course->id)->exists()) {
-            return $this->returnError("You must enroll in the course to watch this video.");
-        }
-
-        // التحقق من أن هذا الفيديو غير مقفل
-        $entry = $student->studentCourseContents()
-            ->where('course_id', $course->id)
-            ->where('content_type', StudentCourseContent::TYPE_VIDEO)
-            ->where('content_id', $video->id)
-            ->first();
-
-        if (!$entry || $entry->locked) {
-            return $this->returnError("This video is locked.");
-        }
-
-        // التحقق من أن جميع الفيديوهات السابقة قد تمت مشاهدتها (completed_at)
-        $previousContentIds = StudentCourseContent::where('student_id', $student->id)
-            ->where('course_id', $course->id)
-            ->where('content_type', Video::class)
-            ->where('order_index', '<', $entry->order_index)
-            ->pluck('completed_at');
-
-        if ($previousContentIds->contains(null)) {
-            return $this->returnError("You must watch all previous videos before accessing this one.");
-        }
-
-
-        // إعداد الداتا
-        $data = [
-            "id" => $video->id,
-            "title" => $video->title,
-            "description" => $video->description,
-            "path" => $video->path,
-            "image" => $video->image,
-            "sequential_order" => $video->sequential_order,
-            "questions" => $video->questions->map(function ($question) {
-                return [
-                    'id' => $question->id,
-                    'question_text' => $question->question,
-                    "time_to_appear" => $question->time_to_appear,
-                    'choices' => $question->choices->map(function ($choice) {
-                        return [
-                            'id' => $choice->id,
-                            'text' => $choice->choice,
-                            'is_correct' => $choice->is_correct, // يمكنك إخفاؤها للطالب
-                        ];
-                    }),
-                ];
-            }),
-            "attachments" => $video->extensions->map(function ($attachment) {
-                return [
-                    'id' => $attachment->id,
-                    'path' => $attachment->file_path,
-                    'text' => $attachment->text,
-                ];
-            }),
-            "scripts" => $video->scripts,
-            "subtitels" => $video->videoSubtitles,
-            "audios" => $video->audios
-        ];
-
-        return $this->returnData("Video loaded successfully", $data);
+    if (!$video) {
+        return $this->returnError("Video not found.");
     }
+
+    $course = $video->course;
+
+    // تحقق من تسجيل الطالب في الكورس
+    if (!$student->courses()->where('courses.id', $course->id)->exists()) {
+        return $this->returnError("You must enroll in the course to watch this video.");
+    }
+
+    // التحقق من أن هذا الفيديو غير مقفل
+    $entry = $student->studentCourseContents()
+        ->where('course_id', $course->id)
+        ->where('contentable_type', Video::class)
+        ->where('contentable_id', $video->id)
+        ->first();
+
+    if (!$entry || $entry->locked) {
+        return $this->returnError("This video is locked.");
+    }
+
+    // التحقق من أن جميع الفيديوهات السابقة قد تمت مشاهدتها (completed_at)
+    $previousContentIds = StudentCourseContent::where('student_id', $student->id)
+        ->where('course_id', $course->id)
+        ->where('contentable_type', Video::class)
+        ->where('sequential_order', '<', $entry->sequential_order)
+        ->pluck('completed_at');
+
+    if ($previousContentIds->contains(null)) {
+        return $this->returnError("You must watch all previous videos before accessing this one.");
+    }
+
+
+    // إعداد الداتا
+    $data = [
+        "id" => $video->id,
+        "title" => $video->title,
+        "description" => $video->description,
+        "path" => $video->path,
+        "image" => $video->image,
+        "sequential_order" => $video->sequential_order,
+        "questions" => $video->questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'question_text' => $question->question,
+                "time_to_appear" => $question->time_to_appear,
+                'choices' => $question->choices->map(function ($choice) {
+                    return [
+                        'id' => $choice->id,
+                        'text' => $choice->choice,
+                        'is_correct' => $choice->is_correct, // يمكنك إخفاؤها للطالب
+                    ];
+                }),
+            ];
+        }),
+        "attachments" => $video->extensions->map(function ($attachment) {
+            return [
+                'id' => $attachment->id,
+                'path' => $attachment->file_path,
+                'text' => $attachment->text,
+            ];
+        }),
+        "scripts" => $video->scripts,
+        "subtitels" => $video->videoSubtitles,
+        "audios" => $video->audios
+    ];
+
+    return $this->returnData("Video loaded successfully", $data);
+}
 
 
 
