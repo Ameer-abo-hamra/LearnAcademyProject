@@ -314,7 +314,7 @@ class StudentController extends Controller
         // تحويل الفيديوهات إلى مصفوفة مرتبة حسب sequential_order
         $orderedItems = [];
 
-        foreach ($videos as $video) {
+        foreach ($videos as $video => $key) {
             $orderedItems[] = [
                 'type' => 'video',
                 'model' => $video,
@@ -325,7 +325,7 @@ class StudentController extends Controller
             foreach ($quizzes as $quiz) {
                 // نحصل على sequential_order للفيديوين المرتبطين بالكويز
                 $from_order = $videos[$quiz->from_video]->sequential_order ?? null;
-                $to_order = $quiz->to_video;
+                $to_order = $videos[$key]->sequential_order ?? null;
 
                 if ($to_order === $video->sequential_order) {
                     $orderedItems[] = [

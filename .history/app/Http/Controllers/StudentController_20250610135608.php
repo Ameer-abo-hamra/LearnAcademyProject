@@ -325,7 +325,7 @@ class StudentController extends Controller
             foreach ($quizzes as $quiz) {
                 // نحصل على sequential_order للفيديوين المرتبطين بالكويز
                 $from_order = $videos[$quiz->from_video]->sequential_order ?? null;
-                $to_order = $quiz->to_video;
+                $to_order = $v
 
                 if ($to_order === $video->sequential_order) {
                     $orderedItems[] = [
