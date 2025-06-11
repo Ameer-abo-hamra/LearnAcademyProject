@@ -19,9 +19,7 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             SpecializationSeeder::class,
             AdminSeeder::class,
-            TeacherAndStudentSeeder::class,
-            QuizzesSeeder::class,
-            CourseSkillAndAquirementSeeder::class,
+            TeacherAndStudentSeeder::class ,
         ]);
     }
 }

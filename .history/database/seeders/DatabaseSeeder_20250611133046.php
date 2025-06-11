@@ -20,8 +20,6 @@ class DatabaseSeeder extends Seeder
             SpecializationSeeder::class,
             AdminSeeder::class,
             TeacherAndStudentSeeder::class,
-            QuizzesSeeder::class,
-            CourseSkillAndAquirementSeeder::class,
         ]);
     }
 }

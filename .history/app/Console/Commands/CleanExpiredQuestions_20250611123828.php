@@ -19,8 +19,8 @@ class CleanExpiredQuestions extends Command
         while (true) {
             $cutoff = now()->subSeconds($seconds);
 
-            $questions = Question::with(['choices', 'quiz'])
-                ->whereHas('quiz', fn($q) => $q->where('is_auto_generated', true))
+            $questions = Question::with(['choices', 'quize'])
+                ->whereHas('quize', fn($q) => $q->where('is_auto_generated', true))
                 ->where('created_at', '<', $cutoff)
                 ->get();
 
@@ -33,7 +33,7 @@ class CleanExpiredQuestions extends Command
             }
 
             $this->info(now() . " → Deleted $deleted expired auto-generated questions.");
-            sleep(3600);
+            sleep(10); // انتظر 10 ثواني
         }
     }
 

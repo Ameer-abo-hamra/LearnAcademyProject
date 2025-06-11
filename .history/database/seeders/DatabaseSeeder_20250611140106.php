@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             TeacherAndStudentSeeder::class,
             QuizzesSeeder::class,
             CourseSkillAndAquirementSeeder::class,
+            Course
         ]);
     }
 }

@@ -33,7 +33,7 @@ class CleanExpiredQuestions extends Command
             }
 
             $this->info(now() . " → Deleted $deleted expired auto-generated questions.");
-            sleep(3600);
+            sleep(10); // انتظر 10 ثواني
         }
     }
 
