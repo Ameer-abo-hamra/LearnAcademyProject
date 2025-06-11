@@ -8,4 +8,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('questions:clean-expired')
-        ->dailyAt('00:10');
+        ->dailyAt('00:00');

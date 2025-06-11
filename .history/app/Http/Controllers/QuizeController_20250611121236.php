@@ -368,7 +368,7 @@ class QuizeController extends Controller
 
         $validated = Validator::make($request->all(), [
             'difficulty' => 'required|in:easy,medium,hard',
-            'language' => 'required|in:en,ar,fr',
+            'language' => 'required|in:en,ar',
         ]);
 
         if ($validated->fails()) {

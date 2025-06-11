@@ -368,7 +368,7 @@ class QuizeController extends Controller
 
         $validated = Validator::make($request->all(), [
             'difficulty' => 'required|in:easy,medium,hard',
-            'language' => 'required|in:en,ar,fr',
+            'language' => 'required|in:en,ar',
         ]);
 
         if ($validated->fails()) {
@@ -407,7 +407,7 @@ class QuizeController extends Controller
             foreach ($data['questions'] as $item) {
                 $question = $quiz->questions()->create([
                     'text' => $item['question'],
-                    'creates_at' => Carbon::now()
+                    'creates_at'
                 ]);
 
                 foreach ($item['options'] as $index => $option) {
