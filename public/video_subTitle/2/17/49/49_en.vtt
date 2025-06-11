@@ -1,0 +1,341 @@
+WEBVTT
+
+1
+00:00:01.300 --> 00:00:09.000
+Well, hello, we are here now, after we confirmed that the stone hasn't come out of the board's boundaries.
+
+2
+00:00:09.000 --> 00:00:14.000
+And we confirmed that it's not in the starting area. Hello, we are here now, we are ready to move.
+
+3
+00:00:14.500 --> 00:00:22.500
+Well, hello, just like you saw in the video, we have rules for moving. Hello, we are the first check, so we need to check what? What do we need to check?
+
+4
+00:00:22.900 --> 00:00:28.000
+It's that we see the new position we want to go to, is it captured? Okay? What did we say the capture is?
+
+5
+00:00:28.300 --> 00:00:36.900
+It's that it refers to a group of stones, it could be his? It could be the opponent's, so we need to check if this capture exists at all, the first thing.
+
+6
+00:00:37.300 --> 00:00:45.700
+Meaning, by default, in the position we want to go to, we need to see if there is a capture? Okay? If there is a capture, then we finish with it.
+
+7
+00:00:45.700 --> 00:00:52.500
+If there isn't a second capture. Well, let's assume there is a capture. Well, but I confirmed that there is a capture, so I must know whose capture it is.
+
+8
+00:00:53.300 --> 00:01:00.600
+Well, how do I know? Through this function. This function tells me, let's see it, what does it tell me?
+
+9
+00:01:00.900 --> 00:01:07.000
+It tells me whether this capture we are going to is his or the opponent's? Okay? By this logic.
+
+10
+00:01:07.700 --> 00:01:14.100
+Okay? I see the owner of the stone. If the capture we are going to was not there before, then...
+
+11
+00:01:14.700 --> 00:01:24.500
+The implication of the lock is for the opponent. So if this condition is met, and the lock that was passed over has no stone, it means I'm telling him that this lock is not for you.
+
+12
+00:01:25.500 --> 00:01:35.000
+Okay? Simply, in the video, what did we see? But essentially, we are attacking a lock, and our stone is returned to the starting point.
+
+13
+00:01:35.300 --> 00:01:42.300
+And my stone is also returned to the starting point. This is the logic we implemented. We told him, the token balance here is what I chose, reset.
+
+14
+00:01:42.600 --> 00:01:50.800
+What does reset do? It returns it to the position minus one. It makes it so that it becomes minus one.
+
+15
+00:01:51.300 --> 00:02:01.300
+Of course, this value is still visible. Okay? And it makes the stone I just assumed here the first stone of this lock.
+
+16
+00:02:02.000 --> 00:02:08.900
+We return it again to the starting point. So what? In short, am I going to move my stone?
+
+17
+00:02:09.400 --> 00:02:14.600
+I verified that it's not at the starting point and verified that it hasn't exceeded the array boundaries. Or that the game boundaries haven't been exceeded.
+
+18
+00:02:15.500 --> 00:02:20.500
+I'm going to move it, so in new position, this new position will be checked.
+
+19
+00:02:20.800 --> 00:02:27.500
+I'll check if it's in a lock? If it's in a lock, I must check which lock? Okay? I must check whose lock it is?
+
+20
+00:02:27.800 --> 00:02:34.000
+If it's the opponent's or the opponent's, meaning I'm going to return the stone that I
+
+21
+00:02:35.000 --> 00:02:42.700
+He placed this castle or assigned its location to the starting point. A random stone I chose here is the zero, meaning the first
+
+22
+00:02:43.000 --> 00:02:50.900
+AAA stone, returning to the starting point. Okay? Let's clarify. So if it wasn't for the enemy, but for me or my opponent, it was for me.
+
+23
+00:02:51.500 --> 00:02:57.000
+Then, simply put, I add the stone that I moved to the castle.
+
+24
+00:02:57.300 --> 00:03:06.700
+Alright, okay? How can I add the stone that belongs to the castle? This dependency takes a token which is a stone, an object from the Token class.
+
+25
+00:03:07.500 --> 00:03:15.900
+And adds it to the tokens specific to the castle. Here, you can keep watching as I move through the classes, this blue class is where I am.
+
+26
+00:03:18.400 --> 00:03:23.900
+We just ensure that the castle that is going there belongs to me, I added the stone to this castle.
+
+27
+00:03:24.300 --> 00:03:33.700
+Simply put, by flipping each token, which is each stone we have, a boolean value is set, indicating whether it has been placed or not.
+
+28
+00:03:34.300 --> 00:03:41.800
+So I added it to the castle, I must leave it there so that I can know in the future whether this stone is placed or not.
+
+29
+00:03:42.000 --> 00:03:50.400
+Okay? So these conditions, if we said it was in a castle.
+
+30
+00:03:50.700 --> 00:03:56.200
+So it is on the castle, okay? I don't want to continue. Then, if it wasn't in a castle, what does it mean?
+
+31
+00:03:56.500 --> 00:04:02.900
+I'm going to move me onto an empty space. Okay? Meaning there's no castle. So, what if there's no castle?
+
+32
+00:04:03.400 --> 00:04:09.000
+So you've been saying "castle" 1000 times, if there's no castle, what could it be? It could be a rock for my enemy.
+
+33
+00:04:10.300 --> 00:04:16.700
+Or for my opponent, or maybe there's a rock for me. Okay? So, what am I going to do here?
+
+34
+00:04:17.300 --> 00:04:28.800
+I'll do it again now, wrap around the players who are the two of us in our situation. Okay? And check if there's a rock for him in the space I'm going to.
+
+35
+00:04:30.000 --> 00:04:35.500
+If there is a rock for him, then I'll return his rock to the initial position, meaning I'll set his position minus one.
+
+36
+00:04:37.000 --> 00:04:45.000
+And move his rock. Okay? How do I move his rock? Using the function called move. Okay? So, let's go back to that move.
+
+37
+00:04:45.600 --> 00:04:51.500
+So, in case I do this again after moving and I discover that I moved onto a space that has a rock for him, meaning it's not for him, it's for me.
+
+38
+00:04:51.800 --> 00:04:59.800
+There's a rock for me, so I have to create a castle, right? So, how do I create a castle? Create Castle, follow with its name Create Castle.
+
+39
+00:05:00.838 --> 00:05:08.538
+This move function means you definitely can't explain its exact function, so move is usually used to wrap around the tokens
+
+40
+00:05:08.538 --> 00:05:14.798
+Okay? And the condition is that the tokens you're wrapping around must not equal the token that I'm moving.
+
+41
+00:05:14.798 --> 00:05:21.388
+So I have four stones, I moved one, so I'm giving the first to my stones except the one I moved.
+
+42
+00:05:21.388 --> 00:05:23.778
+Alright? Just to see their positions.
+
+43
+00:05:24.388 --> 00:05:33.158
+If there's a second stone not in the same place as the one I moved, it means a formation has formed for me, so I'm making a formation and adding these two stones with this method.
+
+44
+00:05:33.688 --> 00:05:34.688
+And what about the MOV.
+
+45
+00:05:38.648 --> 00:05:39.778
+And what about the MOV.
+
+46
+00:05:40.238 --> 00:05:41.778
+What is the MOV? We're going to it.
+
+47
+00:05:42.238 --> 00:05:48.388
+Of course, you're telling us to notice that each step is for each class.
+
+48
+00:05:48.388 --> 00:05:55.248
+Alright? So what does this MOV mean? It means that the stone has passed through all these stages here.
+
+49
+00:05:55.598 --> 00:05:56.498
+What does passing mean?
+
+50
+00:05:57.038 --> 00:05:59.488
+I won't repeat it, go back to the video and see what it means.
+
+51
+00:05:59.488 --> 00:06:01.698
+Alright? So focus, when does it start moving?
+
+52
+00:06:02.608 --> 00:06:03.588
+So that we don't lose again today.
+
+53
+00:06:05.778 --> 00:06:08.388
+Well, then, how do we start moving this stone?
+
+54
+00:06:08.388 --> 00:06:13.258
+Simply, I gave it the field, which is... what? Which is the value of the die.
+
+55
+00:06:13.258 --> 00:06:17.388
+Alright? I gave it the players, we two, and gave it the board.
+
+56
+00:06:17.968 --> 00:06:22.488
+Well, then, how do I move this one?
+
+57
+00:06:22.488 --> 00:06:28.288
+Alright? I can move it when I want to move it, it was already moving, alright? It was already moving.
+
+58
+00:06:29.188 --> 00:06:30.288
+So simply, I will get
+
+59
+00:06:35.488 --> 00:06:39.000
+my castles that I have.
+
+60
+00:06:39.000 --> 00:06:44.788
+So, how about we, with the board, can have for example three castles, four castles.
+
+61
+00:06:45.288 --> 00:06:51.488
+For example, two tokens for the human user's castle and two tokens for the computer's castle.
+
+62
+00:06:52.288 --> 00:06:54.788
+So we need to respond to the specified castle that I am in.
+
+63
+00:06:56.028 --> 00:06:57.688
+Alright? How do I know where it is?
+
+64
+00:06:57.688 --> 00:07:07.788
+Simply from the tokenization, meaning from the position of the token. I don't know, if I classify a token's meaning, nine times out of ten I go back to the token I'm currently working with.
+
+65
+00:07:10.018 --> 00:07:11.288
+I removed the castle.
+
+66
+00:07:11.288 --> 00:07:16.888
+Alright? Since I need to move the stone from it, I must remove the stone from it. That is the function remove_token_from_castle.
+
+67
+00:07:17.588 --> 00:07:22.688
+Removing the stone from the castle, read the comments many times, they are very clear, meaning honestly, I'm not being lazy.
+
+68
+00:07:24.488 --> 00:07:28.488
+Then I determined its position based on the steps, which is the value of the die roll.
+
+69
+00:07:28.888 --> 00:07:42.068
+And here we did a small check that if the new position of the number's position is above the maximum position we set, then we don't do anything, we just leave it at the maximum position we set, don't change anything.
+
+70
+00:07:44.188 --> 00:07:44.788
+Alright?
+
+71
+00:07:47.018 --> 00:07:54.288
+Okay, we can set the conditions to two, meaning these two conditions are repeated, right? They are repeated.
+
+72
+00:07:54.888 --> 00:07:56.488
+Scan them at your place.
+
+73
+00:07:56.488 --> 00:07:56.988
+Right?
+
+74
+00:07:59.388 --> 00:08:05.388
+Well, in this case, let's see, have we reached the point where we can continue explaining the code?
+
+75
+00:08:05.988 --> 00:08:12.388
+The user is now able to play the game perfectly, meaning he can move the pieces.
+
+76
+00:08:13.588 --> 00:08:14.688
+Build castles.
+
+77
+00:08:15.388 --> 00:08:16.788
+Attack castles.
+
+78
+00:08:17.788 --> 00:08:22.488
+For example, how does he get out from the starting area, reach the winning stage.
+
+79
+00:08:22.488 --> 00:08:28.988
+Hello, I'm not able to make a run, meaning hello, if he makes a run, maybe the computer will come out and win against him.
+
+80
+00:08:29.688 --> 00:08:34.588
+Right? But why, meaning he will play according to the algorithm, but it's not 100% working, right? And you have the same thing, it will be.
+
+81
+00:08:35.388 --> 00:08:43.288
+I'm fixing the algorithm called "Khwarizmi," and I'll send you the final code, or maybe by morning we'll see it together.
+
+82
+00:08:44.188 --> 00:08:51.288
+Anyway, regardless of the situation, I'll manipulate the algorithm so that by now we get that specific sign.
+
+83
+00:08:51.288 --> 00:08:51.788
+Alright?
+
+84
+00:08:52.388 --> 00:08:54.988
+After you see them, if there's anything unclear like that, let me know.
+
+85
+00:08:55.788 --> 00:08:56.288
+Alright?
