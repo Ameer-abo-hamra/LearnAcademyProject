@@ -603,6 +603,14 @@ class CourseController extends Controller
         return $this->returnData("", $data);
     }
 
- 
+    public function getSpecData($specialization_id)
+    {
+
+        $spec = Specilization::findOr($specialization_id);
+
+        $data = $spec->load(["categories", "skills"]);
+
+        return $this->returnData("", $data);
+    }
 
 }

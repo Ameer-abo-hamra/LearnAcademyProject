@@ -6,7 +6,6 @@ use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseAttachments;
 use App\Models\Notification;
-use App\Models\Specilization;
 use App\Models\StudentCourseContent;
 use App\Models\StudentCourseVideo;
 use App\Traits\ResponseTrait;
@@ -593,16 +592,11 @@ class CourseController extends Controller
         return $this->returnData("Published courses fetched successfully", $courses);
     }
 
-    public function getCourseData($course_id)
-    {
+    public function getCourseData($course_id) {
 
-        $course = Course::findOr($course_id);
+        $course = Course::findOr($course_id) ;
 
-        $data = $course->load(["skills", "aquirements", "category"]);
-
-        return $this->returnData("", $data);
+        $data = $course->load()
     }
-
- 
 
 }

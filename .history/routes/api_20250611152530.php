@@ -22,9 +22,7 @@ use App\Http\Controllers\Admin\UserController;
  *
  */
 
-Route::get("get-course-data/{course_id}" , [CourseController::class , "getCourseData"]);
 
-Route::get("get-spec-data/{spec_id}" , [SpecilizationController::class , "getSpecData"]);
 
 Route::post('teacher/sign-up', [TeacherController::class, "signUp"]);
 

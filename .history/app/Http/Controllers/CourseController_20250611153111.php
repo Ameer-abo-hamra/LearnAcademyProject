@@ -6,7 +6,6 @@ use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseAttachments;
 use App\Models\Notification;
-use App\Models\Specilization;
 use App\Models\StudentCourseContent;
 use App\Models\StudentCourseVideo;
 use App\Traits\ResponseTrait;
@@ -603,6 +602,9 @@ class CourseController extends Controller
         return $this->returnData("", $data);
     }
 
- 
+    public function getSpecData($specialization_id) {
+
+        
+    }
 
 }
