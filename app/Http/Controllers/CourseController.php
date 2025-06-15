@@ -135,10 +135,7 @@ class CourseController extends Controller
             DB::commit();
 
 
-            return $this->returnSuccess('Course created successfully', 200, [
-
-                'embedding_response' => $response->json(), // من /api/v1/courses/value
-            ]);
+            return $this->returnSuccess('Course created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->returnError('Something went wrong: ' . $e->getMessage());

@@ -6,9 +6,12 @@ use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseAttachments;
 use App\Models\Notification;
+use App\Models\Specilization;
+use App\Models\StudentCourseContent;
 use App\Models\StudentCourseVideo;
 use App\Traits\ResponseTrait;
 use DB;
+use Illuminate\Support\Facades\Http;
 use Validator;
 use Illuminate\Http\Request;
 
@@ -106,9 +109,33 @@ class CourseController extends Controller
                 }
             }
 
+
+            // استخراج المتطلبات كعناوين نصية لإرسالها
+            $aquirementsTitles = $course->aquirements()->pluck('title')->toArray();
+
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->post("http://localhost:8005/api/v1/courses/value", [
+                        'course_id' => (string) $course->id,
+                        'value' => $aquirementsTitles,
+                    ]);
+
+
+            if ($response->successful()) {
+                echo "✅ External course data sent successfully: " . json_encode($response->json());
+
+
+            } else {
+                echo ("❌ Failed to send external request" .
+                    'status' . $response->status() .
+                    'body' . $response->body()
+                );
+            }
             DB::commit();
 
-            return $this->returnSuccess('Course created successfully', 200);
+
+            return $this->returnSuccess('Course created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->returnError('Something went wrong: ' . $e->getMessage());
@@ -210,57 +237,57 @@ class CourseController extends Controller
     }
 
 
- public function publishCourse($course_id)
-{
-    // ✅ تحقق من وجود الكورس
-    $course = Course::with('teacher')->find($course_id);
+    public function publishCourse($course_id)
+    {
+        // ✅ تحقق من وجود الكورس
+        $course = Course::with('teacher')->find($course_id);
 
-    if (!$course) {
-        return $this->returnError('Course not found', 404);
+        if (!$course) {
+            return $this->returnError('Course not found', 404);
+        }
+
+        // ✅ تحقق من وجود كويز نهائي لهذا الكورس
+        $hasFinalQuiz = $course->quiezes()->where('is_final', true)->exists();
+
+        if (!$hasFinalQuiz) {
+            return $this->returnError('You must create a final quiz before publishing the course.');
+        }
+
+        // ✅ تحويل الحالة إلى 1 (بانتظار موافقة الأدمن)
+        $course->status = 1;
+        $course->save();
+
+        // ✅ تجهيز الرسالة
+        $message = [
+            'title' => 'New course pending approval',
+            'body' => "Teacher {$course->teacher->full_name} has submitted the course '{$course->name}' for review.",
+            'course' => [
+                'id' => $course->id,
+                'name' => $course->name,
+                'level' => $course->level,
+            ]
+        ];
+
+        // ✅ إرسال الإشعار إلى كل الأدمنز
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            // تخزين الإشعار في قاعدة البيانات
+            Notification::create([
+                'notifiable_id' => $admin->id,
+                'notifiable_type' => Admin::class,
+                'sender_id' => $course->teacher->id,
+                'sender_type' => \App\Models\Teacher::class,
+                'title' => $message['title'],
+                'body' => $message['body'],
+                'data' => json_encode($message['course']),
+            ]);
+
+            // بث الإشعار عبر القناة المخصصة للأدمن
+            broadcast(new AdminEvent($message, $admin->id));
+        }
+
+        return $this->returnSuccess('Course published successfully, now wait for admin to accept 🙂');
     }
-
-    // ✅ تحقق من وجود كويز نهائي لهذا الكورس
-    $hasFinalQuiz = $course->quiezes()->where('is_final', true)->exists();
-
-    if (!$hasFinalQuiz) {
-        return $this->returnError('You must create a final quiz before publishing the course.');
-    }
-
-    // ✅ تحويل الحالة إلى 1 (بانتظار موافقة الأدمن)
-    $course->status = 1;
-    $course->save();
-
-    // ✅ تجهيز الرسالة
-    $message = [
-        'title' => 'New course pending approval',
-        'body' => "Teacher {$course->teacher->full_name} has submitted the course '{$course->name}' for review.",
-        'course' => [
-            'id' => $course->id,
-            'name' => $course->name,
-            'level' => $course->level,
-        ]
-    ];
-
-    // ✅ إرسال الإشعار إلى كل الأدمنز
-    $admins = Admin::all();
-    foreach ($admins as $admin) {
-        // تخزين الإشعار في قاعدة البيانات
-        Notification::create([
-            'notifiable_id' => $admin->id,
-            'notifiable_type' => Admin::class,
-            'sender_id' => $course->teacher->id,
-            'sender_type' => \App\Models\Teacher::class,
-            'title' => $message['title'],
-            'body' => $message['body'],
-            'data' => json_encode($message['course']),
-        ]);
-
-        // بث الإشعار عبر القناة المخصصة للأدمن
-        broadcast(new AdminEvent($message, $admin->id));
-    }
-
-    return $this->returnSuccess('Course published successfully, now wait for admin to accept 🙂');
-}
 
     public function getTeacherCourses(Request $request)
     {
@@ -291,10 +318,12 @@ class CourseController extends Controller
     public function getCourseDetails($courseId)
     {
         $teacher = u("teacher");
-        $course = $teacher->courses()->where("id", $courseId)->first();
+        // $course = $teacher->courses()->where("id", $courseId)->first();
+        $course = Course::find($courseId);
         if (!$course) {
-            return $this->returnError("this course does not exist");
+            return $this->returnError(" course does not exist");
         }
+
         $firstCourse = [
             "name" => $course->name,
             "status" => $course->status,
@@ -304,52 +333,42 @@ class CourseController extends Controller
             "point_to_enroll" => $course->point_to_enroll,
             "points_earned" => $course->points_earned
         ];
-        if (!$course) {
-            return $this->returnError("You don't have permission to see course details");
-        }
 
         // تحميل الفيديوهات المرتبة
-        $videos = $course->videos()
-            ->orderBy("sequential_order")
-            ->get()
-            ->map(function ($video) {
-                return (object) [
-                    "type" => "video",
-                    "id" => $video->id,
-                    "title" => $video->title,
-                    "description" => $video->description,
-                    "path" => $video->path,
-                    "image" => $video->image,
-                    "sequential_order" => $video->sequential_order,
-                ];
-            });
-
-        // تحميل الكويزات
-        $quizes = $course->quiezes()
-            ->select("title", "from_video", "to_video", "is_final", "id")
-            ->get()
-            ->map(function ($quiz) {
-                return (object) [
-                    "type" => "quiz",
-                    "title" => $quiz->title,
-                    "from_video" => $quiz->from_video,
-                    "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final,
-                    "id" => $quiz->id
-                ];
-            });
-
-        // تركيب الفيديوهات والكويزات معًا
-        $videosAndQuiz = [];
+        $videos = $course->videos()->orderBy("sequential_order")->get();
         $videoMap = $videos->keyBy("id");
 
-        foreach ($videos as $video) {
-            $videosAndQuiz[] = $video;
+        // تحميل الكويزات
+        $quizes = $course->quiezes;
 
-            // بعد كل فيديو، نبحث إذا فيه كويز ينتهي عند هذا الفيديو
+        // دمج الفيديوهات والكويزات بترتيب جاهز
+        $videosAndQuiz = collect();
+
+        foreach ($videos as $video) {
+            // إضافة الفيديو
+            $videosAndQuiz->push((object) [
+                "type" => "video",
+                "id" => $video->id,
+                "title" => $video->title,
+                "description" => $video->description,
+                "path" => $video->path,
+                "image" => $video->image,
+                "sequential_order" => $video->sequential_order,
+            ]);
+
+            // إضافة أي كويز ينتهي عند هذا الفيديو
             foreach ($quizes as $quiz) {
-                if ($quiz->to_video == $video->id) {
-                    $videosAndQuiz[] = $quiz;
+                if ($quiz->to_video == $video->sequential_order) {
+                    $videosAndQuiz->push((object) [
+                        "type" => "quiz",
+                        "id" => $quiz->id,
+                        "title" => $quiz->title,
+                        "from_video" => $quiz->from_video,
+                        "to_video" => $quiz->to_video,
+                        "is_final" => $quiz->is_final,
+                        "is_auto_generated" => $quiz->is_auto_generated
+                        // نربط الكويز بالفيديو لكن لا نحتاج ترتيب إضافي هنا لأنه موضوع بعد الفيديو
+                    ]);
                 }
             }
         }
@@ -366,17 +385,19 @@ class CourseController extends Controller
             "aquirements" => $aquirements,
             "attachments" => $attachments,
             "category" => $category,
-            "videosAndQuiz" => $videosAndQuiz
+            "videosAndQuiz" => $videosAndQuiz->values(), // ترتيب نهائي
         ];
 
         return $this->returnData("", $data);
     }
 
+
+
     public function getCourseForEnrolledStudents($course_id)
     {
         $student = u("student");
 
-        // التحقق من تسجيل الطالب في الدورة
+        // التحقق من الاشتراك
         $isEnrolled = $student->courses()
             ->where('courses.id', $course_id)
             ->exists();
@@ -385,13 +406,13 @@ class CourseController extends Controller
             return $this->returnError("You can't access this course. Please enroll first.");
         }
 
-        // جلب الدورة
+        // جلب بيانات الدورة
         $course = Course::find($course_id);
         if (!$course) {
             return $this->returnError("Course not found.");
         }
 
-        // بيانات الدورة الأساسية
+        // البيانات الأساسية للدورة
         $firstCourse = [
             "name" => $course->name,
             "status" => $course->status,
@@ -402,85 +423,79 @@ class CourseController extends Controller
             "points_earned" => $course->points_earned
         ];
 
-        // تحميل الفيديوهات المرتبة
-        $videos = $course->videos()
-            ->orderBy("sequential_order")
-            ->get()
-            ->map(function ($video) use ($course) {
-                $isLocked = StudentCourseVideo::where("course_id", $course->id)->where("video_id", $video->id)->first();
-                return (object) [
+        // جلب المحتوى المرتبط بالطالب والكورس
+        $contents = StudentCourseContent::where('student_id', $student->id)
+            ->where('course_id', $course_id)
+            ->orderBy('order_index')
+            ->get();
+
+        $videosAndQuiz = collect();
+
+        foreach ($contents as $content) {
+            $model = $content->content;
+
+            if (!$model) {
+                continue; // في حال تم حذف الفيديو أو الكويز
+            }
+
+            if ($content->content_type === \App\Models\Video::class) {
+                $videosAndQuiz->push((object) [
                     "type" => "video",
-                    "id" => $video->id,
-                    "title" => $video->title,
-                    "description" => $video->description,
-                    "path" => $video->path,
-                    "image" => $video->image,
-                    "sequential_order" => $video->sequential_order,
-                    "is_locked" => $isLocked->locked,
-                ];
-            });
-
-        // تحميل الكويزات
-        $quizzes = $course->quiezes()
-            ->select("title", "from_video", "to_video", "is_final", "id")
-            ->get()
-            ->map(function ($quiz) {
-                return (object) [
+                    "id" => $model->id,
+                    "title" => $model->title,
+                    "description" => $model->description,
+                    "path" => $model->path,
+                    "image" => $model->image,
+                    "sequential_order" => $model->sequential_order,
+                    "is_locked" => $content->locked,
+                    "completed_at" => $content->completed_at,
+                ]);
+            } elseif ($content->content_type === \App\Models\Quize::class) {
+                $videosAndQuiz->push((object) [
                     "type" => "quiz",
-                    "title" => $quiz->title,
-                    "from_video" => $quiz->from_video,
-                    "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final,
-                    "id" => $quiz->id
-                ];
-            });
-
-        // تنظيم الكويزات حسب الفيديو المرتبط بها لتحسين الأداء
-        $quizzesByVideo = $quizzes->groupBy('to_video');
-
-        // دمج الفيديوهات والكويزات معًا حسب الترتيب
-        $videosAndQuiz = [];
-        foreach ($videos as $video) {
-            $videosAndQuiz[] = $video;
-            if (isset($quizzesByVideo[$video->id])) {
-                foreach ($quizzesByVideo[$video->id] as $quiz) {
-                    $videosAndQuiz[] = $quiz;
-                }
+                    "id" => $model->id,
+                    "title" => $model->title,
+                    "from_video" => $model->from_video,
+                    "to_video" => $model->to_video,
+                    "is_final" => $model->is_final,
+                    "is_locked" => $content->locked,
+                    "completed_at" => $content->completed_at,
+                    "is_auto_generated" => $model->is_auto_generated
+                ]);
             }
         }
 
-        // تحميل باقي البيانات
+        // جلب باقي البيانات
         $requirements = $course->skills->pluck("title");
         $aquirements = $course->aquirements->pluck("title");
         $attachments = $course->attachments;
         $category = optional($course->category)->title;
 
-        // تجميع البيانات النهائية
+        // تجميع البيانات
         $data = [
             "course" => $firstCourse,
             "requirements" => $requirements,
             "aquirements" => $aquirements,
             "attachments" => $attachments,
             "category" => $category,
-            "videosAndQuiz" => $videosAndQuiz
+            "videosAndQuiz" => $videosAndQuiz->values(),
         ];
 
         return $this->returnData("", $data);
     }
+
+
     public function getCourseForStudent($course_id)
     {
         $student = u("student");
-
-
 
         // جلب الدورة
         $course = Course::find($course_id);
         if (!$course) {
             return $this->returnError("Course not found.");
         }
-        $isEnrolled = $student->courses()->where('courses.id', $course_id)->exists();
 
-        // التحقق من حفظ الكورس
+        $isEnrolled = $student->courses()->where('courses.id', $course_id)->exists();
         $isSaved = $student->savedCourse()->where('courses.id', $course_id)->exists();
 
         // بيانات الدورة الأساسية
@@ -499,43 +514,38 @@ class CourseController extends Controller
         // تحميل الفيديوهات المرتبة
         $videos = $course->videos()
             ->orderBy("sequential_order")
-            ->get()
-            ->map(function ($video) use ($course) {
-                return (object) [
-                    "type" => "video",
-                    "id" => $video->id,
-                    "title" => $video->title,
-                    "description" => $video->description,
-                    "image" => $video->image,
-                    "sequential_order" => $video->sequential_order,
-                ];
-            });
+            ->get();
 
         // تحميل الكويزات
         $quizzes = $course->quiezes()
             ->select("title", "from_video", "to_video", "is_final", "id")
-            ->get()
-            ->map(function ($quiz) {
-                return (object) [
-                    "type" => "quiz",
-                    "title" => $quiz->title,
-                    "from_video" => $quiz->from_video,
-                    "to_video" => $quiz->to_video,
-                    "is_final" => $quiz->is_final,
-                    "id" => $quiz->id
-                ];
-            });
+            ->get();
 
-        // تنظيم الكويزات حسب الفيديو المرتبط بها لتحسين الأداء
-        $quizzesByVideo = $quizzes->groupBy('to_video');
+        // دمج الفيديوهات والكويزات حسب الترتيب
+        $videosAndQuiz = collect();
 
-        // دمج الفيديوهات والكويزات معًا حسب الترتيب
-        $videosAndQuiz = [];
         foreach ($videos as $video) {
-            $videosAndQuiz[] = $video;
-            if (isset($quizzesByVideo[$video->id])) {
-                foreach ($quizzesByVideo[$video->id] as $quiz) {
-                    $videosAndQuiz[] = $quiz;
+            // إضافة الفيديو
+            $videosAndQuiz->push((object) [
+                "type" => "video",
+                "id" => $video->id,
+                "title" => $video->title,
+                "description" => $video->description,
+                "image" => $video->image,
+                "sequential_order" => $video->sequential_order,
+            ]);
+
+            // إضافة الكويزات التي تنتهي عند هذا الفيديو
+            foreach ($quizzes as $quiz) {
+                if ($quiz->to_video == $video->sequential_order) {
+                    $videosAndQuiz->push((object) [
+                        "type" => "quiz",
+                        "id" => $quiz->id,
+                        "title" => $quiz->title,
+                        "from_video" => $quiz->from_video,
+                        "to_video" => $quiz->to_video,
+                        "is_final" => $quiz->is_final,
+                    ]);
                 }
             }
         }
@@ -553,12 +563,52 @@ class CourseController extends Controller
             "aquirements" => $aquirements,
             "attachments" => $attachments,
             "category" => $category,
-            "videosAndQuiz" => $videosAndQuiz
+            "videosAndQuiz" => $videosAndQuiz->values(),
         ];
 
         return $this->returnData("", $data);
     }
 
+
+    public function getInProgressCourses()
+    {
+        $teacher = u('teacher');
+        $courses = $teacher->courses()
+            ->where("status", 0)
+            ->get();
+
+        return $this->returnData("In-progress courses fetched successfully", $courses);
+    }
+
+    public function getPendingCourses()
+    {
+        $teacher = u('teacher');
+        $courses = $teacher->courses()
+            ->where("status", 1)
+            ->get();
+
+        return $this->returnData("Pending courses fetched successfully", $courses);
+    }
+
+    public function getPublishedCourses()
+    {
+        $teacher = u('teacher');
+        $courses = $teacher->courses()
+            ->where("status", 2)
+            ->get();
+
+        return $this->returnData("Published courses fetched successfully", $courses);
+    }
+
+    public function getCourseData($course_id)
+    {
+
+        $course = Course::findOr($course_id);
+
+        $data = $course->load(["skills", "aquirements", "category"]);
+
+        return $this->returnData("", $data);
+    }
 
 
 
