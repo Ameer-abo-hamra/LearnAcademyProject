@@ -32,16 +32,16 @@ class TeacherAndStudentSeeder extends Seeder
         // إنشاء 10 مدرسين
         for ($i = 1; $i <= 10; $i++) {
             Teacher::create([
-                'full_name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'image' => "teacher1.png",
-                'specialization' => $faker->randomElement(['Math', 'Science', 'English', 'History']),
-                'age' => $faker->numberBetween(25, 60),
-                'gender' => $faker->randomElement([0, 1]),
-                'password' => Hash::make('password123'),
-                'username' => $faker->unique()->userName,
-                'activation_code' => Str::random(10),
-                'is_active' => true,
+                'full_name'        => $faker->name,
+                'email'            => $faker->unique()->safeEmail,
+                'image'            => $"teacher1.png",
+                'specialization'   => $faker->randomElement(['Math', 'Science', 'English', 'History']),
+                'age'              => $faker->numberBetween(25, 60),
+                'gender'           => $faker->randomElement([0, 1]),
+                'password'         => Hash::make('password123'),
+                'username'         => $faker->unique()->userName,
+                'activation_code'  => Str::random(10),
+                'is_active'        => true,
                 'admin_activation' => true,
             ]);
         }
@@ -49,17 +49,17 @@ class TeacherAndStudentSeeder extends Seeder
         // إنشاء 10 طلاب
         for ($i = 1; $i <= 10; $i++) {
             Student::create([
-                'full_name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'image' => $studentImageUrl,
-                'age' => $faker->numberBetween(18, 30),
-                'gender' => $faker->randomElement([0, 1]),
-                'free_points' => $faker->numberBetween(0, 100),
-                'paid_points' => 1000,
-                'password' => Hash::make('password123'),
-                'username' => $faker->unique()->userName,
-                'activation_code' => Str::random(10),
-                'is_active' => true,
+                'full_name'        => $faker->name,
+                'email'            => $faker->unique()->safeEmail,
+                'image'            => $studentImageUrl,
+                'age'              => $faker->numberBetween(18, 30),
+                'gender'           => $faker->randomElement([0, 1]),
+                'free_points'      => $faker->numberBetween(0, 100),
+                'paid_points'      => 1000,
+                'password'         => Hash::make('password123'),
+                'username'         => $faker->unique()->userName,
+                'activation_code'  => Str::random(10),
+                'is_active'        => true,
                 'admin_activation' => true,
             ]);
         }
