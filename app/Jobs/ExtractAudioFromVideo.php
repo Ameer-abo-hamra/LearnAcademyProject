@@ -90,7 +90,7 @@ class ExtractAudioFromVideo implements ShouldQueue
 
             // انتظار حتى الاكتمال
             $status = null;
-            $maxAttempts = 300;
+            $maxAttempts = 3000;
             $attempts = 0;
 
             do {
@@ -107,8 +107,8 @@ class ExtractAudioFromVideo implements ShouldQueue
             if ($status === 'completed') {
                 $resultResponse = Http::withHeaders(['accept' => 'application/json'])
                     ->get("http://localhost:8002/api/v1/jobs/{$jobId}/result");
-
                 if ($resultResponse->successful()) {
+
                     $resultData = $resultResponse->json();
                     $transcription = $resultData['transcription']['segments'] ?? [];
                     $translations = collect($resultData['translations'])->keyBy('language');
@@ -134,9 +134,11 @@ class ExtractAudioFromVideo implements ShouldQueue
                     };
 
                     $baseFolder = "{$video->course->teacher_id}/{$video->course_id}/{$video->id}";
-
+                    echo "this is transcription  : \n ";
+                    print_r($transcription);
                     // حفظ التفريغ الأصلي
                     if (!empty($transcription)) {
+                        echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
                         $lang = $resultData['transcription']['language'] ?? 'ar';
 
                         $video->scripts()->create([
