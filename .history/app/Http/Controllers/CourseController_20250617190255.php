@@ -612,27 +612,21 @@ class CourseController extends Controller
 
 
 
-  public function topEnrolled()
-{
-    $courses = DB::table('course_student')
-        ->select('course_id', DB::raw('count(*) as subscriptions_count'))
-        ->groupBy('course_id')
-        ->orderByDesc('subscriptions_count')
-        ->take(3)
-        ->get();
+    public function topEnrolled()
+    {
+        $courses = Course::withCount('students')
+            ->orderByDesc('students_count')
+            ->take(3)
+            ->get();
 
-    // ثم نجلب بيانات الكورسات نفسها بناءً على الـ IDs
-    $courseIds = $courses->pluck('course_id');
+        return $this->returnData("", $courses);
 
-    $detailedCourses = \App\Models\Course::whereIn('id', $courseIds)->get();
-
-    return $this->returnData("", $detailedCourses);
-}
+    }
 
     // API 2: جلب الكورسات المجانية
     public function freeCourses()
     {
-        $courses = Course::where('point_to_enroll', 0)->get();
+        $courses = Course::where('points_to_enroll', 0)->get();
 
         return $this->returnData("", $courses);
     }

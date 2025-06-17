@@ -38,7 +38,7 @@ Route::get("teacher/skills/{category_id}", [SkillController::class, "getSkillFro
 
 Route::group(["middleware" => 'checkuser:student'], function () {
 
-    Route::post("student/send-recomendation" , [StudentController::class , "sendRecomendation"]);
+    Route::post("student/send-recomendation", [StudentController::class, "sendRecomendation"]);
 
     Route::get("student/get-video-audio/{video_id}", [VideoController::class, "getAudioFiles"]);
 
@@ -266,3 +266,7 @@ Route::post('teacher/activate', [TeacherController::class, "activate"]);
 Route::post('student/sign-up', [StudentController::class, "signUp"]);
 
 Route::post('student/login', [StudentController::class, "login"]);
+
+Route::get('/courses/top-enrolled', [CourseController::class, 'topEnrolled']);
+
+Route::get('/courses/free', [CourseController::class, 'freeCourses']);
