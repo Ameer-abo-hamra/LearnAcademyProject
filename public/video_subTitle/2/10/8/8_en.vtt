@@ -1,0 +1,453 @@
+WEBVTT
+
+1
+00:00:01.000 --> 00:00:03.000
+Hello everyone, how are you? How is your health?
+
+2
+00:00:03.800 --> 00:00:10.400
+Hello, first thing we are going to check from the menu, and then, we are together, we are going to expand with the classes.
+
+3
+00:00:11.400 --> 00:00:14.500
+Well, hello, first thing about these classes here.
+
+4
+00:00:16.300 --> 00:00:19.800
+First thing we are going to check is the player class.
+
+5
+00:00:20.300 --> 00:00:27.500
+Hello, we haven't made four players, we only made two, the user and the computer.
+
+6
+00:00:28.200 --> 00:00:30.700
+Well, what is in the player class?
+
+7
+00:00:32.100 --> 00:00:33.000
+We have a name.
+
+8
+00:00:34.400 --> 00:00:36.000
+The score is specific to the algorithm.
+
+9
+00:00:36.600 --> 00:00:39.500
+We have a name, and we have if it is computer, and we have tokens.
+
+10
+00:00:39.500 --> 00:00:42.200
+What are tokens? They are like the stones.
+
+11
+00:00:43.000 --> 00:00:47.400
+Each player has four pieces, right? What are the rules of the game?
+
+12
+00:00:48.700 --> 00:00:55.700
+Okay, let's say we're two players here and we've made an object of the board.
+
+13
+00:00:56.300 --> 00:00:57.000
+What's in the board?
+
+14
+00:00:58.200 --> 00:01:00.200
+There's the max position, what is this? What did you set it for?
+
+15
+00:01:00.200 --> 00:01:10.000
+Hey, the board isn't a 2D array anymore. In the old version, I had a 2D array, but here you've simplified things a bit.
+
+16
+00:01:11.600 --> 00:01:16.300
+The max position is the furthest point a player can reach.
+
+17
+00:01:16.500 --> 00:01:22.400
+So if all of a player's pieces reach the max position, they win.
+
+18
+00:01:23.400 --> 00:01:26.500
+Right? Here it's a variable, so I'm free to change it as I wish.
+
+19
+00:01:26.500 --> 00:01:31.900
+Hey, I tried with 20, but maybe in comparison, we can make it 50 or 100.
+
+20
+00:01:32.000 --> 00:01:32.400
+Right?
+
+21
+00:01:33.500 --> 00:01:39.900
+So, let's look at these two games, the map and the rest, together with us in the code.
+
+22
+00:01:40.000 --> 00:01:45.800
+Alright? The board is basically us, but we're using it for maximum size and its functions. Let's see them alone, one by one.
+
+23
+00:01:47.200 --> 00:01:47.500
+Alright?
+
+24
+00:01:48.000 --> 00:01:48.700
+So, let's go back to the main.
+
+25
+00:01:51.100 --> 00:01:54.400
+What's in the Game class? What's in the Game class?
+
+26
+00:01:56.300 --> 00:02:09.300
+The Game class has the players, which in our case are two, an object from the board, and we have the player, which is the human, and we have the computer, and we have the dice, okay?
+
+27
+00:02:10.700 --> 00:02:20.700
+And the game rules, you've seen them in the video, definitely, it repeats more than once, allowing the user to replay if a six or three comes up.
+
+28
+00:02:21.500 --> 00:02:23.800
+Alright? And now we're just going to learn about these classes.
+
+29
+00:02:26.000 --> 00:02:28.000
+So, how do we implement the game? How do we implement the game?
+
+30
+00:02:28.400 --> 00:02:35.400
+So, let's look at the start method. By looking at it, we'll roughly understand how the game works.
+
+31
+00:02:35.600 --> 00:02:37.600
+Hello, first thing behaviors.
+
+32
+00:02:38.200 --> 00:02:44.900
+I told him that the current user knows of course here I changed, he is an object from the Player class.
+
+33
+00:02:45.500 --> 00:02:48.800
+He is the user player, I am the user player? He is the human player.
+
+34
+00:02:49.400 --> 00:02:53.300
+Well, and you know what the while's boundaries are from here to there.
+
+35
+00:02:54.200 --> 00:02:55.500
+Well, let's check this while, what's in it?
+
+36
+00:02:56.000 --> 00:02:59.900
+Here it will stop the game logic, here it stops the game logic to move.
+
+37
+00:03:00.400 --> 00:03:04.900
+Well, does the while never stop it from running? It keeps it running as long as the game hasn't ended.
+
+38
+00:03:05.000 --> 00:03:06.700
+Well, how can it end? As I told you.
+
+39
+00:03:07.500 --> 00:03:13.100
+If a player among the players has this method, the player among the players has won.
+
+40
+00:03:14.200 --> 00:03:20.300
+Well, how many players did we say we have? Two, but, the computer and the human player, meaning.
+
+41
+00:03:21.200 --> 00:03:23.300
+Well, how does the player win? How did we say the player wins?
+
+42
+00:03:25.000 --> 00:03:38.200
+If one player has all their pieces off the board, meaning all their pieces have reached the end point that we previously set as 20, we could set it to 50, we can do as we wish.
+
+43
+00:03:39.500 --> 00:03:39.700
+Well.
+
+44
+00:03:40.400 --> 00:03:51.500
+So the player wins if all of their pieces are at the maximum position, meaning they have reached the end point. What does that mean? They have reached the end.
+
+45
+00:03:52.000 --> 00:03:52.600
+All pieces.
+
+46
+00:03:53.500 --> 00:04:00.600
+Meaning if a player has a piece that hasn't reached the end, this is what the condition means, so it will return false.
+
+47
+00:04:02.200 --> 00:04:03.500
+Sorry, it will return true.
+
+48
+00:04:05.000 --> 00:04:10.000
+If a player among the players has a piece still in the game, they have not won.
+
+49
+00:04:10.700 --> 00:04:10.900
+Well.
+
+50
+00:04:11.500 --> 00:04:17.300
+We go back to the main menu, then to the start, that's it.
+
+51
+00:04:19.000 --> 00:04:21.200
+While continuing, as long as the game hasn't finished.
+
+52
+00:04:22.000 --> 00:04:22.700
+So, what's going to happen here?
+
+53
+00:04:23.200 --> 00:04:32.400
+These are the three variables, so I can't explain each one exactly in detail, but if you read the code, then I'm explaining the general idea.
+
+54
+00:04:32.400 --> 00:04:39.600
+But if you read the code, then you'll try to understand the order, and these variables are normal, right?
+
+55
+00:04:40.700 --> 00:04:41.800
+So, what did we do here?
+
+56
+00:04:42.300 --> 00:04:48.000
+Of course, here there are many varied codes, and he added clear comments, so the code is clear and readable.
+
+57
+00:04:49.200 --> 00:04:50.400
+Of course, except for the algorithm.
+
+58
+00:04:51.800 --> 00:04:57.200
+Here we rolled the dice, right? The value will come out, for example, two, three, four.
+
+59
+00:04:57.200 --> 00:04:59.400
+So it's like what I told you about the game logic.
+
+60
+00:05:00.000 --> 00:05:03.200
+We said if the die shows six
+
+61
+00:05:04.300 --> 00:05:10.700
+We are going to see if the number of throws is more than three, which we saw above first.
+
+62
+00:05:10.700 --> 00:05:13.600
+If it is more than three, we say to him, stop, you don't need to play more than this.
+
+63
+00:05:14.300 --> 00:05:16.100
+If it is less than three
+
+64
+00:05:18.000 --> 00:05:23.700
+Sorry, if it is not six, then we will change this extra and continue the game.
+
+65
+00:05:24.500 --> 00:05:27.600
+So, what do we understand from this conversation here?
+
+66
+00:05:28.200 --> 00:05:33.000
+We understand from this conversation that this is a logical treatment of the game's rules if it is six.
+
+67
+00:05:33.700 --> 00:05:40.200
+Or that, for example, three throws were taken in succession, or that, for example, it just means the game's rules entirely.
+
+68
+00:05:41.600 --> 00:05:45.900
+Now, let's think about these numbers and languages.
+
+69
+00:05:46.600 --> 00:05:50.800
+You who will explain it in the meeting, this function is derived from here.
+
+70
+00:05:51.600 --> 00:05:54.600
+Alright, I hope I finish it, God willing.
+
+71
+00:05:55.900 --> 00:06:03.300
+Alright, so with this function, we'll skip it and see what's in it.
+
+72
+00:06:05.000 --> 00:06:11.600
+Of course, we take the current player's turn completely, we roll the dice, meaning the value of the die.
+
+73
+00:06:12.600 --> 00:06:16.800
+Alright, so first thing, what do we get? We get the tokens. What are the tokens? We said the stones.
+
+74
+00:06:18.600 --> 00:06:24.400
+By flipping through the player's class, you can browse through the functions, look at them.
+
+75
+00:06:24.400 --> 00:06:28.400
+So, but focus more on what's coming next, what we're going to use.
+
+76
+00:06:29.800 --> 00:06:34.700
+The tokens give the player's stones completely, not us, we have players each with four stones.
+
+77
+00:06:35.300 --> 00:06:39.700
+So we got the player's stones, placed them in this list. What kind of list is this? Token.
+
+78
+00:06:40.000 --> 00:06:43.500
+Alright, so it's not an object. The object is the token.
+
+79
+00:06:44.500 --> 00:06:48.600
+Alright, so what did we present? The player's stones.
+
+80
+00:06:49.200 --> 00:07:00.600
+Alright, so this is practically the opponent. We're presenting the opponent's stones so that the user can see where their opponent's stones are, so they can try to attack them, for example.
+
+81
+00:07:01.500 --> 00:07:06.600
+We presented this token to the user entirely.
+
+82
+00:07:07.200 --> 00:07:12.700
+What should this token do? I need to get the stones I have with their locations so I can choose one of them.
+
+83
+00:07:13.300 --> 00:07:19.800
+Simply put, this is the Set Token, meaning I tell it which stone I want to change.
+
+84
+00:07:20.600 --> 00:07:25.500
+For example, the second and third stones here, this condition if, meaning I see that there's no need, so I'll go back and remove it.
+
+85
+00:07:27.200 --> 00:07:32.300
+So, after I choose to mean, what does it do first? It presents the opponent's stones.
+
+86
+00:07:32.700 --> 00:07:36.000
+Then it presents my stones so I know where to move them.
+
+87
+00:07:37.600 --> 00:07:43.800
+And the die, it gave a value because from here, the die gave the value five three, which is
+
+88
+00:07:44.600 --> 00:07:52.000
+Here we returned, after it gave us the die value, we are forced to move the stone entirely, so it's the MUF token.
+
+89
+00:07:53.600 --> 00:07:58.900
+So what does the MUF token do? It takes the player, it takes the die value.
+
+90
+00:07:59.500 --> 00:08:04.900
+And it takes the stone that the user chose, and it takes a list of players who are in our two states.
+
+91
+00:08:05.600 --> 00:08:09.600
+Alright, same here, we returned the player's tokens and are still observing the reason.
+
+92
+00:08:10.500 --> 00:08:12.300
+Of course, this is also unnecessary, so I won't go back and remove it.
+
+93
+00:08:14.500 --> 00:08:18.800
+We need the specific position of the stone that was chosen.
+
+94
+00:08:19.400 --> 00:08:22.700
+So why do we need the position? We want to know if it's in the starting area.
+
+95
+00:08:23.200 --> 00:08:28.900
+Meaning, afterward, as in the video you saw after, it's in an area that hasn't been freed or emerged into the play area.
+
+96
+00:08:30.400 --> 00:08:33.800
+So if afterward it's in that area, let's call it the "blocked area,"
+
+97
+00:08:34.300 --> 00:08:36.200
+then its position is minus one.
+
+98
+00:08:36.800 --> 00:08:39.300
+We checked the position and saw if it was minus one or not.
+
+99
+00:08:39.700 --> 00:08:45.300
+So what does it help us with? It helps us because the stone doesn't move from its place as long as it
+
+100
+00:08:46.600 --> 00:08:52.200
+hasn't reached the dice result six, meaning? Meaning if it's in the blocked area,
+
+101
+00:08:53.000 --> 00:08:54.800
+Or let's call the starting area
+
+102
+00:08:55.500 --> 00:08:57.900
+And what came up on the dice is six, but it doesn't move
+
+103
+00:08:58.600 --> 00:09:06.500
+Meaning this condition is just to confirm that we don't move the dice, sorry, the stone, if it wasn't
+
+104
+00:09:07.900 --> 00:09:16.600
+We got the number six exactly. Well, if the position is minus one, meaning what does it mean? Its implication is that if this condition is not met, then in the game, it will move the game
+
+105
+00:09:17.300 --> 00:09:22.700
+So simply, we get the new position, what is the new position? It's the current position plus the dice
+
+106
+00:09:23.400 --> 00:09:28.900
+Exactly, the current stone, where is it, for example, at point four, I roll a five, so it must end up at point nine
+
+107
+00:09:29.400 --> 00:09:30.000
+Simply
+
+108
+00:09:31.200 --> 00:09:37.700
+Well, what does this condition mean? This condition means that if we reached the boundaries of the array or didn't reach the boundaries of the game
+
+109
+00:09:38.200 --> 00:09:40.000
+The position is 100 or 50
+
+110
+00:09:40.700 --> 00:09:46.200
+Exactly, if it exceeds 50, its implication is that we have finished, meaning we've reached the end, no more moves
+
+111
+00:09:47.000 --> 00:09:48.000
+Okay, that's the condition.
+
+112
+00:09:49.300 --> 00:09:50.100
+Okay, here it is.
+
+113
+00:09:51.400 --> 00:09:56.900
+Of course, oh guys, this program is recording only 10 minutes, I'll stop this and do another one.

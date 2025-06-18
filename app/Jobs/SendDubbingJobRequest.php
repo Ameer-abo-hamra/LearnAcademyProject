@@ -65,7 +65,7 @@ class SendDubbingJobRequest implements ShouldQueue
         // ✅ تتبع الحالة
         $status = null;
         $attempts = 0;
-        $maxAttempts = 180;
+        $maxAttempts = 18000;
 
         do {
             sleep(1);

@@ -1,0 +1,453 @@
+WEBVTT
+
+1
+00:00:01.000 --> 00:00:03.000
+Bonjour à tous, comment allez-vous ? Comment allez-vous ?
+
+2
+00:00:03.800 --> 00:00:10.400
+Bonjour, première chose, on va regarder le menu, puis on va s'occuper de nous, de nous, pour étendre les classes.
+
+3
+00:00:11.400 --> 00:00:14.500
+Bien, bonjour, première chose, qu'est-ce que ces classes ici.
+
+4
+00:00:16.300 --> 00:00:19.800
+Première chose, on va regarder la classe du joueur.
+
+5
+00:00:20.300 --> 00:00:27.500
+Bonjour, on n'a pas fait quatre joueurs, on a fait seulement deux, qui sont l'utilisateur et l'ordinateur.
+
+6
+00:00:28.200 --> 00:00:30.700
+Bien, dans la classe du joueur, qu'y a-t-il ?
+
+7
+00:00:32.100 --> 00:00:33.000
+Nous avons son nom.
+
+8
+00:00:34.400 --> 00:00:36.000
+C'est le score spécifique à l'algorithme.
+
+9
+00:00:36.600 --> 00:00:39.500
+Nous avons son nom, et nous avons si c'est un ordinateur, et nous avons les tokens.
+
+10
+00:00:39.500 --> 00:00:42.200
+Qu'est-ce que sont les tokens ? Ils représentent les pierres.
+
+11
+00:00:43.000 --> 00:00:47.400
+Chaque joueur a quatre pierres, c'est comme ça que fonctionne le jeu.
+
+12
+00:00:48.700 --> 00:00:55.700
+Alors, on va dire que nous, ici, on est deux joueurs et on a fait une version ou objet du plateau.
+
+13
+00:00:56.300 --> 00:00:57.000
+Qu'est-ce qu'il y a sur le plateau ?
+
+14
+00:00:58.200 --> 00:01:00.200
+Il y a la position maximale, c'est-à-dire ce que tu as fait ?
+
+15
+00:01:00.200 --> 00:01:10.000
+Alors le plateau n'est pas une matrice à deux dimensions, dans la version ancienne, c'est-à-dire dans le code, j'avais fait une matrice à deux dimensions, ici tu l'as simplifiée.
+
+16
+00:01:11.600 --> 00:01:16.300
+La position maximale est la dernière position que peut atteindre le joueur.
+
+17
+00:01:16.500 --> 00:01:22.400
+Donc, si toutes les pierres du joueur sont en position maximale, il gagne.
+
+18
+00:01:23.400 --> 00:01:26.500
+Alors ? Ici c'est une variable, je suis libre de choisir ce que je veux.
+
+19
+00:01:26.500 --> 00:01:31.900
+Alors tu avais fait 20, mais par exemple en comparaison, on peut le faire 50 ou 100.
+
+20
+00:01:32.000 --> 00:01:32.400
+Alors ?
+
+21
+00:01:33.500 --> 00:01:39.900
+Bien, salut, ces deux ici, ces deux ici, la carte et le reste, on va les voir avec nous, avec nous, dans le code.
+
+22
+00:01:40.000 --> 00:01:45.800
+D'accord ? Le board, c'est nous, mais on s'en sert pour le max size et les dépendances, salut, ils peuvent être seuls, seuls.
+
+23
+00:01:47.200 --> 00:01:47.500
+D'accord ?
+
+24
+00:01:48.000 --> 00:01:48.700
+Bien, on revient au menu.
+
+25
+00:01:51.100 --> 00:01:54.400
+Classe ou classe du jeu, qu'y a-t-il dedans ?
+
+26
+00:01:56.300 --> 00:02:09.300
+La classe du jeu, chez nous, les joueurs qui sont dans notre état, deux, un objet du board, et chez nous le joueur qui est l'humain, et chez nous l'ordinateur, et chez nous les dés qui est le dé, d'accord ?
+
+27
+00:02:10.700 --> 00:02:20.700
+Et les règles du jeu, vous les avez vues dans la vidéo, bien sûr, vous avez sûrement remarqué qu'elle se répète plus d'une fois, ça permet au joueur de recommencer si un événement sort qui lui donne six ou trois.
+
+28
+00:02:21.500 --> 00:02:23.800
+D'accord ? Et maintenant, on va juste connaître les classes ici.
+
+29
+00:02:26.000 --> 00:02:28.000
+Bien, comment on doit coder le jeu ?
+
+30
+00:02:28.400 --> 00:02:35.400
+Bien, on va voir la méthode start, on va savoir approximativement comment le jeu fonctionne.
+
+31
+00:02:35.600 --> 00:02:37.600
+Salut, qu'est-ce que c'est que ces types ?
+
+32
+00:02:38.200 --> 00:02:44.900
+J'ai dit à lui qu'il s'agit du joueur actuel, je connais bien sûr, je ne suis pas lui, il est un objet de la classe Joueur.
+
+33
+00:02:45.500 --> 00:02:48.800
+C'est le joueur utilisateur, qui est le joueur humain ? C'est le joueur utilisateur.
+
+34
+00:02:49.400 --> 00:02:53.300
+Bien, et tu sais quelles sont les bornes de while ici.
+
+35
+00:02:54.200 --> 00:02:55.500
+Bien, en retournant dans cette while, qu'y a-t-il dedans ?
+
+36
+00:02:56.000 --> 00:02:59.900
+Ici, il va sortir de la logique du jeu, ici il sort de la logique du jeu pour avancer.
+
+37
+00:03:00.400 --> 00:03:04.900
+Bien, est-ce que la while ne continuera pas à tourner tant qu'elle n'est pas terminée ? Elle continue à tourner tant qu'elle n'est pas terminée.
+
+38
+00:03:05.000 --> 00:03:06.700
+Bien, comment est-ce qu'on peut terminer ? Comme je vous l'ai dit.
+
+39
+00:03:07.500 --> 00:03:13.100
+Si un joueur parmi les joueurs a ce méthode, le joueur qui a cette méthode a gagné.
+
+40
+00:03:14.200 --> 00:03:20.300
+Bien, combien de joueurs avons-nous dit ? Deux seulement, l'ordinateur et le joueur humain, c'est ça.
+
+41
+00:03:21.200 --> 00:03:23.300
+Bon, comment fait-on pour gagner ? Comment avons-nous dit que le joueur gagne ?
+
+42
+00:03:25.000 --> 00:03:38.200
+Dans le cas où un joueur a échec toutes ses pièces, elles sont devenues toutes au bout du chemin du plateau que nous avons supposé être de 20, on peut le rendre à 50, nous en avons comme nous voulons.
+
+43
+00:03:39.500 --> 00:03:39.700
+Bien.
+
+44
+00:03:40.400 --> 00:03:51.500
+Donc, le joueur gagne si toutes ses pièces sont devenues des pièces au complet, c'est-à-dire, qu'elles signifient quoi, une pièce au complet ? Elles sont devenues au maximum.
+
+45
+00:03:52.000 --> 00:03:52.600
+Toutes les pièces.
+
+46
+00:03:53.500 --> 00:04:00.600
+Cela signifie qu'un joueur qui a une pièce qui n'est pas au bout, c'est-à-dire une pièce qui suit, elle va donc retourner faux.
+
+47
+00:04:02.200 --> 00:04:03.500
+Désolé, elle va retourner vrai.
+
+48
+00:04:05.000 --> 00:04:10.000
+Si un joueur, après avoir joué, a une pièce dans la zone de jeu, il n'a donc pas gagné.
+
+49
+00:04:10.700 --> 00:04:10.900
+Bien.
+
+50
+00:04:11.500 --> 00:04:17.300
+Nous retournons au point principal ensuite au début, d'accord.
+
+51
+00:04:19.000 --> 00:04:21.200
+Car il continuera à vous accompagner quoi qu'il arrive tant que le jeu ne sera pas terminé.
+
+52
+00:04:22.000 --> 00:04:22.700
+Bon, alors qu'est-ce qui va se passer ici ?
+
+53
+00:04:23.200 --> 00:04:32.400
+Ces trois variables, donc, signifient que je ne peux pas vous expliquer exactement ce qu'elles font, mais si vous regardez le code, eh bien je vais plutôt vous expliquer la grande idée.
+
+54
+00:04:32.400 --> 00:04:39.600
+Mais si vous regardez le code, c'est-à-dire que vous allez essayer d'y comprendre quelque chose, vous allez plus facilement savoir l'ordre des choses, ces variables sont normales, d'accord ?
+
+55
+00:04:40.700 --> 00:04:41.800
+Bon, alors qu'est-ce que nous avons fait ici ?
+
+56
+00:04:42.300 --> 00:04:48.000
+Et naturellement, ici il y a beaucoup de codes différents, il a mis des commentaires clairs, donc le code est clair, lisible.
+
+57
+00:04:49.200 --> 00:04:50.400
+Naturellement, à l'exception de l'algorithme.
+
+58
+00:04:51.800 --> 00:04:57.200
+Ici nous avons fait une tentative de démultiplication, d'accord ? La valeur qui va sortir, par exemple, deux, trois, quatre.
+
+59
+00:04:57.200 --> 00:04:59.400
+Et donc, c'est comme je vous ai dit, la logique du jeu.
+
+60
+00:05:00.000 --> 00:05:03.200
+Nous avons dit si le dé sort six
+
+61
+00:05:04.300 --> 00:05:10.700
+Tout d'abord, nous voulions voir si le nombre de tirs était supérieur à trois, ce que nous avons vu au-dessus.
+
+62
+00:05:10.700 --> 00:05:13.600
+Si c'est supérieur à trois, nous lui disons d'arrêter, tu ne peux plus jouer au-delà de ça.
+
+63
+00:05:14.300 --> 00:05:16.100
+Si ensuite, c'est inférieur à trois.
+
+64
+00:05:18.000 --> 00:05:23.700
+Excusez-moi, si ce n'est pas six, nous allons changer cet extra et continuer le jeu.
+
+65
+00:05:24.500 --> 00:05:27.600
+Alors, donc, qu'est-ce que nous comprenons de ce discours-ci ?
+
+66
+00:05:28.200 --> 00:05:33.000
+Nous comprenons de ce discours-ci qu'il s'agit d'une congélation/logique des règles du jeu si c'est six.
+
+67
+00:05:33.700 --> 00:05:40.200
+ou qu'il s'agit par exemple de prendre trois tirs d'affilée, ou qu'il s'agit simplement des règles du jeu en entier.
+
+68
+00:05:41.600 --> 00:05:45.900
+Ici, revenons à la logique avec ces chiffres et langues.
+
+69
+00:05:46.600 --> 00:05:50.800
+Alors, vous qui allez l'expliquer en comparaison, c'est cette fonction à partir de là.
+
+70
+00:05:51.600 --> 00:05:54.600
+Tout ça, c'est fini, je l'espère, je l'ai terminé, Allah willing.
+
+71
+00:05:55.900 --> 00:06:03.300
+Alors avec cette fonction, on perd sur lui et on regarde ce qu'il y a dedans
+
+72
+00:06:05.000 --> 00:06:11.600
+Évidemment, on prend de la partie actuelle entièrement, on prend de nous le dé, c'est-à-dire la valeur du dé
+
+73
+00:06:12.600 --> 00:06:16.800
+Entièrement, alors première chose, qu'est-ce qu'on récupère ? On récupère les jetons, quels sont les jetons ? On a dit les pierres
+
+74
+00:06:18.600 --> 00:06:24.400
+On retourne le membre du joueur, vous naviguez avec le curseur, par excuse, on retourne le classement du joueur, il y a des fonctions pour les naviguer, voyez-les
+
+75
+00:06:24.400 --> 00:06:28.400
+Donc, mais concentrez-vous davantage, plus important, ce qui va venir, venir, ce que nous utilisons, les jetons
+
+76
+00:06:29.800 --> 00:06:34.700
+Les jetons, on les récupère pour les pierres du joueur, entièrement, non nous, nous avons des joueurs, chacun a quatre pierres
+
+77
+00:06:35.300 --> 00:06:39.700
+Donc on récupère les pierres du joueur, on les met dans cette liste, cette liste, qu'est-ce que c'est ? Un jeton
+
+78
+00:06:40.000 --> 00:06:43.500
+Entièrement, donc ce n'est pas une liste d'objets, l'objet, c'est le jeton
+
+79
+00:06:44.500 --> 00:06:48.600
+Alors ici, qu'avons-nous présenté ? Les pierres du joueur
+
+80
+00:06:49.200 --> 00:07:00.600
+Entièrement, voilà, donc en pratique, c'est l'adversaire, nous présentons les pierres de l'adversaire pour que l'utilisateur puisse voir où sont les pierres de son adversaire pour qu'il puisse essayer de l'attaquer, par exemple
+
+81
+00:07:01.500 --> 00:07:06.600
+Tout d'abord, nous avons présenté l'utilisateur ce service
+
+82
+00:07:07.200 --> 00:07:12.700
+Que doit faire ce service ? Il faut que je récupère les pierres qui sont à ma disposition avec leurs sites pour choisir parmi eux
+
+83
+00:07:13.300 --> 00:07:19.800
+En fait, c'est ce service qui dit aux jetons, c'est-à-dire que je lui dis quel jeton tu veux modifier, et il choisit
+
+84
+00:07:20.600 --> 00:07:25.500
+Par exemple, le deuxième et le troisième jeton ici, c'est une condition si, c'est-à-dire que si je vois qu'il n'y a pas besoin, je vais revenir et enlever celui-ci
+
+85
+00:07:27.200 --> 00:07:32.300
+Bien, après que j'ai choisi, c'est-à-dire, il fait d'abord ce qu'il présente, qu'est-ce qu'il présente ? Il présente les pierres de l'adversaire
+
+86
+00:07:32.700 --> 00:07:36.000
+Ensuite, il présente mes pierres pour que je sache où il faut les déplacer
+
+87
+00:07:37.600 --> 00:07:43.800
+Bien, et le dé, c'est-à-dire qu'il a donné une valeur car puisque je suis sorti du dé, il a donné la valeur cinq trois qui est
+
+88
+00:07:44.600 --> 00:07:52.000
+Ici, on revient à nous après qu'il nous a donné la valeur du dé, nous sommes obligés de déplacer le jeton, donc il utilise un jeton
+
+89
+00:07:53.600 --> 00:07:58.900
+Bien, le jeton de mouvement, qu'est-ce qu'il fait ? Il prend le joueur, il prend la valeur du dé
+
+90
+00:07:59.500 --> 00:08:04.900
+Et il prend le jeton que l'utilisateur a choisi, et il prend la liste des joueurs qui sont dans notre état deux
+
+91
+00:08:05.600 --> 00:08:09.600
+Tout d'abord, nous avons renvoyé le jeton du joueur, nous allons voir pourquoi.
+
+92
+00:08:10.500 --> 00:08:12.300
+Et bien sûr, il n'y a pas de raison de retourner pour le supprimer.
+
+93
+00:08:14.500 --> 00:08:18.800
+Nous avons besoin de la position spécifique du pion que l'IA a choisi.
+
+94
+00:08:19.400 --> 00:08:22.700
+Pourquoi avons-nous besoin de la position ? Nous voulons savoir si c'est dans la zone de départ.
+
+95
+00:08:23.200 --> 00:08:28.900
+Donc, si après, comme dans la vidéo que vous avez vue, il est dans une zone non libérée, pas encore sorti de la zone de jeu.
+
+96
+00:08:30.400 --> 00:08:33.800
+Alors, si après, il est dans cette zone, nous appelons ça les Murs.
+
+97
+00:08:34.300 --> 00:08:36.200
+Alors, sa position est inférieure de un.
+
+98
+00:08:36.800 --> 00:08:39.300
+Nous vérifions donc la position, nous voyons si elle est inférieure de un ou non.
+
+99
+00:08:39.700 --> 00:08:45.300
+Pourquoi cela nous aide-t-il ? Cela nous aide à savoir que la pierre ne bouge pas de sa place tant qu'elle
+
+100
+00:08:46.600 --> 00:08:52.200
+n'a pas atteint le résultat des dés, soit 6, par exemple ? C'est-à-dire si elle est dans la zone des Murs
+
+101
+00:08:53.000 --> 00:08:54.800
+Commençons par nommer cette zone
+
+102
+00:08:55.500 --> 00:08:57.900
+Et le résultat du dé est six, mais il ne bouge pas
+
+103
+00:08:58.600 --> 00:09:06.500
+Donc cette condition est juste pour confirmer que nous ne bougeons pas le dé, sauf si...
+
+104
+00:09:07.900 --> 00:09:16.600
+Nous obtenons le numéro six exactement. Bon, si la position n'est pas inférieure d'un cran, cela signifie que... qu'est-ce que cela signifie ? Sa signification est que si cette condition n'est pas remplie, cela signifie que dans le jeu, il continue de jouer
+
+105
+00:09:17.300 --> 00:09:22.700
+En fait, nous obtenons simplement la nouvelle position : qu'est-ce que la nouvelle position ? C'est la position actuelle plus le dé
+
+106
+00:09:23.400 --> 00:09:28.900
+Bien, donc la position actuelle, par exemple à la position quatre, nous obtenons le dé cinq, il faut qu'il devienne à la position neuf
+
+107
+00:09:29.400 --> 00:09:30.000
+Très simplement
+
+108
+00:09:31.200 --> 00:09:37.700
+Alors, qu'est-ce que signifie cette condition ? Cette condition signifie que si nous dépassons les limites du tableau ou si nous ne restons pas dans les limites du jeu
+
+109
+00:09:38.200 --> 00:09:40.000
+La position est 100 ou 50
+
+110
+00:09:40.700 --> 00:09:46.200
+Bien, donc si elle dépasse 50, cela signifie que nous avons terminé, c'est-à-dire que nous avons atteint la fin, plus de mouvements
+
+111
+00:09:47.000 --> 00:09:48.000
+Tout est en ordre
+
+112
+00:09:49.300 --> 00:09:50.100
+Voilà, c'est ça
+
+113
+00:09:51.400 --> 00:09:56.900
+Évidemment, mes camarades, ce programme enregistre seulement 10 minutes, je vais arrêter celui-ci et en lancer un autre

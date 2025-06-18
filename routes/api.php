@@ -270,3 +270,4 @@ Route::post('student/login', [StudentController::class, "login"]);
 Route::get('/courses/top-enrolled', [CourseController::class, 'topEnrolled']);
 
 Route::get('/courses/free', [CourseController::class, 'freeCourses']);
+ // add delete video inside courses 
